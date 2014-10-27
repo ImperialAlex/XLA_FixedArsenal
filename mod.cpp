@@ -1,0 +1,14 @@
+name = "XLA Fixed Arsenal v1.1";
+picture = "XLA_FixedArsenal_Picture.paa";
+actionName = "Website";
+action = "http://imperialalex.com";
+description = "XLA Fixed Arsenal";
+logo = "XLA_logo_black.paa";
+logoOver = "XLA_logo_highlight.paa";
+tooltip = "XLA Fixed Arsenal";
+tooltipOwned = "XLA Fixed Arsenal";
+overview = "This addon overrides BIS_fnc_arsenal with a 'fixed' version that enables whitelisted-arsenal compatibility for composite weapons.";
+author = "Alexander (ImperialAlex)";
+overviewPicture = "XLA_logo_black.paa";
+overviewText = "This addon overrides BIS_fnc_arsenal with a 'fixed' version that enables whitelisted-arsenal compatibility for composite weapons.";
+overviewFootnote = "XLA Fixed Arsenal by Alexander (ImperialAlex)";
