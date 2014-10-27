@@ -112,7 +112,7 @@ _fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 		[uniform _center,vest _center,headgear _center,goggles _center];\
 	_virtualWeaponCargo = [];\
 	{\
-		_weapon = _x call bis_fnc_baseWeapon;\
+		_weapon = _x;\
 		_virtualWeaponCargo set [count _virtualWeaponCargo,_weapon];\
 		{\
 			private ["_item"];\
