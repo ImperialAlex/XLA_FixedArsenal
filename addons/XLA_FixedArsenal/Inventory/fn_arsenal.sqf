@@ -1876,8 +1876,8 @@ switch _mode do {
 			_ctrlList lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
 			_ctrlList lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
 
-			// If any of these conditions match, the saved outfit is greyed out/unavailable.
-			//TODO: Remove this once partial loading has been implemented.
+			// If any of these conditions match, the saved outfit is only partially loadable.
+			// The item is still selectable but will be shown in yellow 
 			if (
 				{_item = _x; !CONDITION(_virtualWeaponCargo) || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 				||
@@ -1887,8 +1887,7 @@ switch _mode do {
 				||
 				{_item = _x; !CONDITION(_virtualBackpackCargo) || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
 			) then {
-				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,1,0.25]];
-				_ctrlList lbsetvalue [_lbAdd,-1];
+				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];				
 			};
 		};
 
