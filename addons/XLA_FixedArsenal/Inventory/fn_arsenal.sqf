@@ -101,18 +101,11 @@ _fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 		_types set [IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
 
 
-// Note: _center seems to refer to the player or unit that will be the recipient of the items.
-// TODO: Do not add player's current equipment to the list of allowed things.
+
 #define GETVIRTUALCARGO\
 	_virtualItemCargo =\
 		(missionnamespace call bis_fnc_getVirtualItemCargo) +\
-		(_cargo call bis_fnc_getVirtualItemCargo) +\
-		items _center +\
-		assigneditems _center +\
-		primaryweaponitems _center +\
-		secondaryweaponitems _center +\
-		handgunitems _center +\
-		[uniform _center,vest _center,headgear _center,goggles _center];\
+		(_cargo call bis_fnc_getVirtualItemCargo);\
 	_virtualWeaponCargo = [];\
 	{\
 		_weapon = _x;\
@@ -122,9 +115,9 @@ _fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 			_item = gettext (_x >> "item");\
 			if !(_item in _virtualItemCargo) then {_virtualItemCargo set [count _virtualItemCargo,_item];};\
 		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call bis_fnc_getVirtualWeaponCargo) + (_cargo call bis_fnc_getVirtualWeaponCargo) + weapons _center + [binocular _center]);\
-	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo) + magazines _center;\
-	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo) + [backpack _center];
+	} foreach ((missionnamespace call bis_fnc_getVirtualWeaponCargo) + (_cargo call bis_fnc_getVirtualWeaponCargo));\
+	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo);\
+	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo);
 
 #define CONDITION(LIST)	(_fullArsenal || {"%ALL" in LIST} || {{_item == _x} count LIST > 0})
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
@@ -139,7 +132,8 @@ switch _mode do {
 
 		with missionnamespace do {
 			BIS_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
-			BIS_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;			
+			BIS_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;	
+			// Note: BIS_fnc_arsenal_center seems to refer to the player or unit that will be the recipient of the items.		
 		};
 		with uinamespace do {
 			_displayMission = [] call (uinamespace getvariable "bis_fnc_displayMission");
