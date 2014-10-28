@@ -24,14 +24,4 @@ class CfgFunctions {
 			
 		};
 	};
-
-	class A3 {
-		tag = BIS;
-		
-		class Inventory {
-
-			class loadInventory {file = "\XLA_FixedArsenal\Inventory\fn_loadInventory.sqf";};
-			
-		};
-	};
 };
