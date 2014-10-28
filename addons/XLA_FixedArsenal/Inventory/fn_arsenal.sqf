@@ -100,6 +100,9 @@ _fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 		_types set [IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT,[/*"Mine","MineBounding","MineDirectional"*/]];\
 		_types set [IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
 
+
+// Note: _center seems to refer to the player or unit that will be the recipient of the items.
+// TODO: Do not add player's current equipment to the list of allowed things.
 #define GETVIRTUALCARGO\
 	_virtualItemCargo =\
 		(missionnamespace call bis_fnc_getVirtualItemCargo) +\
@@ -136,7 +139,7 @@ switch _mode do {
 
 		with missionnamespace do {
 			BIS_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
-			BIS_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;
+			BIS_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;			
 		};
 		with uinamespace do {
 			_displayMission = [] call (uinamespace getvariable "bis_fnc_displayMission");
