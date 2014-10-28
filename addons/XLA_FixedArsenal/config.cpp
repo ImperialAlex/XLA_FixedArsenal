@@ -14,13 +14,23 @@ class CfgPatches
 
 
 class CfgFunctions {
+	
 	class A3_Bootcamp {
 		tag = BIS;
 		
 		class Inventory {
-			file = "\XLA_FixedArsenal\Inventory";
 			
-			class arsenal {};
+			class arsenal {file = "\XLA_FixedArsenal\Inventory\fn_arsenal.sqf";};
+			
+		};
+	};
+
+	class A3 {
+		tag = BIS;
+		
+		class Inventory {
+
+			class loadInventory {file = "\XLA_FixedArsenal\Inventory\fn_loadInventory.sqf";};
 			
 		};
 	};
