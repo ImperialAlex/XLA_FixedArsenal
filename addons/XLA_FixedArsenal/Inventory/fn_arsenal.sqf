@@ -1876,6 +1876,8 @@ switch _mode do {
 			_ctrlList lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
 			_ctrlList lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
 
+			// If any of these conditions match, the saved outfit is greyed out/unavailable.
+			//TODO: Remove this once partial loading has been implemented.
 			if (
 				{_item = _x; !CONDITION(_virtualWeaponCargo) || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 				||
