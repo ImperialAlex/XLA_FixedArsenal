@@ -1,5 +1,6 @@
 /*
 	Author: Karel Moricky
+	Edits: Alexander
 
 	Description:
 	Add config defined inventory to an unit
@@ -37,11 +38,38 @@
 #define VEST_SLOT      701
 #define BACKPACK_SLOT  901
 
+
+
+// Copied from my version of bis_fnc_arsenal
+#define GETVIRTUALCARGO\
+	_virtualItemCargo =\
+		(missionnamespace call bis_fnc_getVirtualItemCargo) +\
+		(_cargo call bis_fnc_getVirtualItemCargo);\
+	_virtualWeaponCargo = [];\
+	{\
+		_weapon = _x;\
+		_virtualWeaponCargo set [count _virtualWeaponCargo,_weapon];\
+		{\
+			private ["_item"];\
+			_item = gettext (_x >> "item");\
+			if !(_item in _virtualItemCargo) then {_virtualItemCargo set [count _virtualItemCargo,_item];};\
+		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
+	} foreach ((missionnamespace call bis_fnc_getVirtualWeaponCargo) + (_cargo call bis_fnc_getVirtualWeaponCargo));\
+	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo);\
+	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo);
+
+#define CONDITION(ITEM,LIST)	(_fullArsenal || {"%ALL" in LIST} || {{ITEM == _x} count LIST > 0})
+
 scopename _fnc_scriptName;
 private ["_cfg","_inventory","_isCfg","_blacklist"];
 _object = [_this,0,objnull,[objnull]] call bis_fnc_param;
 
 _cfg = [_this,1,configfile,[configfile,"",[]]] call bis_fnc_param;
+
+_cargo = (missionnamespace getvariable ["BIS_fnc_arsenal_cargo",objnull]);
+
+_fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false];
+
 _inventory = [];
 switch (typename _cfg) do {
 	case (typename ""): {
@@ -111,20 +139,27 @@ if (_isCfg) then {
 	_linkedItemsMisc = (_inventory select 9) + (_inventory select 6 select 1) + (_inventory select 7 select 1) + (_inventory select 8 select 1);
 };
 
+_uniform_old = "";
+_backpack_old = "";
+_vest_old = "";
+
 //--- Remove
 if !("uniform" in _blacklist) then {
+	_uniform_old = uniform _object;
 	removeuniform _object;
 };
 if !("vest" in _blacklist) then {
+	_vest_old = vest _object;
 	removevest _object;
 };
-if !("headgear" in _blacklist) then {
+if !("headgear" in _blacklist) then {	
 	removeheadgear _object;
 };
 if !("goggles" in _blacklist) then {
 	removegoggles _object;
 };
 if !("backpack" in _blacklist) then {
+	_backpack_old = backpack _object;
 	removebackpack _object;
 };
 if !("items" in _blacklist) then {
@@ -164,6 +199,11 @@ if !("transportItems" in _blacklist) then {
 };
 
 //--- Add
+
+GETVIRTUALCARGO
+
+_failures = "";
+
 if !("uniform" in _blacklist) then {
 	private ["_uniform"];
 	_uniform = "";
@@ -175,7 +215,12 @@ if !("uniform" in _blacklist) then {
 	};
 	if (_uniform != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _uniform)) then {
-			_object forceadduniform _uniform;
+			if (CONDITION(_uniform,_virtualItemCargo)) then {
+				_object forceadduniform _uniform;				
+			} else {
+				_failures = _failures + (format ["Uniform %1 is not whitelisted\n",_uniform]);
+				_object forceadduniform _uniform_old;
+			};
 		} else {
 			["Uniform '%1' does not exist in CfgWeapons",_uniform] call bis_fnc_error;
 		};
@@ -184,7 +229,12 @@ if !("uniform" in _blacklist) then {
 if !("vest" in _blacklist) then {
 	if (_vest != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _vest)) then {
-			_object addvest _vest;
+			if CONDITION(_vest,_virtualItemCargo) then {
+				_object addvest _vest;
+			} else {
+				_failures = _failures +  (format ["Vest %1 is not whitelisted\n",_vest]);
+				_object addvest _vest_old;
+			};
 		} else {
 			["Vest '%1' does not exist in CfgWeapons",_vest] call bis_fnc_error;
 		};
@@ -193,7 +243,11 @@ if !("vest" in _blacklist) then {
 if !("headgear" in _blacklist) then {
 	if (_headgear != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _headgear)) then {
-			_object addheadgear _headgear;
+			if CONDITION(_headgear,_virtualItemCargo) then {
+				_object addheadgear _headgear;
+			} else {
+				_failures = _failures + (format ["Headgear %1 is not whitelisted\n",_headgear]);
+			};
 		} else {
 			["Headgear '%1' does not exist in CfgWeapons",_headgear] call bis_fnc_error;
 		};
@@ -202,7 +256,11 @@ if !("headgear" in _blacklist) then {
 if !("goggles" in _blacklist) then {
 	if (_goggles != "") then {
 		if (isclass (configfile >> "cfgGlasses" >> _goggles)) then {
-			_object addgoggles _goggles;
+			if CONDITION(_goggles,_virtualItemCargo) then {
+				_object addgoggles _goggles;
+			} else {
+				_failures = _failures + (format ["Goggles %1 are not whitelisted\n",_goggles]);
+			};
 		} else {
 			["Goggles '%1' does not exist in CfgGlasses",_goggles] call bis_fnc_error;
 		};
@@ -219,7 +277,12 @@ if !("backpack" in _blacklist) then {
 	};
 	if (_backpack != "") then {
 		if (isclass (configfile >> "cfgVehicles" >> _backpack)) then {
-			_object addbackpack _backpack;
+			if CONDITION(_backpack,_virtualBackpackCargo) then {
+				_object addbackpack _backpack;
+			} else {
+				_failures = _failures + (format ["Backpack %1 is not whitelisted\n",_backpack]);
+				_object addBackpack _backpack_old;
+			};
 		} else {
 			["Backpack '%1' does not exist in CfgVehicles",_backpack] call bis_fnc_error;
 		};
@@ -233,7 +296,11 @@ if !("magazines" in _blacklist) then {
 			if (_x != "") then {
 				_magazine = _x;
 				if (typename _magazine == typename []) then {_magazine = _magazine call bis_fnc_selectrandom;};
-				_object addmagazine _magazine;
+				if CONDITION(_magazine,_virtualMagazineCargo) then {
+					_object addmagazine _magazine;
+				} else {
+					_failures = _failures + (format ["Magazine %1 is not whitelisted\n",_magazine]);
+				};
 			};
 		} foreach _magazines;
 	} else {
@@ -252,15 +319,38 @@ if !("weapons" in _blacklist) then {
 		if (_x != "") then {
 			_weapon = _x;
 			if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
-			_object addweapon _weapon;
+			if CONDITION(_weapon,_virtualWeaponCargo) then {
+				_object addweapon _weapon;
+			} else {
+				_failures = _failures + (format ["Weapon %1 is not whitelisted\n",_weapon]);
+			};
 		};
 	} foreach _weapons;
 };
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
-	if !("uniform" in _blacklist) then {{_object additemtouniform _x;} foreach (_inventory select 0 select 1);};
-	if !("vest" in _blacklist) then {{_object additemtovest _x;} foreach (_inventory select 1 select 1);};
-	if !("backpack" in _blacklist) then {{_object additemtobackpack _x;} foreach (_inventory select 2 select 1);};
+	if !("uniform" in _blacklist) then {{
+			if CONDITION(_x, _virtualItemCargo) then {
+				_object additemtouniform _x;
+			} else {
+				_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+			};
+	} foreach (_inventory select 0 select 1);};
+	if !("vest" in _blacklist) then {{
+		if CONDITION(_x, _virtualItemCargo) then {
+			_object additemtovest _x;
+		} else {
+			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+		};
+	} foreach (_inventory select 1 select 1);};
+	if !("backpack" in _blacklist) then {{
+		if CONDITION(_x, _virtualItemCargo) then {
+			_object additemtobackpack _x;
+		} else {
+			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+		};
+
+	} foreach (_inventory select 2 select 1);};
 };
 if !("transportMagazines" in _blacklist) then {
 	if (_isCfg) then {
@@ -271,25 +361,36 @@ if !("transportMagazines" in _blacklist) then {
 		} foreach ([_cfg >> "transportMagazines"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				_object addmagazinecargoglobal _x;
+				if CONDITION(_x,_virtualMagazineCargo) || CONDITION(_x,_virtualItemCargo) then {
+					_object addmagazinecargoglobal _x;
+				} else {
+					_failures = _failures + (format ["Magazine %1 is not whitelisted\n",_x]);
+				};
 			};
 		} foreach _transportMagazines;
 	};
 };
 if !("items" in _blacklist) then {
 	{
-		if (_x != "") then {
+		if CONDITION(_x, _virtualItemCargo) then {
 			_object additem _x;
+		} else {
+			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
 		};
 	} foreach _items;
 };
 if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
-			_object linkitem _x;
+			if CONDITION(_x, _virtualItemCargo) then {
+			__object linkitem _x;
 			_object addPrimaryWeaponItem _x;
 			_object addSecondaryWeaponItem _x;
 			_object addHandgunItem _x;
+		} else {
+			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+		};
+			
 		};
 	} foreach _linkedItemsMisc;
 };
@@ -302,7 +403,11 @@ if !("transportWeapons" in _blacklist) then {
 		} foreach ([_cfg >> "transportWeapons"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				_object addweaponcargoglobal _x;
+				if CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo) then {
+					_object addweaponcargoglobal _x;
+				} else {
+					_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+				};		
 			};
 		} foreach _transportWeapons;
 	};
@@ -316,9 +421,20 @@ if !("transportItems" in _blacklist) then {
 		} foreach ([_cfg >> "transportItems"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				_object additemcargoglobal _x;
+				if ((_x select 0) != "") then {
+				if CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo) then {
+					_object additemcargoglobal _x;
+				} else {
+					_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+				};		
+			};
 			};
 		} foreach _transportItems;
 	};
 };
+
+//if (_failures != "") then {
+ titleText[_failures, "PLAIN"];
+//};
+
 true

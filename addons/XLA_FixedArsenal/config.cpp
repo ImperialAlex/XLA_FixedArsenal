@@ -24,4 +24,12 @@ class CfgFunctions {
 			
 		};
 	};
+
+	class XLA {
+		tag = XLA;
+
+		class Inventory {
+			class loadPartialInventory {file = "\XLA_FixedArsenal\Inventory\fn_loadPartialInventory.sqf";};
+		};
+	};
 };
