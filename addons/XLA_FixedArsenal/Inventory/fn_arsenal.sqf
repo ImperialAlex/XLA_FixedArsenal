@@ -1749,7 +1749,9 @@ switch _mode do {
 			_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
 			if ((_ctrlTemplateValue lbvalue lnbcurselrow _ctrlTemplateValue) == 0) then {
 				_inventory = _ctrlTemplateValue lnbtext [lnbcurselrow _ctrlTemplateValue,0];
-				[_center,[profilenamespace,_inventory]] call bis_fnc_loadinventory;
+				// Since we've started allowing load-outs with non-whitelisted items,
+				// we need to make sure that we only load those items that are allowed
+				[_center,[profilenamespace,_inventory]] call XLA_fnc_loadPartialInventory;
 
 				//--- Load custom data
 				_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
@@ -2233,7 +2235,7 @@ switch _mode do {
 			[_box,true,true,false] call bis_fnc_addVirtualItemCargo;
 			[_box,true,true,false] call bis_fnc_addVirtualBackpackCargo;
 		};
-		[["AmmoboxServer",_box,true],"bis_fnc_arsenal",false] call bis_fnc_mp;
+		[["",_box,true],"bis_fnc_arsenal",false] call bis_fnc_mp;
 	};
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "AmmoboxExit": {
