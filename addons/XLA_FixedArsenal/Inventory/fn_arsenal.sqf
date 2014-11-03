@@ -119,7 +119,7 @@ _fullArsenal = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo);\
 	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo);
 
-#define CONDITION(LIST)	(_fullArsenal || {"%ALL" in LIST} || {{_item == _x} count LIST > 0})
+#define CONDITION(LIST)	(_fullArsenal || {_item in LIST } || {"%ALL" in LIST} )
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
 
