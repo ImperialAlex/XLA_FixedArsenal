@@ -307,7 +307,14 @@ if !("magazines" in _blacklist) then {
 		//--- Add magazines to be loaded in weapons by default
 		if ({!isnil "_x"} count (_inventory select 6) > 2) then {
 			{
-				if (_x != "") then {_object addmagazine _x;};
+				if (_x != "") then {
+					if CONDITION(_magazine,_virtualMagazineCargo) then {
+					object addmagazine _x;
+					} else {
+						_failures = _failures + (format ["Magazine %1 is not whitelisted\n",_x]);
+					};
+					_
+				};
 			} foreach [_inventory select 6 select 2,_inventory select 7 select 2,_inventory select 8 select 2];
 		};
 	};
