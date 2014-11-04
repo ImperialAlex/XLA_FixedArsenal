@@ -1876,18 +1876,53 @@ switch _mode do {
 			_ctrlList lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
 
 			// If any of these conditions match, the saved outfit is only partially loadable.
-			// The item is still selectable but will be shown in yellow 
+			// The item is still selectable but will be shown in a different color
+			// yellow = non whitelisted item 
+			// orange = non existing class (i.e. wrong classname or mod not loaded)
+			// N.B: orange will take precedence over yellow if both are valid
+			//  blue = non existing class (but whitelisted) - indicates typo/error in whitelist!
+			_whitelisted = true;
+			_isclass = true;
 			if (
-				{_item = _x; !CONDITION(_virtualWeaponCargo) || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
+				{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo) || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo) || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
 				||
-				{_item = _x; !CONDITION(_virtualBackpackCargo) || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+				{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
 			) then {
-				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];				
+				_whitelisted = false;		
 			};
+
+			if (
+			{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
+			||
+			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+			||
+			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+			||
+			{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+			) then {
+				_isclass = false;
+			};
+
+			if (!_whitelisted) then {
+				// yelllow
+				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
+			};
+
+			if (!_isclass) then {
+			 	// orange
+			 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
+			};
+			
+			if (_whitelisted&&!_isclass) then {
+				// blue
+			 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
+			};
+
+			
 		};
 
 		//['buttonExport',[_display]] call bis_fnc_arsenal;
