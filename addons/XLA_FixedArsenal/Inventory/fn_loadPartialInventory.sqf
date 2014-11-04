@@ -308,8 +308,8 @@ if !("magazines" in _blacklist) then {
 		if ({!isnil "_x"} count (_inventory select 6) > 2) then {
 			{
 				if (_x != "") then {
-					if CONDITION(_magazine,_virtualMagazineCargo) then {
-					_object addmagazine _magazine;
+					if CONDITION(_x,_virtualMagazineCargo) then {
+					_object addmagazine _x;
 					} else {
 						_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
 					};
