@@ -309,7 +309,7 @@ if !("magazines" in _blacklist) then {
 			{
 				if (_x != "") then {
 					if CONDITION(_magazine,_virtualMagazineCargo) then {
-					object addmagazine _magazine;
+					_object addmagazine _magazine;
 					} else {
 						_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
 					};
