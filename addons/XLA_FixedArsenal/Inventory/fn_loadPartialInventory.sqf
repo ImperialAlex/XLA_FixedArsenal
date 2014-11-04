@@ -58,7 +58,7 @@
 	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo);\
 	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo);
 
-#define CONDITION(ITEM,LIST)	( fullArsenal || {"%ALL" in LIST} || {{ITEM == _x} count LIST > 0})
+#define CONDITION(ITEM,LIST)	( fullArsenal || ITEM in LIST || {"%ALL" in LIST})
 
 scopename _fnc_scriptName;
 private ["_cfg","_inventory","_isCfg","_blacklist"];
