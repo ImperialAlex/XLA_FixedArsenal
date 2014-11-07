@@ -2277,7 +2277,7 @@ switch _mode do {
 			[_box,true,true,false] call bis_fnc_addVirtualItemCargo;
 			[_box,true,true,false] call bis_fnc_addVirtualBackpackCargo;
 		};
-		[["",_box,true],"bis_fnc_arsenal",false] call bis_fnc_mp;
+		[["AmmoboxServer",_box,true],"bis_fnc_arsenal",false] call bis_fnc_mp;
 	};
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "AmmoboxExit": {
