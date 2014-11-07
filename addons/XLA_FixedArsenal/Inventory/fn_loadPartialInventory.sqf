@@ -222,7 +222,7 @@ if !("uniform" in _blacklist) then {
 				_object forceadduniform _uniform_old;
 			};
 		} else {
-			["Uniform '%1' does not exist in CfgWeapons",_uniform] call bis_fnc_error;
+			_failures = _failures + (format["Uniform '%1' does not exist in CfgWeapons\n",_uniform]);
 		};
 	};
 };
@@ -236,7 +236,7 @@ if !("vest" in _blacklist) then {
 				_object addvest _vest_old;
 			};
 		} else {
-			["Vest '%1' does not exist in CfgWeapons",_vest] call bis_fnc_error;
+			_failures = _failures + (format["Vest '%1' does not exist in CfgWeapons\n",_vest]);
 		};
 	};
 };
@@ -249,7 +249,7 @@ if !("headgear" in _blacklist) then {
 				_failures = _failures + (format ["Headgear %1 is not whitelisted\n",_headgear]);
 			};
 		} else {
-			["Headgear '%1' does not exist in CfgWeapons",_headgear] call bis_fnc_error;
+			_failures = _failures + (format["Headgear '%1' does not exist in CfgWeapons\n",_headgear]);
 		};
 	};
 };
@@ -262,7 +262,7 @@ if !("goggles" in _blacklist) then {
 				_failures = _failures + (format ["Goggles %1 are not whitelisted\n",_goggles]);
 			};
 		} else {
-			["Goggles '%1' does not exist in CfgGlasses",_goggles] call bis_fnc_error;
+			_failures = _failures + (format["Goggles '%1' does not exist in CfgGlasses\n",_goggles]);
 		};
 	};
 };
@@ -284,7 +284,7 @@ if !("backpack" in _blacklist) then {
 				_object addBackpack _backpack_old;
 			};
 		} else {
-			["Backpack '%1' does not exist in CfgVehicles",_backpack] call bis_fnc_error;
+			_failures = _failures + (format["Backpack '%1' does not exist in CfgVehicles\n",_backpack]);
 		};
 	};
 };
@@ -308,15 +308,19 @@ if !("magazines" in _blacklist) then {
 		if ({!isnil "_x"} count (_inventory select 6) > 2) then {
 			{
 				if (_x != "") then {
-					if CONDITION(_x,_virtualMagazineCargo) then {
-					_object addmagazine _x;
+					if (isClass (configFile >> "CfgMagazines" >> _x)) then {
+						if CONDITION(_x,_virtualMagazineCargo) then {
+						_object addmagazine _x;
+						} else {
+							_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
+						};
 					} else {
-						_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
+						_failures = _failures + (format["MAgazine '%1' does not exist in CfgMagazines\n",_x]);
 					};
 				};
 			} foreach [_inventory select 6 select 2,_inventory select 7 select 2,_inventory select 8 select 2];
 		} else {
-			_failures = _failures + "SOMETHING WEIRD HAPPENED\n";
+			_failures = _failures + "SOMETHING WEIRD HAPPENED. SORRY.\n";
 		};
 	};
 };
@@ -327,12 +331,17 @@ if !("weapons" in _blacklist) then {
 	{
 		if (_x != "") then {
 			_weapon = _x;
-			if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
-			if CONDITION(_weapon,_virtualWeaponCargo) then {
-				_object addweapon _weapon;
+			if (isClass (configFile >> "CfgWeapons" >> _weapon)) then {
+				if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
+				if CONDITION(_weapon,_virtualWeaponCargo) then {
+					_object addweapon _weapon;
+				} else {
+					_failures = _failures + (format["Weapon %1 is not whitelisted\n",_weapon]);
+				};	
 			} else {
-				_failures = _failures + (format ["Weapon %1 is not whitelisted\n",_weapon]);
+				_failures = _failures + (format["Weapon '%1' does not exist in CfgWeapons\n",_weapon]);
 			};
+					
 		};
 	} foreach _weapons;
 };
@@ -381,25 +390,32 @@ if !("transportMagazines" in _blacklist) then {
 };
 if !("items" in _blacklist) then {
 	{
-		if CONDITION(_x, _virtualItemCargo) then {
+		if (isClass (configFile >> "CfgWeapons" >> _x)) then {
+			if CONDITION(_x, _virtualItemCargo) then {
 			_object additem _x;
+			} else {
+				_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+			};
 		} else {
-			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+			_failures = _failures + (format["Item '%1' does not exist in CfgWeapons\n",_item]);
 		};
 	} foreach _items;
 };
 if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
-			if (CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo))  then {
-			_object linkitem _x;
-			_object addPrimaryWeaponItem _x;
-			_object addSecondaryWeaponItem _x;
-			_object addHandgunItem _x;
-		} else {
-			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
-		};
-			
+			if (isClass (configFile >> "CfgWeapons" >> _x)) then {
+				if (CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo))  then {
+					_object linkitem _x;
+					_object addPrimaryWeaponItem _x;
+					_object addSecondaryWeaponItem _x;
+					_object addHandgunItem _x;
+				} else {
+					_failures = _failures + (format ["LinkedItem %1 is not whitelisted\n",_x]);
+				};
+			} else {
+				_failures = _failures + (format["LinkedItem '%1' does not exist in CfgWeapons\n",_x]);
+			};
 		};
 	} foreach _linkedItemsMisc;
 };

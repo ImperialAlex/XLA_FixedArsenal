@@ -1892,6 +1892,8 @@ switch _mode do {
 				||
 				{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
 			) then {
+				//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
+				//"NOT WHITELISTED" call bis_fnc_log;
 				_whitelisted = false;		
 			};
 
@@ -1904,21 +1906,26 @@ switch _mode do {
 			||
 			{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
 			) then {
+				//("Item " +  (format["%1",_item]) + " is not a class.") call bis_fnc_log;
+				//"NOT A CLASS" call bis_fnc_log;
 				_isclass = false;
 			};
 
 			if (!_whitelisted) then {
 				// yelllow
+				//"Marking as yellow" call bis_fnc_log;
 				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
 			};
 
 			if (!_isclass) then {
 			 	// orange
+			 	//"Marking as orange" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
 			};
 			
 			if (_whitelisted&&!_isclass) then {
 				// blue
+				//"Marking as blue" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
 			};
 
