@@ -1,4 +1,4 @@
-name = "XLA Fixed Arsenal v1.3";
+name = "XLA Fixed Arsenal v1.4";
 picture = "XLA_FixedArsenal_Picture.paa";
 actionName = "Website";
 action = "http://xla.imperialalex.com";
