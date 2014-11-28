@@ -2,10 +2,10 @@
 ================
 
 This is a mod for Arma3. 
-This mod 'fixes' a few issues with the default Virtual Arsenal. 
-The Virtual Arsenal has a 'whitelisting' feature that allows scripters to determine what items are or are not available. 
-By default, saved outfits that contain non-whitelisted equipment cannot be loaded.
-This mod introduces partial loading, i.e. loading all whitelisted parts of a saved outfit.
+This mod improves the way the virtual arsenal works when using 'whitelisting' mode. 
+The 'white listing' feature of the (vanilla) arsenal allows scripters to determine what items are or are not available. 
+However, the vanilla white-listing has a few issues. E.g. by default, saved outfits that contain non-whitelisted equipment cannot be loaded. 
+This mod introduces partial loading, i.e. loading all whitelisted parts of a saved outfit. It also includes fixes and improvements related to the white-listing feature.
 
 
 Partial Loading
