@@ -7,7 +7,28 @@ The Virtual Arsenal has a 'whitelisting' feature that allows scripters to determ
 By default, saved outfits that contain non-whitelisted equipment cannot be loaded.
 This mod introduces partial loading, i.e. loading all whitelisted parts of a saved outfit.
 
-It also changes the whitelisting behaviour slightly. In the default arsenal, any item that a player has in his current inventory is 'whitelisted' by default. The mod disables this so that everybody sees the same arsenal, no matter what gear they wear when they access it.
-By default, the arsenal also does not mesh together too well with composite weapons, i.e. weapons that have attachments by default. There is an issue on the ArmA3 feedback tracker that can be seen here. The bug prevents you from loading a loadout that contains a composite weapon, even if the weapon is whitelisted. This mod includes a simple workaround for this issue, allowing you to save and load composite weapons properly.
+
+Partial Loading
+================
+Partial Loading means that outfits that contain non-whitelisted or non-existing (classname not found) items can still be loaded, but any item that is non-whitelisted/not found will be skipped. 
+If the non-whitelisted item is a uniform, backpack or vest, the currently equipped uniform,backpack or vest (respectively) will be kept.
+Outfits that contain non-available (either due to classname-not-found or non-whitelisted) will be highlighted in the virtual arsenal's "load" view.
+
+white = outfit is loadable in its entirety.  
+yellow = at least one non whitelisted item   
+orange = at least one non existing class (i.e. wrong classname or mod not loaded)  
+N.B: orange will take precedence over yellow if both apply  
+
+
+Better Performance
+==================
+When opening the "load" menu in a whitelisted arsenal each item in each outfit has to be checked against the whitelist.
+This was done in a way where the whitelist was always traversed in its entirety. In this mod, the search stops once the item has been found.
+
+
+Semantics Change
+================
+Apart from the indirect changes induced by partial loading, a deliberate change was made to the semantics of white listing. In the vanilla arsenal (and previous versions), any item currently equipped by the soldier was automatically available in the arsenal. (Effectively, the white-list was computed as the white list + any current equipment the soldier had). This has two effects: Firstly, it allows players to duplicate items like grenades even if they are not part of the white-list. Secondly, it makes it hard for players and mission designers to predict what items will be available when a certain player visits the arsenal.
+
 
 This mod is designed to work together in conjunction with my XLA_RestrictedArsenal.sqf script. To test that script, try my sample mission CO8_WhitelistedArsenalShowcase on steam.
