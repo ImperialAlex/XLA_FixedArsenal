@@ -35,5 +35,11 @@ Composite Weapons
 This mod introduces proper support for composite weapons, i.e. weapons that have things pre-attached.
 (effectively a one-line change, fixing [#20978](http://feedback.arma3.com/view.php?id=20978)
 
+Showcase
+===========
+This mod is designed to work together in conjunction with my [XLA_RestrictedArsenal.sqf](http://hastebin.com/tixatuvodu.md) script.  
+To test that script, try my sample mission [CO8_WhitelistedArsenalShowcase](http://steamcommunity.com/sharedfiles/filedetails/?id=331806334) on steam.
 
-This mod is designed to work together in conjunction with my XLA_RestrictedArsenal.sqf script. To test that script, try my sample mission CO8_WhitelistedArsenalShowcase on steam.
+Feedback
+==========
+Feel free to use this mod's [issue tracker](https://github.com/ImperialAlex/XLA_FixedArsenal/issues) or head over to the [BI forums thread](http://forums.bistudio.com/showthread.php?184838-quot-Fixed-quot-Arsenal-an-Arsenal-improving-workaround/) to discuss this mod.
