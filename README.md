@@ -30,5 +30,10 @@ Semantics Change
 ================
 Apart from the indirect changes induced by partial loading, a deliberate change was made to the semantics of white listing. In the vanilla arsenal (and previous versions), any item currently equipped by the soldier was automatically available in the arsenal. (Effectively, the white-list was computed as the white list + any current equipment the soldier had). This has two effects: Firstly, it allows players to duplicate items like grenades even if they are not part of the white-list. Secondly, it makes it hard for players and mission designers to predict what items will be available when a certain player visits the arsenal.
 
+Composite Weapons
+==================
+This mod introduces proper support for composite weapons, i.e. weapons that have things pre-attached.
+(effectively a one-line change, fixing [#20978](http://feedback.arma3.com/view.php?id=20978)
+
 
 This mod is designed to work together in conjunction with my XLA_RestrictedArsenal.sqf script. To test that script, try my sample mission CO8_WhitelistedArsenalShowcase on steam.
