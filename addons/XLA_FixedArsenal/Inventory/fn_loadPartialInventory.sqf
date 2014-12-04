@@ -315,7 +315,7 @@ if !("magazines" in _blacklist) then {
 							_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
 						};
 					} else {
-						_failures = _failures + (format["MAgazine '%1' does not exist in CfgMagazines\n",_x]);
+						_failures = _failures + (format["Default Magazine '%1' does not exist in CfgMagazines\n",_x]);
 					};
 				};
 			} foreach [_inventory select 6 select 2,_inventory select 7 select 2,_inventory select 8 select 2];
