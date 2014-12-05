@@ -2024,6 +2024,8 @@ switch _mode do {
 		};
 
 		_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
+		//TODO: Add a "actual kg loaded/max kg capacity" text to the bar.
+		// However, since no text rsc exists by default, this would require some UI data changes
 		_ctrlLoadCargo progresssetposition _load;
 
 		_value = {_x == _item} count _items;
