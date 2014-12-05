@@ -20,7 +20,7 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 };
 
 class CfgScriptPaths {
-	FixedArsenal = "\XLA_FixedArsenal\scripts\"; // " // Fix for difference in Arma string parsing vs SQF highlighter for Sublime Text 2
+	FixedArsenal = "\XLA_FixedArsenal\scripts\"; // "
 };
 
 
