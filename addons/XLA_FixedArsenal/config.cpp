@@ -8,28 +8,30 @@ class CfgPatches
 	{
 		units[] = {};
 		requiredVersion = 1;
-		requiredAddons[] = {"A3_Functions_F_Bootcamp"};
+		requiredAddons[] = {"A3_Functions_F_Bootcamp","A3_UI_F"};
 	};
+};
+
+class RscDisplayArsenal{};
+
+class RscDisplayFixedArsenal: RscDisplayArsenal {
+	onLoad = "[""onLoad"",_this,""RscDisplayFixedArsenal"",'FixedArsenal'] call compile preprocessfilelinenumbers ""A3\ui_f\scripts\initDisplay.sqf""";
+	onUnload = "[""onUnload"",_this,""RscDisplayFixedArsenal"",'FixedArsenal'] call compile preprocessfilelinenumbers ""A3\ui_f\scripts\initDisplay.sqf""";
+};
+
+class CfgScriptPaths {
+	FixedArsenal = "\XLA_FixedArsenal\scripts\"
 };
 
 
 class CfgFunctions {
 	
-	class A3_Bootcamp {
-		tag = BIS;
-		
-		class Inventory {
-			
-			class arsenal {file = "\XLA_FixedArsenal\Inventory\fn_arsenal.sqf";};
-			
-		};
-	};
-
 	class XLA {
 		tag = XLA;
 
 		class Inventory {
 			class loadPartialInventory {file = "\XLA_FixedArsenal\Inventory\fn_loadPartialInventory.sqf";};
+			class arsenal {file = "\XLA_FixedArsenal\Inventory\fn_arsenal.sqf";};
 		};
 	};
 };

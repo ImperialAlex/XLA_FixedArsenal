@@ -172,21 +172,23 @@ switch _mode do {
 		with uinamespace do {
 			_displayMission = [] call (uinamespace getvariable "bis_fnc_displayMission");
 			if !(isnull finddisplay 312) then {_displayMission = finddisplay 312;};
-			_displayMission createdisplay "RscDisplayArsenal";
+			_displayMission createdisplay "RscDisplayFixedArsenal";
+			// This goes and executes RsdDisplayFixedArsenal.sqf, 
+			// which will do ['Init',_params] spawn/call (uinamespace getvariable "XLA_fnc_arsenal");
 		};
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Init": {
-		["bis_fnc_arsenal"] call bis_fnc_startloadingscreen;
+		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
 		BIS_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
 
 		INITTYPES
-		["InitGUI",[_display,"bis_fnc_arsenal"]] call bis_fnc_arsenal;
-		["Preload"] call bis_fnc_arsenal;
-		["ListAdd",[_display]] call bis_fnc_arsenal;
-		["ListSelectCurrent",[_display]] call bis_fnc_arsenal;
+		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
+		["Preload"] call XLA_fnc_arsenal;
+		["ListAdd",[_display]] call XLA_fnc_arsenal;
+		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
 
 		//--- Load stats
 		if (isnil {uinamespace getvariable "bis_fnc_arsenal_weaponStats"}) then {
@@ -220,7 +222,7 @@ switch _mode do {
 			uinamespace setvariable ["bis_fnc_arsenal_equipmentStats",[_statsEquipmentMin,_statsEquipmentMax]];
 		};
 
-		["bis_fnc_arsenal"] call bis_fnc_endloadingscreen;
+		["XLA_fnc_arsenal"] call bis_fnc_endloadingscreen;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -236,18 +238,18 @@ switch _mode do {
 		showcommandingmenu "";
 		//["#(argb,8,8,3)color(0,0,0,1)",false,nil,0.1,[0,0.5]] spawn bis_fnc_textTiles;
 
-		_display displayaddeventhandler ["mousebuttondown","with uinamespace do {['MouseButtonDown',_this] call bis_fnc_arsenal;};"];
-		_display displayaddeventhandler ["mousebuttonup","with uinamespace do {['MouseButtonUp',_this] call bis_fnc_arsenal;};"];
-		//_display displayaddeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call bis_fnc_arsenal;};"];
-		_display displayaddeventhandler ["keydown","with (uinamespace) do {['KeyDown',_this] call bis_fnc_arsenal;};"];
-		//_display displayaddeventhandler ["mousemoving","with (uinamespace) do {['Loop',_this] call bis_fnc_arsenal;};"];
-		//_display displayaddeventhandler ["mouseholding","with (uinamespace) do {['Loop',_this] call bis_fnc_arsenal;};"];
+		_display displayaddeventhandler ["mousebuttondown","with uinamespace do {['MouseButtonDown',_this] call XLA_fnc_arsenal;};"];
+		_display displayaddeventhandler ["mousebuttonup","with uinamespace do {['MouseButtonUp',_this] call XLA_fnc_arsenal;};"];
+		//_display displayaddeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call XLA_fnc_arsenal;};"];
+		_display displayaddeventhandler ["keydown","with (uinamespace) do {['KeyDown',_this] call XLA_fnc_arsenal;};"];
+		//_display displayaddeventhandler ["mousemoving","with (uinamespace) do {['Loop',_this] call XLA_fnc_arsenal;};"];
+		//_display displayaddeventhandler ["mouseholding","with (uinamespace) do {['Loop',_this] call XLA_fnc_arsenal;};"];
 
 		_ctrlMouseArea = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEAREA;
-		_ctrlMouseArea ctrladdeventhandler ["mousemoving","with uinamespace do {['Mouse',_this] call bis_fnc_arsenal;};"];
-		_ctrlMouseArea ctrladdeventhandler ["mouseholding","with uinamespace do {['Mouse',_this] call bis_fnc_arsenal;};"];
-		_ctrlMouseArea ctrladdeventhandler ["mousebuttonclick","with uinamespace do {['TabDeselect',[ctrlparent (_this select 0),_this select 1]] call bis_fnc_arsenal;};"];
-		_ctrlMouseArea ctrladdeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call bis_fnc_arsenal;};"];
+		_ctrlMouseArea ctrladdeventhandler ["mousemoving","with uinamespace do {['Mouse',_this] call XLA_fnc_arsenal;};"];
+		_ctrlMouseArea ctrladdeventhandler ["mouseholding","with uinamespace do {['Mouse',_this] call XLA_fnc_arsenal;};"];
+		_ctrlMouseArea ctrladdeventhandler ["mousebuttonclick","with uinamespace do {['TabDeselect',[ctrlparent (_this select 0),_this select 1]] call XLA_fnc_arsenal;};"];
+		_ctrlMouseArea ctrladdeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call XLA_fnc_arsenal;};"];
 		ctrlsetfocus _ctrlMouseArea;
 
 		_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
@@ -268,45 +270,45 @@ switch _mode do {
 
 		//--- UI event handlers
 		_ctrlButtonInterface = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONINTERFACE;
-		_ctrlButtonInterface ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonInterface',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlButtonInterface ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonInterface',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlButtonRandom = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONRANDOM;
 		_ctrlButtonRandom ctrladdeventhandler ["buttonclick",format ["with uinamespace do {['buttonRandom',[ctrlparent (_this select 0)]] call %1;};",_function]];
 
 		_ctrlButtonSave = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONSAVE;
-		_ctrlButtonSave ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonSave',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlButtonSave ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonSave',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlButtonLoad = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONLOAD;
-		_ctrlButtonLoad ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonLoad',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlButtonLoad ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonLoad',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlButtonExport = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONEXPORT;
-		_ctrlButtonExport ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonExport',[ctrlparent (_this select 0),'init']] call bis_fnc_arsenal;};"];
+		_ctrlButtonExport ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonExport',[ctrlparent (_this select 0),'init']] call XLA_fnc_arsenal;};"];
 		_ctrlButtonExport ctrlenable !ismultiplayer;
 
 		_ctrlButtonImport = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONIMPORT;
-		_ctrlButtonImport ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonImport',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlButtonImport ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonImport',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONOK;
-		_ctrlButtonOK ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonOK',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlButtonOK ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonOK',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlArrowLeft = _display displayctrl IDC_RSCDISPLAYARSENAL_ARROWLEFT;
-		_ctrlArrowLeft ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonCargo',[ctrlparent (_this select 0),-1]] call bis_fnc_arsenal;};"];
+		_ctrlArrowLeft ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonCargo',[ctrlparent (_this select 0),-1]] call XLA_fnc_arsenal;};"];
 
 		_ctrlArrowRight = _display displayctrl IDC_RSCDISPLAYARSENAL_ARROWRIGHT;
-		_ctrlArrowRight ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonCargo',[ctrlparent (_this select 0),+1]] call bis_fnc_arsenal;};"];
+		_ctrlArrowRight ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonCargo',[ctrlparent (_this select 0),+1]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK;
-		_ctrlTemplateButtonOK ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlTemplateButtonOK ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonCancel = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCANCEL;
-		_ctrlTemplateButtonCancel ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateCancel',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlTemplateButtonCancel ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateCancel',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
-		_ctrlTemplateButtonDelete ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDelete',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlTemplateButtonDelete ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDelete',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
-		_ctrlTemplateValue ctrladdeventhandler ["lbselchanged","with uinamespace do {['templateSelChanged',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
-		_ctrlTemplateValue ctrladdeventhandler ["lbdblclick","with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlTemplateValue ctrladdeventhandler ["lbselchanged","with uinamespace do {['templateSelChanged',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+		_ctrlTemplateValue ctrladdeventhandler ["lbdblclick","with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		//--- Menus
 		_ctrlIcon = _display displayctrl IDC_RSCDISPLAYARSENAL_TAB;
@@ -328,7 +330,7 @@ switch _mode do {
 			_mode = if (_idc in [IDCS_LEFT]) then {"TabSelectLeft"} else {"TabSelectRight"};
 			{
 				_x ctrladdeventhandler ["buttonclick",format ["with uinamespace do {['%2',[ctrlparent (_this select 0),%1]] call %3;};",_idc,_mode,_function]];
-				_x ctrladdeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call bis_fnc_arsenal;};"];
+				_x ctrladdeventhandler ["mousezchanged","with uinamespace do {['MouseZChanged',_this] call XLA_fnc_arsenal;};"];
 			} foreach [_ctrlIcon,_ctrlTab];
 
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _idc);
@@ -337,9 +339,9 @@ switch _mode do {
 			_ctrlList ctrlsetfontheight (_gridH * 0.8);
 			_ctrlList ctrlcommit 0;
 			_ctrlList ctrladdeventhandler ["lbselchanged",format ["with uinamespace do {['SelectItem',[ctrlparent (_this select 0),(_this select 0),%1]] call %2;};",_idc,_function]];
-			_ctrlList ctrladdeventhandler ["lbdblclick",format ["with uinamespace do {['ShowItem',[ctrlparent (_this select 0),(_this select 0),%1]] spawn bis_fnc_arsenal;};",_idc]];
+			_ctrlList ctrladdeventhandler ["lbdblclick",format ["with uinamespace do {['ShowItem',[ctrlparent (_this select 0),(_this select 0),%1]] spawn XLA_fnc_arsenal;};",_idc]];
 		} foreach IDCS;
-		['TabDeselect',[_display,-1]] call bis_fnc_arsenal;
+		['TabDeselect',[_display,-1]] call XLA_fnc_arsenal;
 		['SelectItem',[_display,controlnull,-1]] call (uinamespace getvariable _function);
 
 		{
@@ -359,7 +361,7 @@ switch _mode do {
 		];
 
 		_ctrlButtonClose = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONCLOSE;
-		_ctrlButtonClose ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonClose',[ctrlparent (_this select 0)]] spawn bis_fnc_arsenal;}; true"];
+		_ctrlButtonClose ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonClose',[ctrlparent (_this select 0)]] spawn XLA_fnc_arsenal;}; true"];
 
 		if (missionname == "Arsenal") then {
 			_ctrlButtonClose ctrlsettext localize "STR_DISP_ARCMAP_EXIT";
@@ -409,8 +411,8 @@ switch _mode do {
 		["#(argb,8,8,3)color(0,0,0,1)",false,nil,0,[0,0.5]] call bis_fnc_textTiles;
 
 		//--- Camera reset
-		["Mouse",[controlnull,0,0]] call bis_fnc_arsenal;
-		BIS_fnc_arsenal_draw3D = addMissionEventHandler ["draw3D",{with (uinamespace) do {['draw3D',_this] call bis_fnc_arsenal;};}];
+		["Mouse",[controlnull,0,0]] call XLA_fnc_arsenal;
+		BIS_fnc_arsenal_draw3D = addMissionEventHandler ["draw3D",{with (uinamespace) do {['draw3D',_this] call XLA_fnc_arsenal;};}];
 
 		setacctime (missionnamespace getvariable ["BIS_fnc_arsenal_acctime",1]);
 	};
@@ -959,7 +961,7 @@ switch _mode do {
 
 			//--- When interface is hidden, reveal it
 			_shown = ctrlshown (_display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_CONTROLBAR);
-			if (!_shown || _key == 1) exitwith {['buttonInterface',[_display]] call bis_fnc_arsenal;};
+			if (!_shown || _key == 1) exitwith {['buttonInterface',[_display]] call XLA_fnc_arsenal;};
 
 			{
 				_idc = _x;
@@ -1041,7 +1043,7 @@ switch _mode do {
 				];
 				_ctrlLineTabLeft ctrlcommit 0;
 				ctrlsetfocus _ctrlList;
-				['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _idc),_idc]] call bis_fnc_arsenal;
+				['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _idc),_idc]] call XLA_fnc_arsenal;
 			};
 
 			_ctrlIcon = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICON + _idc);
@@ -1078,7 +1080,7 @@ switch _mode do {
 			IDC_RSCDISPLAYARSENAL_TAB_ITEMACC,
 			IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE
 		];
-		if (_showItems) then {['TabSelectRight',[_display,IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC]] call bis_fnc_arsenal;};
+		if (_showItems) then {['TabSelectRight',[_display,IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC]] call XLA_fnc_arsenal;};
 
 		//--- Containers
 		_showCargo = _index in [IDC_RSCDISPLAYARSENAL_TAB_UNIFORM,IDC_RSCDISPLAYARSENAL_TAB_VEST,IDC_RSCDISPLAYARSENAL_TAB_BACKPACK];
@@ -1102,7 +1104,7 @@ switch _mode do {
 		_ctrl = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
 		_ctrl ctrlsetfade _fadeCargo;
 		_ctrl ctrlcommit FADE_DELAY;
-		if (_showCargo) then {['TabSelectRight',[_display,IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG]] call bis_fnc_arsenal;};
+		if (_showCargo) then {['TabSelectRight',[_display,IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG]] call XLA_fnc_arsenal;};
 
 		//--- Right sidebar
 		_showRight = _showItems || _showCargo;
@@ -1118,7 +1120,7 @@ switch _mode do {
 		];
 
 		//--- Refresh weapon accessory lists
-		//['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _index),_index]] call bis_fnc_arsenal;
+		//['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _index),_index]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -1163,7 +1165,7 @@ switch _mode do {
 				} foreach [_ctrFrameRight,_ctrBackgroundRight];
 
 				if (_idc in [IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG,IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW,IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT,IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC]) then {
-					["SelectItemRight",[_display,_ctrlList,_index]] call bis_fnc_arsenal;
+					["SelectItemRight",[_display,_ctrlList,_index]] call XLA_fnc_arsenal;
 				};
 			};
 
@@ -1200,7 +1202,7 @@ switch _mode do {
 				};
 
 				//--- Refresh insignia (gets removed when uniform changes)
-				['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA),IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA]] spawn bis_fnc_arsenal;
+				['SelectItem',[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA),IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA]] spawn XLA_fnc_arsenal;
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_VEST: {
 				if (_item == "") then {
@@ -1426,7 +1428,7 @@ switch _mode do {
 
 			//--- Show item availability
 			if !(isnull _ctrlListActive) then {
-				["SelectItemRight",[_display,_ctrlListActive,_index]] call bis_fnc_arsenal;
+				["SelectItemRight",[_display,_ctrlListActive,_index]] call XLA_fnc_arsenal;
 			};
 		};
 
@@ -1526,8 +1528,8 @@ switch _mode do {
 				default						{configfile >> "cfgweapons" >> _item};
 			};
 
-			["ShowItemInfo",[_itemCfg]] call bis_fnc_arsenal;
-			["ShowItemStats",[_itemCfg]] call bis_fnc_arsenal;
+			["ShowItemInfo",[_itemCfg]] call XLA_fnc_arsenal;
+			["ShowItemStats",[_itemCfg]] call XLA_fnc_arsenal;
 		};
 	};
 
@@ -1878,7 +1880,7 @@ switch _mode do {
 					_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
 					_ctrlMouseBlock ctrlenable false;
 				} else {
-					if (_fullVersion) then {["buttonClose",[_display]] spawn bis_fnc_arsenal;} else {_display closedisplay 2;};
+					if (_fullVersion) then {["buttonClose",[_display]] spawn XLA_fnc_arsenal;} else {_display closedisplay 2;};
 				};
 				_return = true;
 			};
@@ -1887,7 +1889,7 @@ switch _mode do {
 			case (_key in [DIK_RETURN,DIK_NUMPADENTER]): {
 				_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
 				if (ctrlfade _ctrlTemplate == 0) then {
-					["buttonTemplateOK",[_display]] spawn bis_fnc_arsenal;
+					["buttonTemplateOK",[_display]] spawn XLA_fnc_arsenal;
 					_return = true;
 				};
 			};
@@ -1915,26 +1917,26 @@ switch _mode do {
 				} foreach [IDCS_LEFT];
 				_idcCount = count [IDCS_LEFT];
 				_idc = if (_ctrl) then {(_idc - 1 + _idcCount) % _idcCount} else {(_idc + 1) % _idcCount};
-				["TabSelectLeft",[_display,_idc]] call bis_fnc_arsenal;
+				["TabSelectLeft",[_display,_idc]] call XLA_fnc_arsenal;
 				_return = true;
 			};
 
 			//--- Export to script
 			case (_key == DIK_C): {
 				_mode = if (_shift) then {"config"} else {"init"};
-				if (_ctrl) then {['buttonExport',[_display,_mode]] call bis_fnc_arsenal;};
+				if (_ctrl) then {['buttonExport',[_display,_mode]] call XLA_fnc_arsenal;};
 			};
 			//--- Export from script
 			case (_key == DIK_V): {
-				if (_ctrl) then {['buttonImport',[_display]] call bis_fnc_arsenal;};
+				if (_ctrl) then {['buttonImport',[_display]] call XLA_fnc_arsenal;};
 			};
 			//--- Save
 			case (_key == DIK_S): {
-				if (_ctrl) then {['buttonSave',[_display]] call bis_fnc_arsenal;};
+				if (_ctrl) then {['buttonSave',[_display]] call XLA_fnc_arsenal;};
 			};
 			//--- Open
 			case (_key == DIK_O): {
-				if (_ctrl) then {['buttonLoad',[_display]] call bis_fnc_arsenal;};
+				if (_ctrl) then {['buttonLoad',[_display]] call XLA_fnc_arsenal;};
 			};
 			//--- Randomize
 			case (_key == DIK_R): {
@@ -1946,9 +1948,9 @@ switch _mode do {
 								_soldiers set [count _soldiers,configname _x];
 							} foreach ("isclass _x && getnumber (_x >> 'scope') > 1 && gettext (_x >> 'simulation') == 'soldier'" configclasses (configfile >> "cfgvehicles"));
 							[_center,_soldiers call bis_fnc_selectrandom] call bis_fnc_loadinventory;
-							["ListSelectCurrent",[_display]] call bis_fnc_arsenal;
+							["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
 						}else {
-							['buttonRandom',[_display]] call bis_fnc_arsenal;
+							['buttonRandom',[_display]] call XLA_fnc_arsenal;
 						};
 					} else {
 						['buttonRandom',[_display]] call bis_fnc_garage;
@@ -1959,7 +1961,7 @@ switch _mode do {
 			case (_key == DIK_BACKSPACE): {
 				_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
 				if !(ctrlenabled _ctrlMouseBlock) then {
-					['buttonInterface',[_display]] call bis_fnc_arsenal;
+					['buttonInterface',[_display]] call XLA_fnc_arsenal;
 					_return = true;
 				};
 			};
@@ -1979,7 +1981,7 @@ switch _mode do {
 			case (_key == DIK_DELETE): {
 				_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
 				if !(ctrlenabled _ctrlMouseBlock) then {
-					['buttonTemplateDelete',[_display]] call bis_fnc_arsenal;
+					['buttonTemplateDelete',[_display]] call XLA_fnc_arsenal;
 					_return = true;
 				};
 			};
@@ -2036,7 +2038,7 @@ switch _mode do {
 		//_ctrlList lnbsetvalue [[_lbcursel,0],_value];
 		_ctrlList lnbsettext [[_lbcursel,2],str _value];
 
-		["SelectItemRight",[_display,_ctrlList,_index]] call bis_fnc_arsenal;
+		["SelectItemRight",[_display,_ctrlList,_index]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2080,7 +2082,7 @@ switch _mode do {
 					[_center,_inventoryCustom select 2] call bis_fnc_setUnitInsignia;
 				};
 
-				["ListSelectCurrent",[_display]] call bis_fnc_arsenal;
+				["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
 			} else {
 				_hideTemplate = false;
 			};
@@ -2116,7 +2118,7 @@ switch _mode do {
 		_cursel = lnbcurselrow _ctrlTemplateValue;
 		_inventory = _ctrlTemplateValue lnbtext [_cursel,0];
 		[_center,[profilenamespace,_inventory],nil,true] call bis_fnc_saveinventory;
-		['showTemplates',[_display]] call bis_fnc_arsenal;
+		['showTemplates',[_display]] call XLA_fnc_arsenal;
 		_ctrlTemplateValue lnbsetcurselrow (_cursel max (lbsize _ctrlTemplateValue - 1));
 
 		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
@@ -2245,7 +2247,7 @@ switch _mode do {
 			
 		};
 
-		//['buttonExport',[_display]] call bis_fnc_arsenal;
+		//['buttonExport',[_display]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2360,11 +2362,11 @@ switch _mode do {
 
 		//--- Show unavailable items
 		if (count _disabledItems > 0) then {
-			['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_unavailable"]] call bis_fnc_arsenal;
+			['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_unavailable"]] call XLA_fnc_arsenal;
 		};
 
-		["ListSelectCurrent",[_display]] call bis_fnc_arsenal;
-		//["templateSelChanged",[_display]] call bis_fnc_arsenal;
+		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
+		//["templateSelChanged",[_display]] call XLA_fnc_arsenal;
 		endloadingscreen;
 	};
 
@@ -2376,13 +2378,13 @@ switch _mode do {
 
 		_export = [_center,_exportMode,_fullVersion] call bis_fnc_exportInventory;
 		_export spawn {copytoclipboard _this;};
-		['showMessage',[_display,localize "STR_a3_RscDisplayArsenal_message_clipboard"]] call bis_fnc_arsenal;
+		['showMessage',[_display,localize "STR_a3_RscDisplayArsenal_message_clipboard"]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonLoad": {
 		_display = _this select 0;
-		['showTemplates',[_display]] call bis_fnc_arsenal;
+		['showTemplates',[_display]] call XLA_fnc_arsenal;
 
 		_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
 		_ctrlTemplate ctrlsetfade 0;
@@ -2416,7 +2418,7 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonSave": {
 		_display = _this select 0;
-		['showTemplates',[_display]] call bis_fnc_arsenal;
+		['showTemplates',[_display]] call XLA_fnc_arsenal;
 
 		_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
 		_ctrlTemplate ctrlsetfade 0;
@@ -2444,7 +2446,7 @@ switch _mode do {
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrlenable ((lnbsize _ctrlTemplateValue select 0) > 0);
 
-		['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_save"]] call bis_fnc_arsenal;
+		['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_save"]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2625,7 +2627,7 @@ switch _mode do {
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
-						["Open",[nil,_box]] call bis_fnc_arsenal;
+						["Open",[nil,_box]] call XLA_fnc_arsenal;
 					},
 					[],
 					6,
