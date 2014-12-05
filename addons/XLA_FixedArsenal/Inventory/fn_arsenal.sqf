@@ -1450,16 +1450,20 @@ switch _mode do {
 			//--- Attachments
 			{
 				_compatibleItems = [];
-				_cfgCompatibleItems = _x >> "compatibleItems";
-				if (isarray _cfgCompatibleItems) then {
-					_compatibleItems = getarray _cfgCompatibleItems;
-				} else {
-					if (isclass _cfgCompatibleItems) then {
-						for "_i" from 0 to (count _cfgCompatibleItems - 1) do {
-							_entry = _cfgCompatibleItems select _i;
-							if (getnumber _entry > 0) then {_compatibleItems set [count _compatibleItems,configname _entry];};
+				if (isnil "asdg_jointrails_fnc_getCompatibleAttachments" ) then {
+					_cfgCompatibleItems = _x >> "compatibleItems";
+					if (isarray _cfgCompatibleItems) then {
+						_compatibleItems = getarray _cfgCompatibleItems;
+					} else {
+						if (isclass _cfgCompatibleItems) then {
+							for "_i" from 0 to (count _cfgCompatibleItems - 1) do {
+								_entry = _cfgCompatibleItems select _i;
+								if (getnumber _entry > 0) then {_compatibleItems set [count _compatibleItems,configname _entry];};
+							};
 						};
 					};
+				} else { 
+					_compatibleItems = [_item] call asdg_jointrails_fnc_getCompatibleAttachments;
 				};
 
 				{
