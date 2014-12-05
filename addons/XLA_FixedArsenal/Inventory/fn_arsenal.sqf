@@ -152,7 +152,7 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
-#define CONDITION(LIST)	(_fullVersion || {"%ALL" in LIST} || { if (_item == _x) exitWith {true};  false;} forEach LIST)
+#define CONDITION(LIST)	(_fullVersion || { _found = false; scopeName outside; {if (_x == _item || _item == "%ALL") then {_found = true; breakTo outside;};} forEach LIST; _found; })
 
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
