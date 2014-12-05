@@ -33,6 +33,7 @@ class CfgScriptPaths {
 // Once BI fixes #21842 (so anytime between tomorrow and never) we can remove virtually all of this and just override the few parameters we want to touch.
 // Due to this bug all the "BaseClasses" have to be named:
 class RscDisplayArsenal;
+class RscText;
 
 class ArrowLeft;
 class ArrowRight;
@@ -122,7 +123,6 @@ class ListVoice;
 class ListWatch;
 class Load;
 class LoadCargo;
-class LoadCargoText;
 class MainBackground;
 class Message;
 class MessageBox;
@@ -195,7 +195,19 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 		class FrameRight: FrameRight {};
 		class Load: Load {};
 		class LoadCargo: LoadCargo {};
-		class LoadCargoText: LoadCargoText {};
+		class LoadCargoText: RscText
+			{
+				shadow = 0;
+				colorShadow[] = {1,1,1,1.0};
+				idc = 27356;
+				x = "safezoneX + safezoneW - 17.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+				y = "safezoneY + 15.5 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				w = "15 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+				h = "1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				colorText[] = {0,0,0,1};
+				colorBackground[] = {1,1,1,0.1};
+				sizeEx = "0.8 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+			};
 		class Message: Message {};
 		class ControlBar: ControlBar
 		{

@@ -35,6 +35,8 @@
 
 #define FADE_DELAY	0.15
 
+#define IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT 27356
+
 disableserialization;
 
 _mode = [_this,0,"Open",[displaynull,""]] call bis_fnc_param;
@@ -1000,6 +1002,7 @@ switch _mode do {
 				IDC_RSCDISPLAYARSENAL_LINETABLEFT,
 				IDC_RSCDISPLAYARSENAL_LINETABRIGHT,
 				IDC_RSCDISPLAYARSENAL_LOADCARGO,
+				IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT,
 				IDC_RSCDISPLAYARSENAL_INFO_INFO,
 				IDC_RSCDISPLAYARSENAL_STATS_STATS
 			];
@@ -1104,6 +1107,11 @@ switch _mode do {
 		_ctrl = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
 		_ctrl ctrlsetfade _fadeCargo;
 		_ctrl ctrlcommit FADE_DELAY;
+
+		_ctrlText = _display displayCtrl IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT;
+		_ctrlText ctrlsetfade _fadeCargo;
+		_ctrlText ctrlcommit FADE_DELAY;
+
 		if (_showCargo) then {['TabSelectRight',[_display,IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG]] call XLA_fnc_arsenal;};
 
 		//--- Right sidebar
@@ -1354,24 +1362,37 @@ switch _mode do {
 			lbclear _ctrlList;
 			_itemsCurrent = [];
 			_load = 0;
+			_container = "";
 			switch _index do {
 				case IDC_RSCDISPLAYARSENAL_TAB_UNIFORM: {
 					_itemsCurrent = uniformitems _center;
 					_load = if (uniform _center == "") then {1} else {loaduniform _center};
+					_container = gettext (configfile >> "CfgWeapons" >> uniform _center >> "ItemInfo" >> "containerClass");
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_VEST: {
 					_itemsCurrent = vestitems _center;
 					_load = if (vest _center == "") then {1} else {loadvest _center};
+					_container = gettext (configfile >> "CfgWeapons" >> vest _center >> "ItemInfo" >> "containerClass");
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK: {
 					_itemsCurrent = backpackitems _center;
 					_load = if (backpack _center == "") then {1} else {loadbackpack _center};
+					_container = backpack _center;
 				};
 				default {[]};
 			};
+			_capacity = getnumber (configfile >> "CfgVehicles" >> _container >> "maximumLoad");
 
 			_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
+			_ctrlLoadCargoText  = _display displayCtrl IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT;
 			_ctrlLoadCargo progresssetposition _load;
+			// We want the actual values as Xkg/Ykg:
+			MASSCONVERT(_capacity);
+			//Remember that MASSCONVERT overrides the variable, so take a new one here
+			_loadKG  = _load;
+			MASSCONVERT(_loadKG); 
+			_ctrlLoadCargoText ctrlSetText (format ["%1kg/%2kg",_loadKG,_capacity]);
+
 
 			//--- Weapon magazines (based on current weapons)
 			_magazines = [];
@@ -2012,29 +2033,40 @@ switch _mode do {
 		} foreach [IDCS_RIGHT];
 		_item = _ctrlList lnbdata [_lbcursel,0];
 		_load = 0;
+		_container = "";
 		_items = [];
 		switch _selected do {
 			case IDC_RSCDISPLAYARSENAL_TAB_UNIFORM: {
 				if (_add > 0) then {_center additemtouniform _item;} else {_center removeitemfromuniform _item;};
 				_load = loaduniform _center;
 				_items = uniformitems _center;
+				_container = gettext (configfile >> "CfgWeapons" >> uniform _center >> "ItemInfo" >> "containerClass");
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_VEST: {
 				if (_add > 0) then {_center additemtovest _item;} else {_center removeitemfromvest _item;};
 				_load = loadvest _center;
 				_items = vestitems _center;
+				_container = gettext (configfile >> "CfgWeapons" >> vest _center >> "ItemInfo" >> "containerClass");
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK: {
 				if (_add > 0) then {_center additemtobackpack _item;} else {_center removeitemfrombackpack _item;};
 				_load = loadbackpack _center;
 				_items = backpackitems _center;
+				_container = backpack _center;
 			};
 		};
+		_capacity = getnumber (configfile >> "CfgVehicles" >> _container >> "maximumLoad");
 
 		_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
-		//TODO: Add a "actual kg loaded/max kg capacity" text to the bar.
-		// However, since no text rsc exists by default, this would require some UI data changes
+		_ctrlLoadCargoText = _display displayCtrl IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT;
 		_ctrlLoadCargo progresssetposition _load;
+
+		// We want the actual values as Xkg/Ykg:
+		MASSCONVERT(_capacity);
+		//Remember that MASSCONVERT overrides the variable, so take a new one here
+		_loadKG  = _load;
+		MASSCONVERT(_loadKG); 
+		_ctrlLoadCargoText ctrlSetText (format ["%1kg/%2kg",_loadKG,_capacity]);
 
 		_value = {_x == _item} count _items;
 		//_ctrlList lnbsetvalue [[_lbcursel,0],_value];
