@@ -152,7 +152,7 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
-#define CONDITION(LIST) ( _fullArsenal || {[_item,LIST] call {_thing = _this select 0; _array = _this select 1; _found = false; if ((_array find _thing) >= 0) then {_found = true;}; _found; }} || {"%ALL" in LIST} )
+#define CONDITION(LIST)	(_fullVersion || {"%ALL" in LIST} || { if (_item == _x) exitWith {true};  false;} forEach LIST)
 
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
