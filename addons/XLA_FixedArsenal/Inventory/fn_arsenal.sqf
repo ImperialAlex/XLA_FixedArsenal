@@ -135,6 +135,14 @@ _fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 	["armor","maximumLoad","mass"],\
 	[false,false,false]
 
+#define STATS_MASS\
+	["mass"],\
+	[true]
+
+#define STATS_MASS_NORMAL\
+	["mass"],\
+	[false]
+
 // CONVERTING "MASS" TO REAL UNITS, OVERRIDES THE VARIABLE
 // Since Mass is really "mass*volume*fudge" it's going to be hard to turn this into real values, 
 // especially if we want the values to fit with what AGM says about total weight....
@@ -1686,8 +1694,7 @@ switch _mode do {
 				_h = 0.2;
 				{
 					_ctrlStat  = _display displayctrl ((_statControls select _foreachindex) select 0);
-					_ctrlText  = _display displayctrl ((_statControls select _foreachindex) select 1);				
-					//_ctrlValue = _display displayctrl ((_statControls select _foreachindex) select 2);
+					_ctrlText  = _display displayctrl ((_statControls select _foreachindex) select 1);
 
 					if (count _x > 0) then {
 						_ctrlStat progresssetposition (_x select 0);
@@ -1808,6 +1815,53 @@ switch _mode do {
 							// We also need to access the units (kg, seconnds, etc) iteratively, so we add them, too
 							[_statArmor,localize "str_a3_rscdisplayarsenal_stat_armor",_valueArmor,""], //armor has no real unit
 							[_statMaximumLoad,localize "str_a3_rscdisplayarsenal_stat_load",_valueMaximumLoad,_massunit],
+							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight",_valueMass,_massunit]
+						] call _fnc_showStats;
+					};
+				};
+				case IDC_RSCDISPLAYARSENAL_TAB_MAP;
+				case IDC_RSCDISPLAYARSENAL_TAB_GPS;
+				case IDC_RSCDISPLAYARSENAL_TAB_RADIO;
+				case IDC_RSCDISPLAYARSENAL_TAB_COMPASS;
+				case IDC_RSCDISPLAYARSENAL_TAB_WATCH;
+				case IDC_RSCDISPLAYARSENAL_TAB_GOGGLES;
+				case IDC_RSCDISPLAYARSENAL_TAB_BINOCULARS;
+				case IDC_RSCDISPLAYARSENAL_TAB_NVGS: {
+					_ctrlStats ctrlsetfade 0;
+					_statsExtremes = uinamespace getvariable "bis_fnc_arsenal_equipmentStats";
+					if !(isnil "_statsExtremes") then {
+						_statsMin = _statsExtremes select 0;
+						_statsMax = _statsExtremes select 1;
+
+						_stats = [
+							[_itemCfg],
+							STATS_MASS,
+							_statsMin
+						] call bis_fnc_configExtremes;
+						_stats = _stats select 0;
+
+						//Let's go and grab the actual values
+						// Since STATS_EQUIPMENT asks for logarithmic value for Armor
+						// We are going to ask the system again, but this time for all normal numbers
+
+						_statsNormal = [
+							[_itemCfg],
+							STATS_MASS_NORMAL,
+							_statsMin
+						] call bis_fnc_configExtremes;
+						_statsNormal = _statsNormal select 0;
+						
+						_valueMass = _statsNormal select 0;
+						MASSCONVERT(_valueMass) //convert Mass to real units
+
+						_statMass = linearConversion [_statsMin select 0,_statsMax select 0,_stats select 0,_barMin,_barMax];						
+
+						[	// We can't add the values as 5th/6th/.. etc parameters, since _fnc_showStats uses _foreachindex
+							// So, instead, we had them add the end of the respective array. (Better style,too!)
+							// We also need to access the units (kg, seconnds, etc) iteratively, so we add them, too
+							[], //Needs these...that's what the easteregg does in the case above!
+							[],
+							[],						
 							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight",_valueMass,_massunit]
 						] call _fnc_showStats;
 					};
