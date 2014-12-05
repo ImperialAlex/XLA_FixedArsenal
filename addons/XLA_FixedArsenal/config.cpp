@@ -34,6 +34,7 @@ class CfgScriptPaths {
 // Due to this bug all the "BaseClasses" have to be named:
 class RscDisplayArsenal;
 class RscText;
+class RscProgress;
 
 class ArrowLeft;
 class ArrowRight;
@@ -193,7 +194,31 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 		class Tabs: Tabs {};
 		class FrameLeft: FrameLeft {};
 		class FrameRight: FrameRight {};
-		class Load: Load {};
+		class Load: RscProgress
+		{
+			idc = 990; //same as in vanilla arsenal
+			texture = "#(argb,8,8,3)color(1,1,1,1)";
+			colorBar[] = {1,1,1,1};
+			colorFrame[] = {0,0,0,0.5};
+			x = "safezoneX + 18 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+			y = "safezoneY + 0.5 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+			w = "safezoneW - 36 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+			h = "1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+		};
+		class LoadText: RscText
+		{
+			shadow = 0;
+			colorShadow[] = {1,1,1,1.0};
+			idc = 27357;
+			x = "safezoneX + 18 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+			y = "safezoneY + 0.5 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+			w = "safezoneW - 36 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
+			h = "1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+			colorText[] = {0,0,0,1};
+			colorBackground[] = {1,1,1,0.1};
+			sizeEx = "0.8 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+
+		};
 		class LoadCargo: LoadCargo {};
 		class LoadCargoText: RscText
 			{

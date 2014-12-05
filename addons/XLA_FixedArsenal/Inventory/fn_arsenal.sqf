@@ -36,6 +36,7 @@
 #define FADE_DELAY	0.15
 
 #define IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT 27356
+#define IDC_RSCDISPLAYARSENAL_LOADTEXT 27357
 
 disableserialization;
 
@@ -148,6 +149,8 @@ _fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 // especially if we want the values to fit with what AGM says about total weight....
 // This is based on the way AGM calulcates overall inventory weight:
 // Compatible with AGM's Imperial/Metric switch:
+#define MAXINVENTORYMASS 1220
+
 #define MASSCONVERT(MASS)\
 	if (profileNamespace getVariable ["AGM_useImperial", false]) then {\
   		MASS = (round (MASS * 10)) / 100;\
@@ -155,7 +158,7 @@ _fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
   		MASS = (round (MASS * (1/2.2046) * 10)) / 100;\
 	};
 
-_massUnit = "kg";
+_massunit = "kg";
 if (profileNamespace getVariable ["AGM_useImperial", false]) then {
 	_massunit = "lb";
 } else {\
@@ -1399,7 +1402,7 @@ switch _mode do {
 			//Remember that MASSCONVERT overrides the variable, so take a new one here
 			_loadKG  = _load;
 			MASSCONVERT(_loadKG); 
-			_ctrlLoadCargoText ctrlSetText (format ["%1kg/%2kg",_loadKG,_capacity]);
+			_ctrlLoadCargoText ctrlSetText (format ["%1%2/%3%4",_loadKG,_massunit,_capacity,_massunit]);
 
 
 			//--- Weapon magazines (based on current weapons)
@@ -1538,9 +1541,16 @@ switch _mode do {
 			} foreach [IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE,IDC_RSCDISPLAYARSENAL_TAB_ITEMACC,IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC];
 		};
 
-		//--- Calculate load
+		//--- Calculate Player load
 		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYARSENAL_LOAD;
+		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADTEXT;
+		_maxLoad = MAXINVENTORYMASS;
+		MASSCONVERT(_maxLoad)
+		_currentLoad = loadAbs _center;
+		MASSCONVERT(_currentLoad)
 		_ctrlLoad progresssetposition load _center;
+		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
+
 
 
 		if (ctrlenabled _ctrlList) then {
@@ -1592,6 +1602,17 @@ switch _mode do {
 
 		_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
 		_load = _maximumLoad * (1 - progressposition _ctrlLoadCargo);
+
+		//--- Calculate Player load
+		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYARSENAL_LOAD;
+		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADTEXT;
+		_maxLoad = MAXINVENTORYMASS;
+		MASSCONVERT(_maxLoad)
+		_currentLoad = loadAbs _center;
+		MASSCONVERT(_currentLoad)
+		_ctrlLoad progresssetposition load _center;
+		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
+
 
 		//-- Disable too heavy items
 		_rows = lnbsize _ctrlList select 0;
@@ -2120,7 +2141,7 @@ switch _mode do {
 		//Remember that MASSCONVERT overrides the variable, so take a new one here
 		_loadKG  = _load;
 		MASSCONVERT(_loadKG); 
-		_ctrlLoadCargoText ctrlSetText (format ["%1kg/%2kg",_loadKG,_capacity]);
+		_ctrlLoadCargoText ctrlSetText (format ["%1%2/%3%4",_loadKG,_massunit,_capacity,_massunit]);
 
 		_value = {_x == _item} count _items;
 		//_ctrlList lnbsetvalue [[_lbcursel,0],_value];
