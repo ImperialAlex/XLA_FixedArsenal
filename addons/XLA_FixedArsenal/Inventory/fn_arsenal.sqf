@@ -1715,7 +1715,9 @@ switch _mode do {
 						// Assign the values we just read out
 						_valueReloadSpeed = _statsNormal select 0;
 						//Instead of displaying "reload speed" (seconds between shots), we actually want "rate of fire" in rounds per minute
-						_valueRPM = 60*(1/_valueReloadSpeed);
+						// We round the value of RPM  since nobody cares about if his gun has 708 or 710 RPM. 
+						_valueRPM = 0;
+						if (_valueReloadSpeed != 0 ) then { _valueRPM =10*round(6*(1/_valueReloadSpeed)); };
 						_valueMaxRange = _statsNormal select 1;
 						_valueHit = _statsNormal select 2;
 						_valueMass = _statsNormal select 3;
