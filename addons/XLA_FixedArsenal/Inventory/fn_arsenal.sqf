@@ -121,9 +121,36 @@ _fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 	["reloadtime","maxrange","hit","mass"],\
 	[true,true,true,false]
 
+#define STATS_WEAPONS_NORMAL\
+	["reloadtime","maxrange","hit","mass"],\
+	[false,false,false,false]
+
 #define STATS_EQUIPMENT\
 	["armor","maximumLoad","mass"],\
 	[true,false,false]
+
+#define STATS_EQUIPMENT_NORMAL\
+	["armor","maximumLoad","mass"],\
+	[false,false,false]
+
+// CONVERTING "MASS" TO REAL UNITS, OVERRIDES THE VARIABLE
+// Since Mass is really "mass*volume*fudge" it's going to be hard to turn this into real values, 
+// especially if we want the values to fit with what AGM says about total weight....
+// This is based on the way AGM calulcates overall inventory weight:
+// Compatible with AGM's Imperial/Metric switch:
+#define MASSCONVERT(MASS)\
+	if (profileNamespace getVariable ["AGM_useImperial", false]) then {\
+  		MASS = (round (MASS * 10)) / 100;\
+	} else {\
+  		MASS = (round (MASS * (1/2.2046) * 10)) / 100;\
+	};
+
+_massUnit = "kg";
+if (profileNamespace getVariable ["AGM_useImperial", false]) then {
+	_massunit = "lb";
+} else {\
+  	_massunit = "kg";
+};
 
 #define CONDITION(LIST) ( _fullArsenal || {[_item,LIST] call {_thing = _this select 0; _array = _this select 1; _found = false; if ((_array find _thing) >= 0) then {_found = true;}; _found; }} || {"%ALL" in LIST} )
 
@@ -1631,11 +1658,13 @@ switch _mode do {
 			_fnc_showStats = {
 				_h = 0.2;
 				{
-					_ctrlStat = _display displayctrl ((_statControls select _foreachindex) select 0);
-					_ctrlText = _display displayctrl ((_statControls select _foreachindex) select 1);
+					_ctrlStat  = _display displayctrl ((_statControls select _foreachindex) select 0);
+					_ctrlText  = _display displayctrl ((_statControls select _foreachindex) select 1);				
+					//_ctrlValue = _display displayctrl ((_statControls select _foreachindex) select 2);
+
 					if (count _x > 0) then {
 						_ctrlStat progresssetposition (_x select 0);
-						_ctrlText ctrlsettext toupper (_x select 1);
+						_ctrlText ctrlsettext ((toupper (_x select 1)) + ": " + (str (_x select 2)) + (_x select 3));
 						_ctrlText ctrlshow true;
 						_h = _h + 0.2;
 					} else {
@@ -1667,6 +1696,25 @@ switch _mode do {
 						] call bis_fnc_configExtremes;
 						_stats = _stats select 1;
 
+						//Let's go and grab the actual values
+						// Since STATS_WEAPONS asks for logarithmic values for everything except mass
+						// We are going to ask the system again, but this time for all normal numbers
+						_statsNormal  = [
+							[_itemCfg],
+							STATS_WEAPONS_NORMAL,
+							_statsMin
+						] call bis_fnc_configExtremes;
+						_statsNormal = _statsNormal select 1;
+
+						// Assign the values we just read out
+						_valueReloadSpeed = _statsNormal select 0;
+						//Instead of displaying "reload speed" (seconds between shots), we actually want "rate of fire" in rounds per minute
+						_valueRPM = 60*(1/_valueReloadSpeed);
+						_valueMaxRange = _statsNormal select 1;
+						_valueHit = _statsNormal select 2;
+						_valueMass = _statsNormal select 3;
+						MASSCONVERT(_valueMass) //convert Mass to real units
+
 						_statReloadSpeed = linearConversion [_statsMin select 0,_statsMax select 0,_stats select 0,_barMax,_barMin];
 						_statMaxRange = linearConversion [_statsMin select 1,_statsMax select 1,_stats select 1,_barMin,_barMax];
 						_statHit = linearConversion [_statsMin select 2,_statsMax select 2,_stats select 2,_barMin,_barMax];
@@ -1674,10 +1722,13 @@ switch _mode do {
 						if (getnumber (_itemCfg >> "type") == 4 && _statReloadSpeed == 1) then {_statReloadSpeed = _barMin;};
 
 						[
-							[_statReloadSpeed,localize "str_a3_rscdisplayarsenal_stat_rof"],
-							[_statMaxRange,localize "str_a3_rscdisplayarsenal_stat_range"],
-							[_statHit,localize "str_a3_rscdisplayarsenal_stat_impact"],
-							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight"]
+							// We can't add the values as 5th/6th/.. etc parameters, since _fnc_showStats uses _foreachindex
+							// So, instead, we had them add the end of the respective array. (Better style,too!)
+							// We also need to access the units (kg, seconnds, etc) iteratively, so we add them, too
+							[_statReloadSpeed,localize "str_a3_rscdisplayarsenal_stat_rof",_valueRPM,"RPM"],
+							[_statMaxRange,localize "str_a3_rscdisplayarsenal_stat_range",_valueMaxRange,"m"],
+							[_statHit,localize "str_a3_rscdisplayarsenal_stat_impact",_valueHit,""], //Hit's unit is magical engine hitpoints
+							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight",_valueMass,_massunit]
 						] call _fnc_showStats;
 					};
 				};
@@ -1698,6 +1749,23 @@ switch _mode do {
 						] call bis_fnc_configExtremes;
 						_stats = _stats select 0;
 
+						//Let's go and grab the actual values
+						// Since STATS_EQUIPMENT asks for logarithmic value for Armor
+						// We are going to ask the system again, but this time for all normal numbers
+
+						_statsNormal = [
+							[_itemCfg],
+							STATS_EQUIPMENT_NORMAL,
+							_statsMin
+						] call bis_fnc_configExtremes;
+						_statsNormal = _statsNormal select 0;
+
+						_valueArmor = _statsNormal select 0;
+						_valueMaximumLoad = _statsNormal select 1;
+						MASSCONVERT(_valueMaximumLoad);
+						_valueMass = _statsNormal select 2;
+						MASSCONVERT(_valueMass) //convert Mass to real units
+
 						_statArmor = linearConversion [_statsMin select 0,_statsMax select 0,_stats select 0,_barMin,_barMax];
 						_statMaximumLoad = linearConversion [_statsMin select 1,_statsMax select 1,_stats select 1,_barMin,_barMax];
 						_statMass = linearConversion [_statsMin select 2,_statsMax select 2,_stats select 2,_barMin,_barMax];
@@ -1706,9 +1774,12 @@ switch _mode do {
 
 						[
 							if (_item == "H_Beret_blk") then {[0.95,localize "STR_difficulty3"]} else {[]}, //--- Easter egg
-							[_statArmor,localize "str_a3_rscdisplayarsenal_stat_armor"],
-							[_statMaximumLoad,localize "str_a3_rscdisplayarsenal_stat_load"],
-							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight"]
+							// We can't add the values as 5th/6th/.. etc parameters, since _fnc_showStats uses _foreachindex
+							// So, instead, we had them add the end of the respective array. (Better style,too!)
+							// We also need to access the units (kg, seconnds, etc) iteratively, so we add them, too
+							[_statArmor,localize "str_a3_rscdisplayarsenal_stat_armor",_valueArmor,""], //armor has no real unit
+							[_statMaximumLoad,localize "str_a3_rscdisplayarsenal_stat_load",_valueMaximumLoad,_massunit],
+							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight",_valueMass,_massunit]
 						] call _fnc_showStats;
 					};
 				};
