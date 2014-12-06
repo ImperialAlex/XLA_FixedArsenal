@@ -20,6 +20,18 @@ class CfgFunctions {
 		class Inventory {
 			class loadPartialInventory {file = "\XLA_FixedArsenal\Inventory\fn_loadPartialInventory.sqf";};
 			class arsenal {file = "\XLA_FixedArsenal\Inventory\fn_arsenal.sqf";};
+			class addVirtualBackpackCargo {file = "\XLA_FixedArsenal\Inventory\fn_addVirtualBackpackCargo.sqf";};
+			class addVirtualItemCargo {file = "\XLA_FixedArsenal\Inventory\fn_addVirtualItemCargo.sqf";};
+			class addVirtualMagazineCargo {file = "\XLA_FixedArsenal\Inventory\fn_addVirtualMagazineCargo.sqf";};
+			class addVirtualWeaponCargo {file = "\XLA_FixedArsenal\Inventory\fn_addVirtualWeaponCargo.sqf";};
+			class getVirtualBackpackCargo {file = "\XLA_FixedArsenal\Inventory\fn_getVirtualBackpackCargo.sqf";};
+			class getVirtualItemCargo {file = "\XLA_FixedArsenal\Inventory\fn_getVirtualItemCargo.sqf";};
+			class getVirtualMagazineCargo {file = "\XLA_FixedArsenal\Inventory\fn_getVirtualMagazineCargo.sqf";};			
+			class getVirtualWeaponCargo {file = "\XLA_FixedArsenal\Inventory\fn_getVirtualWeaponCargo.sqf";};
+			class removeVirtualBackpackCargo {file = "\XLA_FixedArsenal\Inventory\fn_removeVirtualBackpackCargo.sqf";};
+			class removeVirtualItemCargo {file = "\XLA_FixedArsenal\Inventory\fn_removeVirtualItemCargo.sqf";};
+			class removeVirtualMagazineCargo {file = "\XLA_FixedArsenal\Inventory\fn_removeVirtualMagazineCargo.sqf";};
+			class removeVirtualWeaponCargo {file = "\XLA_FixedArsenal\Inventory\fn_removeVirtualWeaponCargo.sqf";};
 		};
 	};
 };

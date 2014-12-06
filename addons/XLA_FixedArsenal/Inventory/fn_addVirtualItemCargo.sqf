@@ -24,7 +24,7 @@ _add = [_this,4,1,[1]] call bis_fnc_param;
 _type = [_this,5,0,[0]] call bis_fnc_param;
 
 //--- Get cargo list
-_cargo = _object getvariable ["bis_addVirtualWeaponCargo_cargo",[[],[],[],[]]];
+_cargo = _object getvariable ["XLA_addVirtualWeaponCargo_cargo",[[],[],[],[]]];
 _cargoArray = _cargo select _type;
 if (_add == 0) exitwith {_cargoArray};
 
@@ -60,21 +60,21 @@ _cargo set [_type,_cargoArray];
 
 if (_save) then {
 	if (typename _object == typename missionnamespace) then {
-		_object setvariable ["bis_addVirtualWeaponCargo_cargo",_cargo];
-		publicvariable "bis_addVirtualWeaponCargo_cargo";
+		_object setvariable ["XLA_addVirtualWeaponCargo_cargo",_cargo];
+		publicvariable "XLA_addVirtualWeaponCargo_cargo";
 	} else {
-		_object setvariable ["bis_addVirtualWeaponCargo_cargo",_cargo,_isGlobal];
+		_object setvariable ["XLA_addVirtualWeaponCargo_cargo",_cargo,_isGlobal];
 	};
 };
 
 if (_initAction && typename _object == typename objnull) then {
 	if ({count _x > 0} count _cargo > 0) then {
 		//--- Init arsenal
-		["AmmoboxInit",_object] call bis_fnc_arsenal;
+		["AmmoboxInit",_object] call XLA_fnc_arsenal;
 	} else {
 		//--- Terminate arsenal
-		["AmmoboxExit",_object] call bis_fnc_arsenal;
+		["AmmoboxExit",_object] call XLA_fnc_arsenal;
 	};
 };
 
-_cargoArray
+_cargoArrayf
