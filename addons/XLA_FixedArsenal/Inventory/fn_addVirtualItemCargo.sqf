@@ -77,4 +77,4 @@ if (_initAction && typename _object == typename objnull) then {
 	};
 };
 
-_cargoArrayf
+_cargoArray
