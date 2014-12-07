@@ -37,6 +37,9 @@
 
 #define IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT 27356
 #define IDC_RSCDISPLAYARSENAL_LOADTEXT 27357
+#define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT 27359
+#define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM 27360
+#define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION 27361
 
 disableserialization;
 
@@ -318,6 +321,15 @@ switch _mode do {
 
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDelete',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
+		_ctrlTemplateButtonDefault = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT;
+		_ctrlTemplateButtonDefault ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDefault',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
+		_ctrlTemplateButtonCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM;
+		_ctrlTemplateButtonCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
+		_ctrlTemplateButtonMission = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION;
+		_ctrlTemplateButtonMission ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateMission',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
 		_ctrlTemplateValue ctrladdeventhandler ["lbselchanged","with uinamespace do {['templateSelChanged',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
@@ -2533,6 +2545,12 @@ switch _mode do {
 			_ctrl ctrlshow false;
 			_ctrl ctrlenable false;
 		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TEXTNAME,IDC_RSCDISPLAYARSENAL_TEMPLATE_EDITNAME];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow true;
+			_ctrl ctrlenable true;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION];
+
 		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
 		if (lnbcurselrow _ctrlTemplateValue < 0) then {_ctrlTemplateValue lnbsetcurselrow 0;};
 		ctrlsetfocus _ctrlTemplateValue;
@@ -2543,6 +2561,8 @@ switch _mode do {
 		_ctrlTemplateButtonOK ctrlenable _enableButtons;
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrlenable _enableButtons;
+
+		//TODO: Disable Tabs when nothing is available, by setting text to grey
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2566,6 +2586,11 @@ switch _mode do {
 			_ctrl ctrlshow true;
 			_ctrl ctrlenable true;
 		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TEXTNAME,IDC_RSCDISPLAYARSENAL_TEMPLATE_EDITNAME];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow false;
+			_ctrl ctrlenable false;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION];
 
 		_ctrlTemplateName = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_EDITNAME;
 		ctrlsetfocus _ctrlTemplateName;
