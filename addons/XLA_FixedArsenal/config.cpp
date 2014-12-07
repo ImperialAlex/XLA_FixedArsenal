@@ -47,6 +47,12 @@ class CfgScriptPaths {
 class RscDisplayArsenal;
 class RscText;
 class RscProgress;
+class RscControlsGroup;
+class RscTitle;
+class RscButtonMenu;
+class RscEdit;
+class RscListNBox;
+
 
 class ArrowLeft;
 class ArrowRight;
@@ -177,11 +183,8 @@ class TabUniform;
 class TabVest;
 class TabVoice;
 class TabWatch;
-class Template;
 class TextName;
-class Title;
 class ValueName;
-
 
 class RscDisplayFixedArsenal: RscDisplayArsenal {
 	
@@ -287,23 +290,166 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 			};
 		};
 		class MouseBlock: MouseBlock {};
-		class Template: Template 
+		class Template: RscControlsGroup
 		{
-			class controls: controls
+			fade = 1;
+			idc = 35919;
+			x = "10 * 					(			((safezoneW / safezoneH) min 1.2) / 40) + 		(safezoneX + (safezoneW - 					((safezoneW / safezoneH) min 1.2))/2)";
+			y = "0.9 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25) + 		(safezoneY + (safezoneH - 					(			((safezoneW / safezoneH) min 1.2) / 1.2))/2)";
+			w = "20 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+			h = "23.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+			class controls
 			{
-				class Title: Title {};
-				class MainBackground: MainBackground {};
-				class Column1: Column1 {};
-				class Column2: Column2 {};
-				class Column3: Column3 {};
-				class Column4: Column4 {};
-				class Column5: Column5 {};
-				class TextName: TextName {};
-				class EditName: EditName {};
-				class ValueName: ValueName {};
-				class ButtonOK: ButtonOK {};
-				class ButtonCancel: ButtonCancel {};
-				class ButtonDelete: ButtonDelete {};
+				class Title: RscTitle
+				{
+					style = 0;
+					colorBackground[] = {"(profilenamespace getvariable ['GUI_BCG_RGB_R',0.77])","(profilenamespace getvariable ['GUI_BCG_RGB_G',0.51])","(profilenamespace getvariable ['GUI_BCG_RGB_B',0.08])","(profilenamespace getvariable ['GUI_BCG_RGB_A',0.8])"};
+					idc = 34619;
+					text = "";
+					x = "0 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "0 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "20 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};						
+				class ButtonDefault: RscButtonMenu
+				{
+					idc = 27359;
+					text = "$STR_DISP_DEFAULT";					
+					x = "0.500005 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonCustom: RscButtonMenu
+				{
+					idc = 27360;
+					text = "$STR_RADIO_CUSTOM";
+					x = "6.83333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonMission: RscButtonMenu
+				{
+					idc = 27361;
+					text = "$STR_SECTION_MISSION";
+					x = "13.1666 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};				
+				class MainBackground: RscText
+				{
+					idc = 34622;
+					x = "0 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "20 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "21.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {0,0,0,0.7};
+				};
+				class Column1: RscText
+				{
+					idc = 34620;
+					x = "0.5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "19 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {1,1,1,0.2};
+				};
+				class Column2: RscText
+				{
+					idc = 34623;
+					x = "9.05 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "1.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {1,1,1,0.1};
+				};
+				class Column3: RscText
+				{
+					idc = 34624;
+					x = "12.85 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "1.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {1,1,1,0.1};
+				};
+				class Column4: RscText
+				{
+					idc = 34625;
+					x = "15.7 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "0.95 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {1,1,1,0.1};
+				};
+				class Column5: RscText
+				{
+					idc = 34626;
+					x = "17.6 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "0.95 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {1,1,1,0.1};
+				};
+				class TextName: RscText
+				{
+					style = 1;
+					idc = 34621;
+					text = "$STR_DISP_GAME_NAME";
+					x = "0.5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "21.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "5.5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					colorBackground[] = {0,0,0,0.2};
+					sizeEx = "0.8 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class EditName: RscEdit
+				{
+					idc = 35020;
+					x = "6 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "21.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "13.5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					sizeEx = "0.8 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ValueName: RscListNBox
+				{
+					columns[] = {0.0,0.45,0.55,0.65,0.75,0.8,0.85,0.9,0.95};
+					idc = 35119;
+					x = "0.5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "3.1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "19 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "17.5 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					sizeEx = "0.8 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonOK: RscButtonMenu
+				{
+					idc = 36019;
+					text = "$STR_DISP_OK";
+					x = "15 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonCancel: RscButtonMenu
+				{
+					idc = 36020;
+					text = "$STR_DISP_CANCEL";
+					x = "0 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonDelete: RscButtonMenu
+				{
+					idc = 36021;
+					text = "$STR_DISP_DELETE";
+					x = "9.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
 			};
 		};
 		class MessageBox: MessageBox {};
