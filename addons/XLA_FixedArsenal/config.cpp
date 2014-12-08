@@ -311,33 +311,6 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 					w = "20 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 				};						
-				class ButtonDefault: RscButtonMenu
-				{
-					idc = 27359;
-					text = "$STR_DISP_DEFAULT";					
-					x = "0.500005 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-				};
-				class ButtonCustom: RscButtonMenu
-				{
-					idc = 27360;
-					text = "$STR_RADIO_CUSTOM";
-					x = "6.83333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-				};
-				class ButtonMission: RscButtonMenu
-				{
-					idc = 27361;
-					text = "$STR_SECTION_MISSION";
-					x = "13.1666 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
-					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-				};				
 				class MainBackground: RscText
 				{
 					idc = 34622;
@@ -448,6 +421,33 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 					x = "9.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonDefault: RscButtonMenu
+				{
+					idc = 27359;
+					text = "$STR_DISP_DEFAULT";					
+					x = "0.500005 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonCustom: RscButtonMenu
+				{
+					idc = 27360;
+					text = "$STR_RADIO_CUSTOM";					
+					x = "6.83333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
+				class ButtonMission: RscButtonMenu
+				{
+					idc = 27361;
+					text = "$STR_SECTION_MISSION";				
+					x = "13.1666 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 				};
 			};

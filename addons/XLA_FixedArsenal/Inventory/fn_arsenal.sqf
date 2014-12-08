@@ -323,7 +323,7 @@ switch _mode do {
 		_ctrlTemplateButtonDelete ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDelete',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonDefault = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT;
-		_ctrlTemplateButtonDefault ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDefault',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+		_ctrlTemplateButtonDefault ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonLoad',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM;
 		_ctrlTemplateButtonCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
