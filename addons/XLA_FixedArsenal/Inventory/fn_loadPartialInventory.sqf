@@ -40,11 +40,11 @@
 
 
 
-// Copied from my version of bis_fnc_arsenal
+// Copied from my version of XLA_fnc_arsenal
 #define GETVIRTUALCARGO\
 	_virtualItemCargo =\
-		(missionnamespace call bis_fnc_getVirtualItemCargo) +\
-		(_cargo call bis_fnc_getVirtualItemCargo);\
+		(missionnamespace call XLA_fnc_getVirtualItemCargo) +\
+		(_cargo call XLA_fnc_getVirtualItemCargo);\
 	_virtualWeaponCargo = [];\
 	{\
 		_weapon = _x;\
@@ -54,11 +54,11 @@
 			_item = gettext (_x >> "item");\
 			if !(_item in _virtualItemCargo) then {_virtualItemCargo set [count _virtualItemCargo,_item];};\
 		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call bis_fnc_getVirtualWeaponCargo) + (_cargo call bis_fnc_getVirtualWeaponCargo));\
-	_virtualMagazineCargo = (missionnamespace call bis_fnc_getVirtualMagazineCargo) + (_cargo call bis_fnc_getVirtualMagazineCargo);\
-	_virtualBackpackCargo = (missionnamespace call bis_fnc_getVirtualBackpackCargo) + (_cargo call bis_fnc_getVirtualBackpackCargo);
+	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponCargo) + (_cargo call XLA_fnc_getVirtualWeaponCargo));\
+	_virtualMagazineCargo = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo);\
+	_virtualBackpackCargo = (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo);
 
-#define CONDITION(ITEM,LIST) ( _fullVersion || {[ITEM,LIST] call {_thing = _this select 0; _array = _this select 1; _found = false; if ((_array find _thing) >= 0) then {_found = true;}; _found; }} || {"%ALL" in LIST} )
+#define CONDITION(ITEM, LIST) ( _fullVersion || (LIST find ITEM) >= 0 || {"%ALL" in LIST} )
 
 scopename _fnc_scriptName;
 private ["_cfg","_inventory","_isCfg","_blacklist"];
@@ -66,9 +66,9 @@ _object = [_this,0,objnull,[objnull]] call bis_fnc_param;
 
 _cfg = [_this,1,configfile,[configfile,"",[]]] call bis_fnc_param;
 
-_cargo = (missionnamespace getvariable ["BIS_fnc_arsenal_cargo",objnull]);
+_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
-_fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false];
+_fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false];
 
 _inventory = [];
 switch (typename _cfg) do {
