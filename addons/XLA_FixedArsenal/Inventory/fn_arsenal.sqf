@@ -40,6 +40,7 @@
 #define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT 27359
 #define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM 27360
 #define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION 27361
+#define IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM 27362
 
 disableserialization;
 
@@ -322,8 +323,11 @@ switch _mode do {
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDelete',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
+		_ctrlTemplateButtonAddCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateAddCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
 		_ctrlTemplateButtonDefault = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT;
-		_ctrlTemplateButtonDefault ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonLoad',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+		_ctrlTemplateButtonDefault ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateDefault',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
 
 		_ctrlTemplateButtonCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM;
 		_ctrlTemplateButtonCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
@@ -2241,6 +2245,45 @@ switch _mode do {
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
+	case "buttonTemplateAddCustom": {
+		_display = _this select 0;
+		_inventoryStarred = false;
+		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		_name = _ctrlTemplateValue lnbtext [lnbcurselrow _ctrlTemplateValue,0];
+		_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];		
+		_nameID = _data find _name;
+		if (_nameID >= 0) then {
+			_inventory = _data select (_nameID+1);
+			_inventoryCustom = _inventory select 10;					
+			_inventoryCustom set [3, true];
+			saveprofilenamespace;
+		};		
+		_ctrlTemplateButtonAddCustom = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlEnable false;
+		_ctrlTemplateButtonAddCustom ctrlEnable true;
+	};
+	///////////////////////////////////////////////////////////////////////////////////////////
+	case "buttonTemplateRemoveCustom": {
+		_display = _this select 0;
+		_inventoryStarred = false;
+		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		_name = _ctrlTemplateValue lnbtext [lnbcurselrow _ctrlTemplateValue,0];
+		_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];		
+		_nameID = _data find _name;
+		if (_nameID >= 0) then {
+			_inventory = _data select (_nameID+1);
+			_inventoryCustom = _inventory select 10;					
+			_inventoryCustom set [3, false];
+			saveprofilenamespace;
+		};	
+		_ctrlTemplateButtonAddCustom = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlEnable false;
+		_ctrlTemplateButtonAddCustom ctrlEnable true;
+		//Update the screen!
+		['showTemplatesCustom',[_display]] call XLA_fnc_arsenal;
+	};
+
+	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonTemplateCancel": {
 		_display = _this select 0;
 
@@ -2288,6 +2331,242 @@ switch _mode do {
 		_ctrlList = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
 		lnbclear _ctrlList;
 		_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];
+		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
+		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+
+		GETVIRTUALCARGO
+
+		for "_i" from 0 to (count _data - 1) step 2 do {
+			_name = _data select _i;
+			_inventory = _data select (_i + 1);
+
+			_inventoryWeapons = [
+				(_inventory select 5), //--- Binocular
+				(_inventory select 6 select 0), //--- Primary weapon
+				(_inventory select 7 select 0), //--- Secondary weapon
+				(_inventory select 8 select 0) //--- Handgun
+			] - [""];
+			_inventoryMagazines = (
+				(_inventory select 0 select 1) + //--- Uniform
+				(_inventory select 1 select 1) + //--- Vest
+				(_inventory select 2 select 1) //--- Backpack items
+			) - [""];
+			_inventoryItems = (
+				[_inventory select 0 select 0] + (_inventory select 0 select 1) + //--- Uniform
+				[_inventory select 1 select 0] + (_inventory select 1 select 1) + //--- Vest
+				(_inventory select 2 select 1) + //--- Backpack items
+				[_inventory select 3] + //--- Headgear
+				[_inventory select 4] + //--- Goggles
+				(_inventory select 6 select 1) + //--- Primary weapon items
+				(_inventory select 7 select 1) + //--- Secondary weapon items
+				(_inventory select 8 select 1) + //--- Handgun items
+				(_inventory select 9) //--- Assigned items
+			) - [""];
+			_inventoryBackpacks = [_inventory select 2 select 0] - [""];
+
+
+			_lbAdd = _ctrlList lnbaddrow [_name];
+			_ctrlList lnbsetpicture [[_lbAdd,1],gettext (configfile >> "cfgweapons" >> (_inventory select 6 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,2],gettext (configfile >> "cfgweapons" >> (_inventory select 7 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,3],gettext (configfile >> "cfgweapons" >> (_inventory select 8 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,4],gettext (configfile >> "cfgweapons" >> (_inventory select 0 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,5],gettext (configfile >> "cfgweapons" >> (_inventory select 1 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,6],gettext (configfile >> "cfgvehicles" >> (_inventory select 2 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
+
+			// If any of these conditions match, the saved outfit is only partially loadable.
+			// The item is still selectable but will be shown in a different color
+			// yellow = non whitelisted item 
+			// orange = non existing class (i.e. wrong classname or mod not loaded)
+			// N.B: orange will take precedence over yellow if both are valid
+			//  blue = non existing class (but whitelisted) - indicates typo/error in whitelist!
+			_whitelisted = true;
+			_isclass = true;
+			if (
+				{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
+				||
+				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
+				||
+				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
+				||
+				{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
+			) then {
+				//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
+				//"NOT WHITELISTED" call bis_fnc_log;
+				_whitelisted = false;		
+			};
+
+			if (
+			{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
+			||
+			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+			||
+			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+			||
+			{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+			) then {
+				//("Item " +  (format["%1",_item]) + " is not a class.") call bis_fnc_log;
+				//"NOT A CLASS" call bis_fnc_log;
+				_isclass = false;
+			};
+
+			if (!_whitelisted) then {
+				// yelllow
+				//"Marking as yellow" call bis_fnc_log;
+				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
+			};
+
+			if (!_isclass) then {
+			 	// orange
+			 	//"Marking as orange" call bis_fnc_log;
+			 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
+			};
+			
+			if (_whitelisted&&!_isclass) then {
+				// blue
+				//"Marking as blue" call bis_fnc_log;
+			 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
+			};
+
+			
+		};
+
+		//['buttonExport',[_display]] call XLA_fnc_arsenal;
+	};
+
+	///////////////////////////////////////////////////////////////////////////////////////////
+	case "showTemplatesCustom": {
+		_display = _this select 0;
+		_ctrlList = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		lnbclear _ctrlList;
+
+		_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];
+		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
+		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+
+		GETVIRTUALCARGO
+
+		for "_i" from 0 to (count _data - 1) step 2 do {
+			_name = _data select _i;
+			_inventory = _data select (_i + 1);
+
+			_inventoryWeapons = [
+				(_inventory select 5), //--- Binocular
+				(_inventory select 6 select 0), //--- Primary weapon
+				(_inventory select 7 select 0), //--- Secondary weapon
+				(_inventory select 8 select 0) //--- Handgun
+			] - [""];
+			_inventoryMagazines = (
+				(_inventory select 0 select 1) + //--- Uniform
+				(_inventory select 1 select 1) + //--- Vest
+				(_inventory select 2 select 1) //--- Backpack items
+			) - [""];
+			_inventoryItems = (
+				[_inventory select 0 select 0] + (_inventory select 0 select 1) + //--- Uniform
+				[_inventory select 1 select 0] + (_inventory select 1 select 1) + //--- Vest
+				(_inventory select 2 select 1) + //--- Backpack items
+				[_inventory select 3] + //--- Headgear
+				[_inventory select 4] + //--- Goggles
+				(_inventory select 6 select 1) + //--- Primary weapon items
+				(_inventory select 7 select 1) + //--- Secondary weapon items
+				(_inventory select 8 select 1) + //--- Handgun items
+				(_inventory select 9) //--- Assigned items
+			) - [""];
+			_inventoryBackpacks = [_inventory select 2 select 0] - [""];
+
+
+			_lbAdd = _ctrlList lnbaddrow [_name];
+			_ctrlList lnbsetpicture [[_lbAdd,1],gettext (configfile >> "cfgweapons" >> (_inventory select 6 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,2],gettext (configfile >> "cfgweapons" >> (_inventory select 7 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,3],gettext (configfile >> "cfgweapons" >> (_inventory select 8 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,4],gettext (configfile >> "cfgweapons" >> (_inventory select 0 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,5],gettext (configfile >> "cfgweapons" >> (_inventory select 1 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,6],gettext (configfile >> "cfgvehicles" >> (_inventory select 2 select 0) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
+			_ctrlList lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
+
+			//--- Load custom data
+			_inventoryStarred = false;
+			_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+			_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];				
+			_nameID = _data find _name;
+			if (_nameID >= 0) then {
+				_inventory = _data select (_nameID + 1);
+				_inventoryCustom = _inventory select 10;
+				if (count _inventoryCustom > 3) then {
+					_inventoryStarred = _inventoryCustom select 3;
+				}; //else implicit false because of definition above	
+			};
+
+			// If any of these conditions match, the saved outfit is only partially loadable.
+			// The item is still selectable but will be shown in a different color
+			// yellow = non whitelisted item 
+			// orange = non existing class (i.e. wrong classname or mod not loaded)
+			// N.B: orange will take precedence over yellow if both are valid
+			//  blue = non existing class (but whitelisted) - indicates typo/error in whitelist!
+			if (_inventoryStarred) then {
+				_whitelisted = true;
+				_isclass = true;
+				if (
+					{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
+					||
+					{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
+					||
+					{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
+					||
+					{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
+				) then {
+					//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
+					//"NOT WHITELISTED" call bis_fnc_log;
+					_whitelisted = false;		
+				};
+
+				if (
+				{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
+				||
+				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+				||
+				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+				||
+				{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+				) then {
+					//("Item " +  (format["%1",_item]) + " is not a class.") call bis_fnc_log;
+					//"NOT A CLASS" call bis_fnc_log;
+					_isclass = false;
+				};
+
+				if (!_whitelisted) then {
+					// yelllow
+					//"Marking as yellow" call bis_fnc_log;
+					_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
+				};
+
+				if (!_isclass) then {
+				 	// orange
+				 	//"Marking as orange" call bis_fnc_log;
+				 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
+				};
+				
+				if (_whitelisted&&!_isclass) then {
+					// blue
+					//"Marking as blue" call bis_fnc_log;
+				 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
+				};
+			} else {
+				_ctrlList lnbDeleteRow _lbAdd;
+			};
+			
+		};
+
+		//['buttonExport',[_display]] call XLA_fnc_arsenal;
+	};
+	///////////////////////////////////////////////////////////////////////////////////////////
+	case "showTemplatesMission": {
+		_display = _this select 0;
+		_ctrlList = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		lnbclear _ctrlList;
+		_data = missionnamespace getvariable ["bis_fnc_saveInventory_data",[]];
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
@@ -2522,9 +2801,22 @@ switch _mode do {
 		_export spawn {copytoclipboard _this;};
 		['showMessage',[_display,localize "STR_a3_RscDisplayArsenal_message_clipboard"]] call XLA_fnc_arsenal;
 	};
-
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonLoad": {
+		_display = _this select 0;
+		['showTemplatesCustom',[_display]] call XLA_fnc_arsenal;
+		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		_hasCustoms = (lnbsize _ctrlTemplateValue select 0) > 0;
+
+		if (_hasCustoms) then {
+			["buttonTemplateCustom",[_display]] call XLA_fnc_arsenal;
+		} else {
+			["buttonTemplateDefault",[_display]] call XLA_fnc_arsenal;
+		};
+
+	};
+	///////////////////////////////////////////////////////////////////////////////////////////
+	case "buttonTemplateDefault": {
 		_display = _this select 0;
 		['showTemplates',[_display]] call XLA_fnc_arsenal;
 
@@ -2555,14 +2847,23 @@ switch _mode do {
 		if (lnbcurselrow _ctrlTemplateValue < 0) then {_ctrlTemplateValue lnbsetcurselrow 0;};
 		ctrlsetfocus _ctrlTemplateValue;
 
+		//--- Change button to "STAR"
+		_ctrlTemplateButtonAddCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlSetText "STAR";
+		_ctrlTemplateButtonAddCustom ctrlRemoveAllEventHandlers "ButtonClick";
+		_ctrlTemplateButtonAddCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateAddCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
 		//--- Disable LOAD and DELETE buttons when no items are available
 		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
 		_ctrlTemplateButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK;
 		_ctrlTemplateButtonOK ctrlenable _enableButtons;
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrlenable _enableButtons;
+		_ctrlTemplateButtonAddCustom ctrlEnable _enableButtons;
 
-		//TODO: Disable Tabs when nothing is available, by setting text to grey
+		//Set highlight for tab	
+		_ctrlTemplateButtonDefault = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT;
+		ctrlSetFocus _ctrlTemplateButtonDefault ;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2603,7 +2904,105 @@ switch _mode do {
 
 		['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_save"]] call XLA_fnc_arsenal;
 	};
+	///////////////////////////////////////////////////////////////////////////////////////////
+	case "buttonTemplateCustom": {
+		_display = _this select 0;
+		['showTemplatesCustom',[_display]] call XLA_fnc_arsenal;
 
+		_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
+		_ctrlTemplate ctrlsetfade 0;
+		_ctrlTemplate ctrlcommit 0;
+		_ctrlTemplate ctrlenable true;
+
+		_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
+		_ctrlMouseBlock ctrlenable true;
+		ctrlsetfocus _ctrlMouseBlock;
+
+		{
+			(_display displayctrl _x) ctrlsettext localize "str_disp_int_load";
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TITLE,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow false;
+			_ctrl ctrlenable false;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TEXTNAME,IDC_RSCDISPLAYARSENAL_TEMPLATE_EDITNAME];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow true;
+			_ctrl ctrlenable true;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION];
+
+		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		if (lnbcurselrow _ctrlTemplateValue < 0) then {_ctrlTemplateValue lnbsetcurselrow 0;};
+		ctrlsetfocus _ctrlTemplateValue;
+
+		//--- Change button to "UN-STAR"
+		_ctrlTemplateButtonAddCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlSetText "UN-STAR";
+		_ctrlTemplateButtonAddCustom ctrlRemoveAllEventHandlers "ButtonClick";
+		_ctrlTemplateButtonAddCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateRemoveCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+
+		//--- Disable LOAD, DELETE and UN-STAR buttons when no items are available
+		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
+		_ctrlTemplateButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK;
+		_ctrlTemplateButtonOK ctrlenable _enableButtons;
+		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
+		_ctrlTemplateButtonDelete ctrlenable _enableButtons;
+		_ctrlTemplateButtonAddCustom ctrlEnable _enableButtons;
+
+		//Set highlight for tab	
+		_ctrlTemplateButtonCustom = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM;
+		ctrlSetFocus _ctrlTemplateButtonCustom ;
+	};
+	///////////////////////////////////////////////////////////////////////////////////////////
+		case "buttonTemplateMission": {
+		_display = _this select 0;
+		['showTemplatesMission',[_display]] call XLA_fnc_arsenal;
+
+		_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
+		_ctrlTemplate ctrlsetfade 0;
+		_ctrlTemplate ctrlcommit 0;
+		_ctrlTemplate ctrlenable true;
+
+		_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYARSENAL_MOUSEBLOCK;
+		_ctrlMouseBlock ctrlenable true;
+		ctrlsetfocus _ctrlMouseBlock;
+
+		{
+			(_display displayctrl _x) ctrlsettext localize "str_disp_int_load";
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TITLE,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow false;
+			_ctrl ctrlenable false;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_TEXTNAME,IDC_RSCDISPLAYARSENAL_TEMPLATE_EDITNAME];
+		{
+			_ctrl = _display displayctrl _x;
+			_ctrl ctrlshow true;
+			_ctrl ctrlenable true;
+		} foreach [IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONCUSTOM,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDEFAULT,IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION];
+
+		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
+		if (lnbcurselrow _ctrlTemplateValue < 0) then {_ctrlTemplateValue lnbsetcurselrow 0;};
+		ctrlsetfocus _ctrlTemplateValue;
+
+		//--- Disable LOAD and DELETE buttons when no items are available
+		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
+		_ctrlTemplateButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONOK;
+		_ctrlTemplateButtonOK ctrlenable _enableButtons;
+
+		// ---- Disable DELETE button, so players can't delete the mission things!
+		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
+		_ctrlTemplateButtonDelete ctrlenable false;
+
+		// Also disable the "STAR" button - sorry, but you need to copy that over into your "own" outfit first!
+		_ctrlTemplateButtonAddCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlEnable false;
+
+		//Set highlight for tab		
+		_ctrlTemplateButtonMission = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION;
+		ctrlSetFocus _ctrlTemplateButtonMission ;
+	};
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "buttonRandom": {
 		_display = _this select 0;

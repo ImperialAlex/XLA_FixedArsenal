@@ -405,6 +405,15 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 				};
+				class ButtonAddCustom: RscButtonMenu
+				{
+					idc = 27362;
+					text = "STAR";
+					x = "5.1 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+					w = "4.8 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+				};
 				class ButtonCancel: RscButtonMenu
 				{
 					idc = 36020;
@@ -418,9 +427,9 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 				{
 					idc = 36021;
 					text = "$STR_DISP_DELETE";
-					x = "9.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					x = "10 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					y = "22.7 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-					w = "5 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
+					w = "4.9 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					h = "1 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 				};
 				class ButtonDefault: RscButtonMenu
@@ -435,7 +444,7 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 				class ButtonCustom: RscButtonMenu
 				{
 					idc = 27360;
-					text = "$STR_RADIO_CUSTOM";					
+					text = "FAVOURITES";					
 					x = "6.83333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
