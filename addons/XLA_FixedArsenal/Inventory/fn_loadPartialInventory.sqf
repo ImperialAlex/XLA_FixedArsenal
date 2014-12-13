@@ -202,7 +202,7 @@ if !("transportItems" in _blacklist) then {
 
 GETVIRTUALCARGO
 
-_failures = "";
+_failures = [];
 
 if !("uniform" in _blacklist) then {
 	private ["_uniform"];
@@ -222,7 +222,7 @@ if !("uniform" in _blacklist) then {
 				_object forceadduniform _uniform_old;
 			};
 		} else {
-			_failures = _failures + (format["Uniform '%1' does not exist in CfgWeapons\n",_uniform]);
+			_failures = _failures + [format["Uniform '%1' does not exist in CfgWeapons\n",_uniform]];
 		};
 	};
 };
@@ -232,11 +232,11 @@ if !("vest" in _blacklist) then {
 			if CONDITION(_vest,_virtualItemCargo) then {
 				_object addvest _vest;
 			} else {
-				_failures = _failures +  (format ["Vest %1 is not whitelisted\n",_vest]);
+				_failures = _failures +  [format ["Vest %1 is not whitelisted\n",_vest]];
 				_object addvest _vest_old;
 			};
 		} else {
-			_failures = _failures + (format["Vest '%1' does not exist in CfgWeapons\n",_vest]);
+			_failures = _failures + [format["Vest '%1' does not exist in CfgWeapons\n",_vest]];
 		};
 	};
 };
@@ -246,10 +246,10 @@ if !("headgear" in _blacklist) then {
 			if CONDITION(_headgear,_virtualItemCargo) then {
 				_object addheadgear _headgear;
 			} else {
-				_failures = _failures + (format ["Headgear %1 is not whitelisted\n",_headgear]);
+				_failures = _failures + [format ["Headgear %1 is not whitelisted\n",_headgear]];
 			};
 		} else {
-			_failures = _failures + (format["Headgear '%1' does not exist in CfgWeapons\n",_headgear]);
+			_failures = _failures + [format["Headgear '%1' does not exist in CfgWeapons\n",_headgear]];
 		};
 	};
 };
@@ -259,10 +259,10 @@ if !("goggles" in _blacklist) then {
 			if CONDITION(_goggles,_virtualItemCargo) then {
 				_object addgoggles _goggles;
 			} else {
-				_failures = _failures + (format ["Goggles %1 are not whitelisted\n",_goggles]);
+				_failures = _failures + [format ["Goggles %1 are not whitelisted\n",_goggles]];
 			};
 		} else {
-			_failures = _failures + (format["Goggles '%1' does not exist in CfgGlasses\n",_goggles]);
+			_failures = _failures + [format["Goggles '%1' does not exist in CfgGlasses\n",_goggles]];
 		};
 	};
 };
@@ -280,11 +280,11 @@ if !("backpack" in _blacklist) then {
 			if CONDITION(_backpack,_virtualBackpackCargo) then {
 				_object addbackpack _backpack;
 			} else {
-				_failures = _failures + (format ["Backpack %1 is not whitelisted\n",_backpack]);
+				_failures = _failures + [format ["Backpack %1 is not whitelisted\n",_backpack]];
 				_object addBackpack _backpack_old;
 			};
 		} else {
-			_failures = _failures + (format["Backpack '%1' does not exist in CfgVehicles\n",_backpack]);
+			_failures = _failures +  [format["Backpack '%1' does not exist in CfgVehicles\n",_backpack]];
 		};
 	};
 };
@@ -299,7 +299,7 @@ if !("magazines" in _blacklist) then {
 				if CONDITION(_magazine,_virtualMagazineCargo) then {
 					_object addmagazine _magazine;
 				} else {
-					_failures = _failures + (format ["Magazine %1 is not whitelisted\n",_magazine]);
+					_failures = _failures + [format ["Magazine %1 is not whitelisted\n",_magazine]];
 				};
 			};
 		} foreach _magazines;
@@ -312,10 +312,10 @@ if !("magazines" in _blacklist) then {
 						if CONDITION(_x,_virtualMagazineCargo) then {
 						_object addmagazine _x;
 						} else {
-							_failures = _failures + (format ["Default Magazine %1 is not whitelisted\n",_x]);
+							_failures = _failures + [format ["Default Magazine %1 is not whitelisted\n",_x]];
 						};
 					} else {
-						_failures = _failures + (format["Default Magazine '%1' does not exist in CfgMagazines\n",_x]);
+						_failures = _failures + [format["Default Magazine '%1' does not exist in CfgMagazines\n",_x]];
 					};
 				};
 			} foreach [_inventory select 6 select 2,_inventory select 7 select 2,_inventory select 8 select 2];
@@ -336,10 +336,10 @@ if !("weapons" in _blacklist) then {
 				if CONDITION(_weapon,_virtualWeaponCargo) then {
 					_object addweapon _weapon;
 				} else {
-					_failures = _failures + (format["Weapon %1 is not whitelisted\n",_weapon]);
+					_failures = _failures + [format["Weapon %1 is not whitelisted\n",_weapon]];
 				};	
 			} else {
-				_failures = _failures + (format["Weapon '%1' does not exist in CfgWeapons\n",_weapon]);
+				_failures = _failures + [format["Weapon '%1' does not exist in CfgWeapons\n",_weapon]];
 			};
 					
 		};
@@ -351,21 +351,21 @@ if !(_isCfg) then {
 			if CONDITION(_x, _virtualItemCargo) then {
 				_object additemtouniform _x;
 			} else {
-				_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+				_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
 		if CONDITION(_x, _virtualItemCargo) then {
 			_object additemtovest _x;
 		} else {
-			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+			_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
 		if CONDITION(_x, _virtualItemCargo) then {
 			_object additemtobackpack _x;
 		} else {
-			_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+			_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 		};
 
 	} foreach (_inventory select 2 select 1);};
@@ -382,7 +382,7 @@ if !("transportMagazines" in _blacklist) then {
 				if (CONDITION(_x,_virtualMagazineCargo) || CONDITION(_x,_virtualItemCargo)) then {
 					_object addmagazinecargoglobal _x;
 				} else {
-					_failures = _failures + (format ["Transport Magazine %1 is not whitelisted\n",_x]);
+					_failures = _failures + [format ["Transport Magazine %1 is not whitelisted\n",_x]];
 				};
 			};
 		} foreach _transportMagazines;
@@ -394,10 +394,10 @@ if !("items" in _blacklist) then {
 			if CONDITION(_x, _virtualItemCargo) then {
 			_object additem _x;
 			} else {
-				_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+				_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 			};
 		} else {
-			_failures = _failures + (format["Item '%1' does not exist in CfgWeapons\n",_item]);
+			_failures = _failures + [format["Item '%1' does not exist in CfgWeapons\n",_item]];
 		};
 	} foreach _items;
 };
@@ -411,10 +411,10 @@ if !("linkeditems" in _blacklist) then {
 					_object addSecondaryWeaponItem _x;
 					_object addHandgunItem _x;
 				} else {
-					_failures = _failures + (format ["LinkedItem %1 is not whitelisted\n",_x]);
+					_failures = _failures + [format ["LinkedItem %1 is not whitelisted\n",_x]];
 				};
 			} else {
-				_failures = _failures + (format["LinkedItem '%1' does not exist in CfgWeapons\n",_x]);
+				_failures = _failures + [format["LinkedItem '%1' does not exist in CfgWeapons\n",_x]];
 			};
 		};
 	} foreach _linkedItemsMisc;
@@ -431,7 +431,7 @@ if !("transportWeapons" in _blacklist) then {
 				if (CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo)) then {
 					_object addweaponcargoglobal _x;
 				} else {
-					_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+					_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 				};		
 			};
 		} foreach _transportWeapons;
@@ -450,16 +450,31 @@ if !("transportItems" in _blacklist) then {
 				if CONDITION(_x, _virtualItemCargo) || CONDITION(_x,_virtualWeaponCargo) then {
 					_object additemcargoglobal _x;
 				} else {
-					_failures = _failures + (format ["Item %1 is not whitelisted\n",_x]);
+					_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
 				};		
 				
 			};
 		} foreach _transportItems;
 	};
 };
+// Find unique entries in failures:
+_uniqueFailures = [];
+{
+	if ((_uniqueFailures find _x)<0) then {
+		_uniqueFailures = _uniqueFailures + [_x];
+	}
+} forEach _failures ;
 
-//if (_failures != "") then {
- titleText[_failures, "PLAIN"];
-//};
+// Now count them.
+_failString = "";
+{
+	_y = _x;
+  	_n =  {_x == _y} count _failures;
+  	_failString = _failString + (format ["%1x %2" , _n,_x]);
+} forEach _uniqueFailures;
+
+
+ titleText[_failString, "PLAIN"];
+
 
 true
