@@ -26,12 +26,24 @@ class CfgFunctions {
 			class addVirtualWeaponCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_addVirtualWeaponCargo.sqf";};
 			class getVirtualBackpackCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualBackpackCargo.sqf";};
 			class getVirtualItemCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualItemCargo.sqf";};
-			class getVirtualMagazineCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualMagazineCargo.sqf";};			
+			class getVirtualMagazineCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualMagazineCargo.sqf";};	
 			class getVirtualWeaponCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualWeaponCargo.sqf";};
 			class removeVirtualBackpackCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualBackpackCargo.sqf";};
 			class removeVirtualItemCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualItemCargo.sqf";};
 			class removeVirtualMagazineCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualMagazineCargo.sqf";};
 			class removeVirtualWeaponCargo {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualWeaponCargo.sqf";};
+			class addVirtualItemBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_addVirtualItemBlacklist.sqf";};
+			class addVirtualMagazineBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_addVirtualMagazineBlacklist.sqf";};
+			class addVirtualWeaponBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_addVirtualWeaponBlacklist.sqf";};
+			class getVirtualBackpackBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualBackpackBlacklist.sqf";};
+			class getVirtualItemBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualItemBlacklist.sqf";};
+			class getVirtualMagazineBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualMagazineBlacklist.sqf";};	
+			class getVirtualWeaponBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_getVirtualWeaponBlacklist.sqf";};
+			class removeVirtualBackpackBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualBackpackBlacklist.sqf";};
+			class removeVirtualItemBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualItemBlacklist.sqf";};
+			class removeVirtualMagazineBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualMagazineBlacklist.sqf";};
+			class removeVirtualWeaponBlacklist {file = "\XLA_Fixedarsenal\functions\Inventory\fn_removeVirtualWeaponBlacklist.sqf";};
+			
 		};
 	};
 };

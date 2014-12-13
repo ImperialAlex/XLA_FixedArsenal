@@ -124,6 +124,23 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	_virtualMagazineCargo = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo);\
 	_virtualBackpackCargo = (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo);
 
+#define GETVIRTUALBLACKLIST\
+	_virtualItemBlacklist =\
+		(missionnamespace call XLA_fnc_GetVirtualItemBlacklist) +\
+		(_cargo call XLA_fnc_getVirtualItemBlacklist);\
+	_virtualWeaponBlacklist = [];\
+	{\
+		_weapon = _x;\
+		_virtualWeaponBlacklist set [count _virtualWeaponBlacklist,_weapon];\
+		{\
+			private ["_item"];\
+			_item = gettext (_x >> "item");\
+			if !(_item in _virtualItemBlacklist) then {_virtualItemBlacklist set [count _virtualItemBlacklist,_item];};\
+		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
+	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));\
+	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineBlacklist) + (_cargo call XLA_fnc_getVirtualMagazineBlacklist);\
+	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);
+
 #define STATS_WEAPONS\
 	["reloadtime","maxrange","hit","mass"],\
 	[true,true,true,false]
@@ -793,6 +810,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
 
 		{	
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _foreachindex);
@@ -1383,6 +1401,7 @@ switch _mode do {
 		) then {
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 			GETVIRTUALCARGO
+			GETVIRTUALBLACKLIST
 
 			private ["_ctrlList"];
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_CARGOMAG);
@@ -1490,7 +1509,7 @@ switch _mode do {
 
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 			GETVIRTUALCARGO
-
+			GETVIRTUALBLACKLIST
 			{
 				_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _x);
 				lbclear _ctrlList;
@@ -2335,6 +2354,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
 
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
@@ -2446,6 +2466,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
 
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
@@ -2571,6 +2592,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
 
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
@@ -2679,6 +2701,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
 
 		_disabledItems = [];
 
