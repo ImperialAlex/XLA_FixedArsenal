@@ -146,11 +146,8 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 
 // ADVANCED CONDITIONS:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM)\
-	_condition = false;\	
-	/*First, find the side of the item*/\
-	/*Sadly, quite a few equipment items (hats,goggles,etc) don't have sides*/\
+	_condition = 0;\
 	_itemSide = format ["%1",(side ITEM)];\
-	/*If we can't find the side the item can only be side-allowed if ALL sides are allowed*/\
 	if (_itemSide == "UNKNOWN") then {_itemSide = "%ALL"};\
 	_sideAllowed = ( ((WSIDES find _itemSide) > 0) || ((WSIDES find "%ALL") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "%ALL") > 0) );\
 	if (_sideAllowed) then {\
@@ -207,7 +204,6 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
-#define CONDITION(LIST) ( _fullVersion || (LIST find _item) >= 0 || {"%ALL" in LIST} )
 
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
@@ -1470,7 +1466,8 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						if (CONDITION(_virtualMagazineCargo)) then {
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualSideBlacklist,_virtualMagazineBlacklist,_item)
+						if (_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
 								_magazines set [count _magazines,_mag];
@@ -1556,7 +1553,8 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						if (CONDITION(_virtualItemCargo)) then {
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {
 							_type = _item call bis_fnc_itemType;
 							_idcList = switch (_type select 1) do {
 								case "AccessoryMuzzle": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE};
@@ -1578,7 +1576,7 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						if (CONDITION(_virtualItemCargo)) then {
+						if (_condition) then {
 							_type = _item call bis_fnc_itemType;
 							_idcList = switch (_type select 1) do {
 								case "AccessoryMuzzle": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE};
@@ -2425,13 +2423,29 @@ switch _mode do {
 			_whitelisted = true;
 			_isclass = true;
 			if (
-				{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
+				{
+					_item = _x; 
+					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryWeapons > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
+				{	
+					_item = _x;
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+					!_condition
+				} count _inventoryMagazines > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
+				{
+					_item = _x;
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryItems > 0
 				||
-				{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
+				{
+					_item = _x;
+					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryBackpacks > 0
 			) then {
 				//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
 				//"NOT WHITELISTED" call bis_fnc_log;
@@ -2551,27 +2565,29 @@ switch _mode do {
 				_whitelisted = true;
 				_isclass = true;
 				if (
-					{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
+					{
+						_item = _x; 
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+						!_condition
+					} count _inventoryWeapons > 0
 					||
-					{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
+					{	
+						_item = _x;
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+						!_condition
+					} count _inventoryMagazines > 0
 					||
-					{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
+					{
+						_item = _x;
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						!_condition
+					} count _inventoryItems > 0
 					||
-					{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
-				) then {
-					//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
-					//"NOT WHITELISTED" call bis_fnc_log;
-					_whitelisted = false;		
-				};
-
-				if (
-				{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
-				||
-				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
-				||
-				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
-				||
-				{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+					{
+						_item = _x;
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+						!_condition
+					} count _inventoryBackpacks > 0
 				) then {
 					//("Item " +  (format["%1",_item]) + " is not a class.") call bis_fnc_log;
 					//"NOT A CLASS" call bis_fnc_log;
@@ -2663,13 +2679,29 @@ switch _mode do {
 			_whitelisted = true;
 			_isclass = true;
 			if (
-				{_item = _x; !CONDITION(_virtualWeaponCargo)} count _inventoryWeapons > 0
+				{
+					_item = _x; 
+					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryWeapons > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryMagazines > 0
+				{	
+					_item = _x;
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+					!_condition
+				} count _inventoryMagazines > 0
 				||
-				{_item = _x; !CONDITION(_virtualItemCargo + _virtualMagazineCargo)} count _inventoryItems > 0
+				{
+					_item = _x;
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryItems > 0
 				||
-				{_item = _x; !CONDITION(_virtualBackpackCargo)} count _inventoryBackpacks > 0
+				{
+					_item = _x;
+					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+					!_condition
+				} count _inventoryBackpacks > 0
 			) then {
 				//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
 				//"NOT WHITELISTED" call bis_fnc_log;
@@ -2752,64 +2784,80 @@ switch _mode do {
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
 					case "adduniform": {
-						if (CONDITION(_virtualItemCargo)) then {_center forceadduniform _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center forceadduniform _item;} else {ERROR};
 					};
 					case "addvest": {
-						if (CONDITION(_virtualItemCargo)) then {_center addvest _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addvest _item;} else {ERROR};
 					};
 					case "addbackpack": {
-						if (CONDITION(_virtualBackpackCargo)) then {_center addbackpack _item;} else {ERROR};
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addbackpack _item;} else {ERROR};
 					};
 					case "addheadgear": {
-						if (CONDITION(_virtualItemCargo)) then {_center addheadgear _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addheadgear _item;} else {ERROR};
 					};
 					case "addgoggles": {
-						if (CONDITION(_virtualItemCargo)) then {_center addgoggles _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addgoggles _item;} else {ERROR};
 					};
 
 					case "additemtouniform": {
-						if (CONDITION(_virtualItemCargo + _virtualMagazineCargo)) then {
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtouniform _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtovest": {
-						if (CONDITION(_virtualItemCargo + _virtualMagazineCargo)) then {
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtovest _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtobackpack": {
-						if (CONDITION(_virtualItemCargo + _virtualMagazineCargo)) then {
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtobackpack _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 
 					case "addweapon": {
-						if (CONDITION(_virtualWeaponCargo)) then {_center addweapon _item;} else {ERROR};
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addweapon _item;} else {ERROR};
 					};
 					case "addprimaryweaponitem": {
-						if (CONDITION(_virtualItemCargo)) then {_center addprimaryweaponitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (CONDITION(_condition) then {_center addprimaryweaponitem _item;} else {ERROR};
 					};
 					case "addsecondaryweaponitem": {
-						if (CONDITION(_virtualItemCargo)) then {_center addsecondaryweaponitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addsecondaryweaponitem _item;} else {ERROR};
 					};
 					case "addhandgunitem": {
-						if (CONDITION(_virtualItemCargo)) then {_center addhandgunitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addhandgunitem _item;} else {ERROR};
 					};
 
 					case "addmagazine": {
-						if (CONDITION(_virtualMagazineCargo)) then {_center addmagazine _item;} else {ERROR};
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center addmagazine _item;} else {ERROR};
 					};
 					case "additem": {
-						if (CONDITION(_virtualItemCargo)) then {_center additem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center additem _item;} else {ERROR};
 					};
 					case "assignitem": {
-						if (CONDITION(_virtualItemCargo)) then {_center assignitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center assignitem _item;} else {ERROR};
 					};
 					case "linkitem": {
-						if (CONDITION(_virtualItemCargo)) then {_center linkitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						if (_condition) then {_center linkitem _item;} else {ERROR};
 					};
 
 					case "setface": {
@@ -2819,6 +2867,7 @@ switch _mode do {
 						if (_fullVersion) then {_center setspeaker _item;};
 					};
 					case "bis_fnc_setunitinsignia": {
+						//TODO: Allow insignia/face/speaker by adding a "fake" side for them?
 						if (_fullVersion) then {[_center,_importArray select ((_foreachindex - 3) max 0)] call bis_fnc_setunitinsignia;};
 					};
 				};
