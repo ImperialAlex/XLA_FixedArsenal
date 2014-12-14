@@ -145,11 +145,19 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 
 
 // ADVANCED CONDITIONS:
-#define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM)\
-	_condition = 0;\
-	_itemSide = format ["%1",(side ITEM)];\
-	if (_itemSide == "UNKNOWN") then {_itemSide = "%ALL"};\
-	_sideAllowed = ( ((WSIDES find _itemSide) > 0) || ((WSIDES find "%ALL") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "%ALL") > 0) );\
+#define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
+	_condition = false;\
+	_sideAllowed = false;\
+	_itemSide = -1;\
+	{ 	_config = (configFile >> _x >> ITEM );\
+		diag_log _config;\
+		if (isNumber (_config >> "side")) then\
+		{	diag_log "Found side";\
+			_itemSide = getNumber (_config >> "side");\
+			diag_log _side;\
+		} else { diag_log "No side found, setting to -1";\
+				_itemSide = -1;	};\
+	_sideAllowed =  false; } forEach  CONFIG ;\
 	if (_sideAllowed) then {\
 		_condition = !((BLIST find ITEM) > 0 );\
 	} else {\
@@ -157,7 +165,25 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	};\
 	_condition;
 
+//(_sideAllowed || ( ( ((WSIDES find (str _itemSide)) > 0) || ((WSIDES find "-1") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "%ALL") > 0) ) ));\
+/*_itemSide = -1;
+		_config = (configFile >> _x >> ITEM );\
+		diag_log _config;\
+		if (isNumber (_config >> "side")) then\
+		{\
+			diag_log "Found side";\
+			_itemSide = getNumber (_config >> "side");\
+			diag_log _side;\
+		} else {\
+			diag_log "No side found, setting to -1";\
+			_itemSide = -1;\
+		};\
+		_sideAllowed =  false\
+		*/
 
+		/*
+			{\		
+	} forEach  CONFIG;\*/
 
 #define STATS_WEAPONS\
 	["reloadtime","maxrange","hit","mass"],\
@@ -200,7 +226,7 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 _massunit = "kg";
 if (profileNamespace getVariable ["AGM_useImperial", false]) then {
 	_massunit = "lb";
-} else {\
+} else {
   	_massunit = "kg";
 };
 
@@ -835,10 +861,9 @@ switch _mode do {
 				case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON;
 				case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON;
 				case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN: {
-					_virtualCargo = _virtualWeaponCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
@@ -855,10 +880,9 @@ switch _mode do {
 				case IDC_RSCDISPLAYARSENAL_TAB_RADIO;
 				case IDC_RSCDISPLAYARSENAL_TAB_COMPASS;
 				case IDC_RSCDISPLAYARSENAL_TAB_WATCH: {
-					_virtualCargo = _virtualItemCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
@@ -867,10 +891,9 @@ switch _mode do {
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_BINOCULARS: {
-					_virtualCargo = _virtualWeaponCargo + _virtualItemCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION((_virtualWeaponCargo+_virtualItemCargo),_virtualSideCargo,(_virtualWeaponBlacklist+_virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
@@ -880,10 +903,9 @@ switch _mode do {
 
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_GOGGLES: {
-					_virtualCargo = _virtualItemCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgglasses" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
@@ -892,10 +914,9 @@ switch _mode do {
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK: {
-					_virtualCargo = _virtualBackpackCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgvehicles" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
@@ -927,10 +948,9 @@ switch _mode do {
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW;
 				case IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT: {
-					_virtualCargo = _virtualMagazineCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgmagazines" >> _x;
 							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
 							_ctrlList lnbsetdata [[_lbAdd,0],_x];
@@ -940,10 +960,9 @@ switch _mode do {
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC: {
-					_virtualCargo = _virtualItemCargo;
-					_virtualAll = _fullVersion || {"%ALL" in _virtualCargo};
 					{
-						if (_virtualAll || {_x in _virtualCargo}) then {
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
 							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
 							_ctrlList lnbsetdata [[_lbAdd,0],_x];
@@ -1466,7 +1485,7 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualSideBlacklist,_virtualMagazineBlacklist,_item)
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualSideBlacklist,_virtualMagazineBlacklist,_item,["CfgMagazines"])
 						if (_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
@@ -1553,7 +1572,7 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {
 							_type = _item call bis_fnc_itemType;
 							_idcList = switch (_type select 1) do {
@@ -1576,6 +1595,7 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {
 							_type = _item call bis_fnc_itemType;
 							_idcList = switch (_type select 1) do {
@@ -2425,25 +2445,25 @@ switch _mode do {
 			if (
 				{
 					_item = _x; 
-					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 					!_condition
 				} count _inventoryWeapons > 0
 				||
 				{	
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
 					!_condition
 				} count _inventoryMagazines > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 					!_condition
 				} count _inventoryItems > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item,["CfgVehicles"])
 					!_condition
 				} count _inventoryBackpacks > 0
 			) then {
@@ -2567,25 +2587,25 @@ switch _mode do {
 				if (
 					{
 						_item = _x; 
-						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						!_condition
 					} count _inventoryWeapons > 0
 					||
 					{	
 						_item = _x;
-						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
 						!_condition
 					} count _inventoryMagazines > 0
 					||
 					{
 						_item = _x;
-						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 						!_condition
 					} count _inventoryItems > 0
 					||
 					{
 						_item = _x;
-						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item,["CfgVehicles"])
 						!_condition
 					} count _inventoryBackpacks > 0
 				) then {
@@ -2681,25 +2701,25 @@ switch _mode do {
 			if (
 				{
 					_item = _x; 
-					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 					!_condition
 				} count _inventoryWeapons > 0
 				||
 				{	
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item) 
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
 					!_condition
 				} count _inventoryMagazines > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 					!_condition
 				} count _inventoryItems > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+					GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item,["CfgVehicles"])
 					!_condition
 				} count _inventoryBackpacks > 0
 			) then {
@@ -2784,42 +2804,42 @@ switch _mode do {
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
 					case "adduniform": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center forceadduniform _item;} else {ERROR};
 					};
 					case "addvest": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addvest _item;} else {ERROR};
 					};
 					case "addbackpack": {
-						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_item,["CfgVehicles"])
 						if (_condition) then {_center addbackpack _item;} else {ERROR};
 					};
 					case "addheadgear": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addheadgear _item;} else {ERROR};
 					};
 					case "addgoggles": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addgoggles _item;} else {ERROR};
 					};
 
 					case "additemtouniform": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtouniform _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtovest": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtovest _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtobackpack": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item)
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtobackpack _item;};
 						} else {ERROR};
@@ -2827,36 +2847,36 @@ switch _mode do {
 					};
 
 					case "addweapon": {
-						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addweapon _item;} else {ERROR};
 					};
 					case "addprimaryweaponitem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
-						if (CONDITION(_condition) then {_center addprimaryweaponitem _item;} else {ERROR};
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
+						if (_condition) then {_center addprimaryweaponitem _item;} else {ERROR};
 					};
 					case "addsecondaryweaponitem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addsecondaryweaponitem _item;} else {ERROR};
 					};
 					case "addhandgunitem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center addhandgunitem _item;} else {ERROR};
 					};
 
 					case "addmagazine": {
-						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_item,["CfgMagazines"])
 						if (_condition) then {_center addmagazine _item;} else {ERROR};
 					};
 					case "additem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center additem _item;} else {ERROR};
 					};
 					case "assignitem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center assignitem _item;} else {ERROR};
 					};
 					case "linkitem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item)
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
 						if (_condition) then {_center linkitem _item;} else {ERROR};
 					};
 
