@@ -26,7 +26,7 @@ _add = [_this,4,1,[1]] call bis_fnc_param;
 _type = [_this,5,0,[0]] call bis_fnc_param;
 
 //--- Get blacklist
-_blist = _object getvariable ["XLA_fnc_addVirtualItemBlacklist_list",[[],[],[],[]]];
+_blist = _object getvariable ["XLA_fnc_addVirtualItemBlacklist_list",[[],[],[],[],[]]];
 _listArray = _blist select _type;
 if (_add == 0) exitwith {_listArray};
 

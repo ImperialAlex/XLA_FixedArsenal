@@ -24,7 +24,7 @@ _add = [_this,4,1,[1]] call bis_fnc_param;
 _type = [_this,5,0,[0]] call bis_fnc_param;
 
 //--- Get cargo list
-_cargo = _object getvariable ["XLA_addVirtualWeaponCargo_cargo",[[],[],[],[]]];
+_cargo = _object getvariable ["XLA_addVirtualWeaponCargo_cargo",[[],[],[],[],[]]];
 _cargoArray = _cargo select _type;
 if (_add == 0) exitwith {_cargoArray};
 
