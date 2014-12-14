@@ -2589,6 +2589,20 @@ switch _mode do {
 						!_condition
 					} count _inventoryBackpacks > 0
 				) then {
+					//("Item " + (format["%1",_item])  + " is not whitelisted.") call bis_fnc_log;
+					//"NOT WHITELISTED" call bis_fnc_log;
+					_whitelisted = false;		
+				};
+
+				if (
+				{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
+				||
+				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+				||
+				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+				||
+				{_item = _x; !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
+				) then {
 					//("Item " +  (format["%1",_item]) + " is not a class.") call bis_fnc_log;
 					//"NOT A CLASS" call bis_fnc_log;
 					_isclass = false;
