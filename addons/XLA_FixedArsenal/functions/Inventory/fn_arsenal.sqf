@@ -141,6 +141,25 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineBlacklist) + (_cargo call XLA_fnc_getVirtualMagazineBlacklist);\
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);
 
+
+// ADVANCED CONDITIONS:
+#define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM)\
+	_condition = false;\	
+	/*First, find the side of the item*/\
+	/*Sadly, quite a few equipment items (hats,goggles,etc) don't have sides*/\
+	_itemSide = format ["%1",(side ITEM)];\
+	/*If we can't find the side the item can only be side-allowed if ALL sides are allowed*/\
+	if (_itemSide == "UNKNOWN") then {_itemSide = "%ALL"};\
+	_sideAllowed = ( ((WSIDES find _itemSide) > 0) || ((WSIDES find "%ALL") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "%ALL") > 0) );\
+	if (_sideAllowed) then {\
+		_condition = !((BLIST find ITEM) > 0 );\
+	} else {\
+		_condition = !((WLIST find ITEM) > 0);\
+	};\
+	_condition;
+
+
+
 #define STATS_WEAPONS\
 	["reloadtime","maxrange","hit","mass"],\
 	[true,true,true,false]
