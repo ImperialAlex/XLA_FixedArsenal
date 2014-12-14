@@ -147,21 +147,22 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 // ADVANCED CONDITIONS:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
 	_condition = false;\
-	_sideAllowed = false;\
-	_itemSide = -1;\
-	{ 	_config = (configFile >> _x >> ITEM );\
-		diag_log _config;\
-		if (isNumber (_config >> "side")) then\
-		{	diag_log "Found side";\
-			_itemSide = getNumber (_config >> "side");\
-			diag_log _side;\
-		} else { diag_log "No side found, setting to -1";\
-				_itemSide = -1;	};\
-	_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) > 0) || ((WSIDES find "-1") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "%ALL") > 0) ) )); } forEach  CONFIG ;\
-	if (_sideAllowed) then {\
-		_condition = !((BLIST find ITEM) > 0 );\
-	} else {\
-		_condition = ((WLIST find ITEM) > 0);\
+	if (!_fullVersion) then {\
+		_sideAllowed = false;\
+		_itemSide = -1;\
+		{ 	_config = (configFile >> _x >> ITEM );\
+			if (isNumber (_config >> "side")) then\
+			{	diag_log "Found side";\
+				_itemSide = getNumber (_config >> "side");\
+				diag_log _side;\
+			} else { diag_log "No side found, setting to -1";\
+					_itemSide = -1;	};\
+		_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) > 0) || ((WSIDES find "-1") > 0) ) && !( ((BSIDES find _itemSide) > 0 ) || ((BSIDES find "-1") > 0) ) )); } forEach  CONFIG ;\
+		if (_sideAllowed) then {\
+			_condition = !((BLIST find ITEM) > 0 );\
+		} else {\
+			_condition = ((WLIST find ITEM) > 0);\
+		};\
 	};\
 	_condition;
 
