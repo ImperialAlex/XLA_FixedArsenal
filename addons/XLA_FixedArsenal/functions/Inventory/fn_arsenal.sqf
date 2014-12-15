@@ -143,23 +143,33 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	_virtualSideBlacklist = (missionnamespace call XLA_fnc_getVirtualSideBlacklist) + (_cargo call XLA_fnc_getVirtualSideBlacklist);\
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);
 
-
+if (isNil "DEBUGHELPER") then {DEBUGHELPER = [];};
 // ADVANCED CONDITIONS:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
+	diag_log "--------------------";\
+	diag_log __LINE__;\
+	diag_log ITEM;\
 	_condition = false;\
 	if (!_fullVersion) then {\
 		_sideAllowed = false;\
-		_itemSide = -1;\
-		{ 	_config = (configFile >> _x >> ITEM );\
+		_itemSide = -99;\
+		{ 	_config = (configFile / _x / ITEM );\
+			diag_log _x;\
+			diag_log (configFile / _x);\
+			DEBUGHELPER = DEBUGHELPER + [ ITEM ];\
+			diag_log (configFile / _x / ITEM);\
 			if (isNumber (_config >> "side")) then\
-			{ itemSide = getNumber (_config >> "side");\
-			} else { _itemSide = -1;	};\
+			{	_itemSide = getNumber (_config >> "side");\
+			} else { _itemSide = -55;	};\
+			diag_log _itemSide;\
 		_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) )); } forEach  CONFIG ;\
+		diag_log _sideAllowed;\
 		if (_sideAllowed) then {\
 			_condition = !((BLIST find ITEM) >= 0 );\
 		} else {\
 			_condition = ((WLIST find ITEM) >= 0);\
 		};\
+		diag_log _condition;\
 	};\
 	_condition;
 
@@ -237,7 +247,7 @@ switch _mode do {
 	case "Init": {
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
-		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
+		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage 
 
 		INITTYPES
 		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
@@ -251,6 +261,7 @@ switch _mode do {
 				"XLA_fnc_arsenal_weaponStats",
 				[
 					("isclass _x && getnumber (_x >> 'scope') == 2 && getnumber (_x >> 'type') < 5") configclasses (configfile >> "cfgweapons"),
+
 					STATS_WEAPONS
 				] call bis_fnc_configExtremes
 			];
@@ -825,6 +836,7 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListAdd": {
+		diag_log "ADD_LIST";
 		_display = _this select 0;
 		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
@@ -840,9 +852,11 @@ switch _mode do {
 				case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON;
 				case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN: {
 					{
-						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["cfgweapons"])
 						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
+							diag_log "---------------------ADD_GUN";
+							diag_log _xCfg;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
