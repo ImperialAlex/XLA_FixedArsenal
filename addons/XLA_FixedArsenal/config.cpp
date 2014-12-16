@@ -60,6 +60,9 @@ class CfgScriptPaths {
 };
 
 
+
+// Everything below this is related to UI.
+
 // Because of issue #21842 (http://feedback.arma3.com/view.php?id=20978) we cannot just use inheritance as normal
 // Once BI fixes #21842 (so anytime between tomorrow and never) we can remove virtually all of this and just override the few parameters we want to touch.
 // Due to this bug all the "BaseClasses" have to be named:
