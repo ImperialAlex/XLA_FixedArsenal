@@ -1,2 +1,6 @@
 (\t\t)class ([a-Z]*).*\n(\1.*\n)*?\1\};
 \1class \2: \2 {};
+
+For CfgWeapons:
+(\t)class ([a-Z0-9_]*): ([a-Z0-9_]*).*\n(\1.*\n)*?\1\};
+\1class \2: \3 { NONE_SIDE };
