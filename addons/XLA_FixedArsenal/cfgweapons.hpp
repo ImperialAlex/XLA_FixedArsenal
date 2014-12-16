@@ -75,6 +75,65 @@ class CfgWeapons {
 	class I_UavTerminal : UavTerminal_base {INDEP_SIDE};
 	class O_UavTerminal : UavTerminal_base {EAST_SIDE};
 
+	//OPTICS:
+	 class optic_Arco: ItemCore { ALL_SIDE };
+	 class optic_Hamr: ItemCore { ALL_SIDE };
+	 class optic_Aco: ItemCore { ALL_SIDE };
+	 class optic_ACO_grn: ItemCore { ALL_SIDE };
+	 class optic_Aco_smg: ItemCore { ALL_SIDE };
+	 class optic_ACO_grn_smg: ItemCore { ALL_SIDE };
+	 class optic_Holosight: ItemCore { ALL_SIDE };
+	 class optic_Holosight_smg: ItemCore { ALL_SIDE };
+	 class optic_SOS: ItemCore { ALL_SIDE };
+	 class optic_MRCO: ItemCore { ALL_SIDE };
+	 class optic_DMS: ItemCore { ALL_SIDE };
+	 class optic_Yorris: ItemCore { ALL_SIDE };
+	 class optic_MRD: ItemCore { ALL_SIDE };
+	 class optic_LRPS: ItemCore { ALL_SIDE };
+	 class optic_NVS: ItemCore { ALL_SIDE };
+	 class optic_Nightstalker: ItemCore { ALL_SIDE };
+	 class optic_tws: ItemCore { ALL_SIDE };
+	 class optic_tws_mg: ItemCore { ALL_SIDE };
+
+	 // Attachments
+	 class acc_flashlight: ItemCore { ALL_SIDE };
+	 class acc_pointer_IR: ItemCore { ALL_SIDE };
+
+
+	 //Vests
+	class Vest_NoCamo_Base;
+	class V_Rangemaster_belt: Vest_NoCamo_Base {ALL_SIDE};
+	class V_PlateCarrier1_rgr: Vest_NoCamo_Base {WEST_SIDE};
+	class V_PlateCarrier3_rgr: Vest_NoCamo_Base {WEST_SIDE};
+	class V_PlateCarrierGL_rgr: Vest_NoCamo_Base {WEST_SIDE};
+	class V_PlateCarrierSpec_rgr: Vest_NoCamo_Base {WEST_SIDE};
+
+	class V_TacVestIR_blk: Vest_NoCamo_Base {ALL_SIDE};
+
+	class V_PlateCarrierIA1_dgtl: Vest_NoCamo_Base {INDEP_SIDE};
+
+	class V_HarnessO_brn: Vest_NoCamo_Base {EAST_SIDE};
+	class V_HarnessOGL_brn: Vest_NoCamo_Base {EAST_SIDE};
+
+	class Vest_Camo_Base;
+	class V_BandollierB_khk: Vest_Camo_Base {EAST_SIDE};
+	class V_Chestrig_khk: Vest_Camo_Base {EAST_SIDE};
+
+	class V_TacVest_khk: Vest_Camo_Base {ALL_SIDE};
+
+	class V_Rebreather: Vest_Camo_Base {WEST_SIDE};
+	class V_RebreatherIR: V_Rebreather {EAST_SIDE};
+	class V_RebreatherIA: V_Rebreather {INDEP_SIDE};
+
+	class V_PlateCarrier1_blk: Vest_Camo_Base {WEST_SIDE};
+
+	class V_Chestrig_oli: Vest_Camo_Base {INDEP_SIDE};
+
+	class V_TacVest_camo: Vest_Camo_Base {ALL_SIDE};
+
+	class V_TacVest_blk_POLICE: Vest_Camo_Base {CIV_SIDE};
+
+	class V_TacVestCamo_khk: Vest_Camo_Base {ALL_SIDE};
 
 };
 
