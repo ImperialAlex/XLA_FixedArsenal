@@ -77,23 +77,25 @@
 
 // ADVANCED CONDITIONS:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
+	_item_to_test = ITEM;\
 	_condition = false;\
 	if (!_fullVersion) then {\
 		_sideAllowed = false;\
-		_itemSide = -1;\
-		{ 	_config = (configFile >> _x >> ITEM );\
+		_itemSide = -99;\
+		{ 	_config = (configFile / _x / _item_to_test );\
+			DEBUGHELPER = DEBUGHELPER + [ _item_to_test ];\
 			if (isNumber (_config >> "side")) then\
 			{	_itemSide = getNumber (_config >> "side");\
-			} else { _itemSide = -1;	};\
+			} else { _itemSide = -55;	};\
 		_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) )); } forEach  CONFIG ;\
 		if (_sideAllowed) then {\
-			_condition = !((BLIST find ITEM) >= 0 );\
+			_condition = !((BLIST find _item_to_test) >= 0 );\
 		} else {\
-			_condition = ((WLIST find ITEM) >= 0);\
+			_condition = ((WLIST find _item_to_test) >= 0);\
 		};\
 	};\
 	_condition;
-
+	
 scopename _fnc_scriptName;
 private ["_cfg","_inventory","_isCfg","_blacklist"];
 _object = [_this,0,objnull,[objnull]] call bis_fnc_param;

@@ -144,32 +144,25 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);
 
 if (isNil "DEBUGHELPER") then {DEBUGHELPER = [];};
+	
 // ADVANCED CONDITIONS:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
-	diag_log "--------------------";\
-	diag_log __LINE__;\
-	diag_log ITEM;\
+	_item_to_test = ITEM;\
 	_condition = false;\
 	if (!_fullVersion) then {\
 		_sideAllowed = false;\
 		_itemSide = -99;\
-		{ 	_config = (configFile / _x / ITEM );\
-			diag_log _x;\
-			diag_log (configFile / _x);\
-			DEBUGHELPER = DEBUGHELPER + [ ITEM ];\
-			diag_log (configFile / _x / ITEM);\
+		{ 	_config = (configFile / _x / _item_to_test );\
+			DEBUGHELPER = DEBUGHELPER + [ _item_to_test ];\
 			if (isNumber (_config >> "side")) then\
 			{	_itemSide = getNumber (_config >> "side");\
 			} else { _itemSide = -55;	};\
-			diag_log _itemSide;\
 		_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) )); } forEach  CONFIG ;\
-		diag_log _sideAllowed;\
 		if (_sideAllowed) then {\
-			_condition = !((BLIST find ITEM) >= 0 );\
+			_condition = !((BLIST find _item_to_test) >= 0 );\
 		} else {\
-			_condition = ((WLIST find ITEM) >= 0);\
+			_condition = ((WLIST find _item_to_test) >= 0);\
 		};\
-		diag_log _condition;\
 	};\
 	_condition;
 
@@ -907,7 +900,7 @@ switch _mode do {
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK: {
 					{
-						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						GETCONDITION(_virtualBackpackCargo,_virtualSideCargo,_virtualBackpackBlacklist,_virtualSideBlacklist,_x,["CfgVehicles"])
 						if (_condition) then {
 							_xCfg = configfile >> "cfgvehicles" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
