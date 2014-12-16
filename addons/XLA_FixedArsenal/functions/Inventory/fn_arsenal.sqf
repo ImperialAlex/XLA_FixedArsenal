@@ -163,7 +163,7 @@ if (isNil "DEBUGHELPER") then {DEBUGHELPER = [];};
 		} else {\
 			_condition = ((WLIST find _item_to_test) >= 0);\
 		};\
-	};\
+	} else { _condition = true;} ;\
 	_condition;
 
 #define STATS_WEAPONS\
