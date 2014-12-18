@@ -1,7 +1,7 @@
 // XLA FixedArsenal by Alexander (ImperialAlex)
 // All this does is overwrite some of the Virtual Arsenal related functions
 
-#include "cfgweapons.hpp"
+#include "definesides.hpp"
 
 class CfgPatches
 {
