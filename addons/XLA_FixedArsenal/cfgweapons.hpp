@@ -7,6 +7,7 @@
 
 class CfgWeapons {
 
+	class Default; 
 	class Rifle_Base_F;
 
 	class arifle_Katiba_Base_F: Rifle_Base_F { EAST_SIDE };
@@ -49,8 +50,7 @@ class CfgWeapons {
 	class DetectorCore;
 	class MineDetector: DetectorCore {ALL_SIDE};
 
-	class Binocular;
-	class XLA_Binocular: Binocular {author = "Bohemia Interactive"; ALL_SIDE};
+	class Binocular: Default {ALL_SIDE};
 	class Rangefinder: Binocular {ALL_SIDE};
 	class LaserDesignator: Binocular {ALL_SIDE};
 	class NVGoggles:Binocular {WEST_SIDE};
