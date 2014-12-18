@@ -261,6 +261,7 @@ if !("uniform" in _blacklist) then {
 			};
 		} else {
 			_failures = _failures + [format["Uniform '%1' does not exist in CfgWeapons\n",_uniform]];
+			_object forceadduniform _uniform_old;
 		};
 	};
 };
@@ -276,6 +277,7 @@ if !("vest" in _blacklist) then {
 			};
 		} else {
 			_failures = _failures + [format["Vest '%1' does not exist in CfgWeapons\n",_vest]];
+			_object addvest _vest_old;
 		};
 	};
 };
@@ -327,6 +329,7 @@ if !("backpack" in _blacklist) then {
 			};
 		} else {
 			_failures = _failures +  [format["Backpack '%1' does not exist in CfgVehicles\n",_backpack]];
+			_object addBackpack _backpack_old;
 		};
 	};
 };
