@@ -889,7 +889,7 @@ switch _mode do {
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_GOGGLES: {
 					{
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgGlasses"])
 						if (_condition) then {
 							_xCfg = configfile >> "cfgglasses" >> _x;
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
