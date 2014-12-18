@@ -1795,7 +1795,7 @@ switch _mode do {
 					_ctrlStat  = _display displayctrl ((_statControls select _foreachindex) select 0);
 					_ctrlText  = _display displayctrl ((_statControls select _foreachindex) select 1);
 
-					if (count _x > 0) then {
+					if (count _x > 3) then {
 						_ctrlStat progresssetposition (_x select 0);
 						_ctrlText ctrlsettext ((toupper (_x select 1)) + ": " + (str (_x select 2)) + (_x select 3));
 						_ctrlText ctrlshow true;
