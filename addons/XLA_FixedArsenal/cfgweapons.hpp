@@ -292,6 +292,8 @@ class CfgWeapons {
 	class H_MilCap_ocamo : H_HelmetB { EAST_SIDE };
 	class H_MilCap_dgtl : H_MilCap_oucamo { INDEP_SIDE };
 	class H_MilCap_mcamo : H_MilCap_ocamo { WEST_SIDE };
+	class H_MilCap_blue: H_MilCap_ocamo { ALL_SIDE };
+	class H_MilCap_gry: H_MilCap_ocamo { ALL_SIDE };
 
 	class H_PilotHelmetFighter_B : H_HelmetB { WEST_SIDE };
 	class H_PilotHelmetFighter_I : H_PilotHelmetFighter_B { INDEP_SIDE };
