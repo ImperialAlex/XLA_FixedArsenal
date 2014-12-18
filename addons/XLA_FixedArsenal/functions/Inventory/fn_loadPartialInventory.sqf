@@ -394,27 +394,27 @@ if !("weapons" in _blacklist) then {
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
 	if !("uniform" in _blacklist) then {{
-			GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+			GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 			if (_condition) then {
 				_object additemtouniform _x;
 			} else {
-				_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
+				_failures = _failures + [format ["Item in uniform %1 is not whitelisted\n",_x]];
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
-		GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+		GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 		if (_condition) then {
 			_object additemtovest _x;
 		} else {
-			_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
+			_failures = _failures + [format ["Item in vest %1 is not whitelisted\n",_x]];
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
-		GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),_virtualSideCargo,(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons"])
+		GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 		if (_condition) then {
 			_object additemtobackpack _x;
 		} else {
-			_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
+			_failures = _failures + [format ["Item in backpack %1 is not whitelisted\n",_x]];
 		};
 
 	} foreach (_inventory select 2 select 1);};
@@ -441,7 +441,7 @@ if !("transportMagazines" in _blacklist) then {
 if !("items" in _blacklist) then {
 	{
 		if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-			GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+			GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 			if (_condition) then {
 			_object additem _x;
 			} else {
@@ -456,7 +456,7 @@ if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
 			if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualWeaponBlacklist),_virtualSideBlacklist,_x,["CfgWeapons"])
+				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 				if (_condition)  then {
 					_object linkitem _x;
 					_object addPrimaryWeaponItem _x;
@@ -480,11 +480,11 @@ if !("transportWeapons" in _blacklist) then {
 		} foreach ([_cfg >> "transportWeapons"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualWeaponBlacklist),_virtualSideBlacklist,_x,["CfgWeapons"])
+				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 				if (_condition) then {
 					_object addweaponcargoglobal _x;
 				} else {
-					_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
+					_failures = _failures + [format ["Transportweapon %1 is not whitelisted\n",_x]];
 				};		
 			};
 		} foreach _transportWeapons;
@@ -499,11 +499,11 @@ if !("transportItems" in _blacklist) then {
 		} foreach ([_cfg >> "transportItems"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualWeaponBlacklist),_virtualSideBlacklist,_x,["CfgWeapons"])
+				GETCONDITION((_virtualItemCargo+_virtualWeaponCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualWeaponBlacklist + _virtualMagazineBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
 				if (_condition) then {
 					_object additemcargoglobal _x;
 				} else {
-					_failures = _failures + [format ["Item %1 is not whitelisted\n",_x]];
+					_failures = _failures + [format ["Transportitem %1 is not whitelisted\n",_x]];
 				};		
 				
 			};
