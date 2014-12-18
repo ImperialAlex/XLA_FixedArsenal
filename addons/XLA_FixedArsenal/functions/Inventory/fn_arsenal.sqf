@@ -829,7 +829,6 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListAdd": {
-		diag_log "ADD_LIST";
 		_display = _this select 0;
 		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
@@ -847,9 +846,7 @@ switch _mode do {
 					{
 						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["cfgweapons"])
 						if (_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							diag_log "---------------------ADD_GUN";
-							diag_log _xCfg;
+							_xCfg = configfile >> "cfgweapons" >> _x;						
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
