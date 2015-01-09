@@ -1,9 +1,8 @@
 #define ALL_SIDE side = -2;
-#define CIV_SIDE side = 3;
 #define EAST_SIDE side = 0;
-#define INDEP_SIDE side = 2;
-#define NONE_SIDE side = -1;
 #define WEST_SIDE side = 1;
+#define INDEP_SIDE side = 2;
+#define CIV_SIDE side = 3;
 
 class CfgWeapons {
 
@@ -253,9 +252,14 @@ class CfgWeapons {
 	class H_Cap_red: H_HelmetB { CIV_SIDE };
 	class H_Bandanna_surfer : H_HelmetB {CIV_SIDE };
 	class H_Bandanna_mcamo : H_Bandanna_surfer { WEST_SIDE };
-
-	class H_Bandanna_surfer_blk : H_Bandanna_surfer { CIV_SIDE };
-	class H_Bandanna_surfer_grn : H_Bandanna_surfer { CIV_SIDE };
+	class H_Bandanna_surfer_blk : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_surfer_cbr : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_surfer_grn : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_surfer_gry : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_surfer_khk : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_surfer_khk_hs : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_sand : H_Bandanna_surfer { ALL_SIDE };
+	class H_Bandanna_sgg : H_Bandanna_surfer { ALL_SIDE };
 	class H_Beret_02 : H_Beret_blk { WEST_SIDE };
 	class H_Beret_blk_POLICE : H_Beret_blk { CIV_SIDE };
 	class H_Beret_grn_SF : H_Beret_blk { WEST_SIDE };
@@ -270,6 +274,10 @@ class CfgWeapons {
 	class H_Cap_surfer : H_Cap_red { CIV_SIDE };
 	class H_Cap_tan_specops_US : H_Cap_red { WEST_SIDE };
 	class H_Cap_usblack : H_Cap_red { WEST_SIDE };
+	class H_Cap_grn : H_Cap_red { ALL_SIDE };
+	class H_Cap_oli : H_Cap_red { ALL_SIDE };
+	class H_Cap_oli_hs : H_Cap_red { ALL_SIDE };
+	class H_Cap_headphones : H_HelmetB { ALL_SIDE };
 	class H_CrewHelmetHeli_B : H_HelmetB { WEST_SIDE };
 	class H_CrewHelmetHeli_I : H_CrewHelmetHeli_B { INDEP_SIDE };
 	class H_CrewHelmetHeli_O : H_CrewHelmetHeli_B { EAST_SIDE };
