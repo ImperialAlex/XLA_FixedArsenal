@@ -39,6 +39,16 @@
 #define BACKPACK_SLOT  901
 
 
+#define NO_SIDE -1
+#define EAST_SIDE 0
+#define WEST_SIDE 1
+#define INDEP_SIDE 2
+#define CIV_SIDE 3
+#define NEUTRAL_SIDE 4
+#define ENEMY_SIDE 5
+#define FRIENDLY_SIDE 6
+#define LOGIC_SIDE 7
+
 #define GETVIRTUALCARGO\
 	_virtualItemCargo =\
 		(missionnamespace call XLA_fnc_getVirtualItemCargo) +\
@@ -75,26 +85,36 @@
 	_virtualSideBlacklist = (missionnamespace call XLA_fnc_getVirtualSideBlacklist) + (_cargo call XLA_fnc_getVirtualSideBlacklist);\
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);
 
-// ADVANCED CONDITIONS:
+// ADVANCED CONDITION:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
 	_item_to_test = ITEM;\
 	_condition = false;\
-	if (!_fullVersion) then {\
+	if (!_fullVersion) then { \
 		_sideAllowed = false;\
-		_itemSide = -99;\
-		{ 	_config = (configFile / _x / _item_to_test );\
-			DEBUGHELPER = DEBUGHELPER + [ _item_to_test ];\
-			if (isNumber (_config >> "side")) then\
-			{	_itemSide = getNumber (_config >> "side");\
-			} else { _itemSide = -55;	};\
-		_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) )); } forEach  CONFIG ;\
-		if (_sideAllowed) then {\
+		_itemSide = NO_SIDE;\
+		{ \
+			_config = (configFile / _x / _item_to_test );\
+			if (isNumber (_config >> "side")) then { \
+				_itemSide = getNumber (_config >> "side");\
+			};\
+			_factionstring = getText(_config >> "faction");\
+			if (_factionstring != "" && _factionstring != "Default") then { \
+				_configFaction = (configFile / "CfgFactionClasses" / _factionstring);\
+				if (isNumber (_configFaction >> "side")) then { \
+					_itemSide = getNumber (_configFaction >> "side"); \
+				};\
+			};\
+			_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) ));\
+		} forEach  CONFIG ;\
+		if (_sideAllowed) then { \
 			_condition = !((BLIST find _item_to_test) >= 0 );\
-		} else {\
+		} else { \
 			_condition = ((WLIST find _item_to_test) >= 0);\
 		};\
-	} else { _condition = true;} ;\
-	_condition;
+	} else { \
+		_condition = true;\
+	};\
+	_condition;	
 	
 scopename _fnc_scriptName;
 private ["_cfg","_inventory","_isCfg","_blacklist"];
