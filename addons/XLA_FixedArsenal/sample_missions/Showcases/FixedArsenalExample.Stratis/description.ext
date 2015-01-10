@@ -1,0 +1,33 @@
+//http://community.bistudio.com/wiki/description.ext#Header_Class
+class header {
+	gametype = COOP;
+	minplayers = 1;
+	maxplayers = 8;
+	playerCountMultipleOf = 1;  //Coop type missions use 1, Team type missions use 2
+};
+
+// Respawn type
+respawn = 3;
+// Delay in seconds before playable unit respawns.
+respawnDelay = 0;
+// Delay in seconds before vehicle respawns.
+respawnVehicleDelay = 10;
+// 0 to disable the score table (it can still be opened manually by pressing 'P' key).
+respawnDialog = 0;
+// Respawn templates from CfgRespawnTemplates. You can combine any number of them together.
+respawnTemplates[] = {"Base"};
+// 1 to respawn player when he joins the game. Available only for INSTANT and BASE respawn types.
+respawnOnStart = 0;
+// When 1, the score table contains score of all playable units as opposed to players only.
+aikills = 1;
+
+enableDebugConsole = 1;
+allowFunctionsRecompile = 1;
+
+
+author = Alexander (ImperialAlex);
+onLoadMission = "Have fun";
+onLoadIntroTime = true;
+onLoadMissionTime = true;
+onLoadName = XLA | Getting Started;
+
