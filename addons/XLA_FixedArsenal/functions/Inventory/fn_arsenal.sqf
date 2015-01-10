@@ -787,7 +787,7 @@ switch _mode do {
 				case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON;
 				case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN: {
 					{
-						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["cfgweapons"])
+						GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
 						if (_condition) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;						
 							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
@@ -874,7 +874,7 @@ switch _mode do {
 				case IDC_RSCDISPLAYARSENAL_TAB_CARGOTHROW;
 				case IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT: {
 					{
-						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_x,["CfgWeapons"])
+						GETCONDITION(_virtualMagazineCargo,_virtualSideCargo,_virtualMagazineBlacklist,_virtualSideBlacklist,_x,["CfgMagazines"])
 						if (_condition) then {
 							_xCfg = configfile >> "cfgmagazines" >> _x;
 							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
