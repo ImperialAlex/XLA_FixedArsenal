@@ -1257,7 +1257,7 @@ switch _mode do {
 							_center unlinkItem _x;
 						}
 					} forEach  _assigned;
-				} else {_center additem _item;};
+				} else {_center addweapon _item;};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_BINOCULARS: {
 			if (_item == "") then {
@@ -1274,7 +1274,7 @@ switch _mode do {
 							_center removeWeapon _x;
 						}
 					} forEach  _assigned;
-				} else {_center additem _item;};
+				} else {_center addweapon _item;};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON: {
 				_isDifferentWeapon = (primaryweapon _center call bis_fnc_baseWeapon) != _item;
