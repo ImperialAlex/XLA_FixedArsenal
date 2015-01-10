@@ -342,6 +342,10 @@ class CfgAmmos {
 };
 
 class CfgGlasses {
+
+	// -------------------------------------------------------------------	
+	//		Vanilla Arma 3 equipment
+	// -------------------------------------------------------------------
 	class None { FRIENDLY_SIDE };
 	class G_Spectacles: None { CIV_SIDE };
 	class G_Spectacles_Tinted: None { CIV_SIDE };
@@ -383,4 +387,28 @@ class CfgGlasses {
 	class G_Shades_Blue: None { FRIENDLY_SIDE };
 	class G_Sport_Blackred: None { CIV_SIDE };
 	class G_Tactical_Clear: None { FRIENDLY_SIDE };
+};
+
+
+class CfgVehicles {
+	// static-weapon related backpacks have factions set,
+	// so we only need to set the 'cargo' backpacks.
+	class ReammoBox;
+	class Bag_Base: ReammoBox { FRIENDLY_SIDE };
+	class B_AssaultPack_Base;
+	class B_AssaultPack_dgtl : B_AssaultPack_Base { INDEP_SIDE };
+	class B_AssaultPack_mcamo : B_AssaultPack_Base { WEST_SIDE };
+	class B_Kitbag_Base;
+	class B_Kitbag_mcamo : B_Kitbag_Base { WEST_SIDE };
+	class B_Bergen_Base;
+	class B_Bergen_mcamo : B_Bergen_Base { WEST_SIDE };
+	class B_FieldPack_Base: Bag_Base { EAST_SIDE };
+	class B_Carryall_Base;
+	class B_Carryall_ocamo : B_Carryall_Base { EAST_SIDE };
+	class B_Carryall_oucamo : B_Carryall_Base { EAST_SIDE };
+	class B_Carryall_mcamo : B_Carryall_Base { WEST_SIDE };
+	class B_TacticalPack_Base;
+	class B_TacticalPack_mcamo : B_TacticalPack_Base { WEST_SIDE };
+	class B_TacticalPack_ocamo : B_AssaultPack_Base { EAST_SIDE };
+
 };
