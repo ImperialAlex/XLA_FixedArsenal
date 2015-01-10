@@ -954,7 +954,9 @@ switch _mode do {
 				for "_l" from 0 to (lbsize _ctrlList - 1) do {
 					if ({(_ctrlList lbdata _l) == _x} count _current > 0) exitwith {_ctrlList lbsetcursel _l;};
 				};
-				if (lbcursel _ctrlList < 0) then {_ctrlList lbsetcursel 0;};
+				if (lbcursel _ctrlList < 0) then {
+					// You are wearing things that aren't part of this arsenal's inventory.
+					_ctrlList lbsetcursel 0;};
 			};
 		} foreach _data;
 	};
