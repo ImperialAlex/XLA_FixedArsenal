@@ -47,30 +47,37 @@
 // ADVANCED CONDITION:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
 	_item_to_test = ITEM;\
+	diag_log ("item to test: " + (str ITEM));\
+	diag_log ("configs to test: " + (str CONFIG));\
 	_condition = false;\
 	if (!_fullVersion) then { \
 		_sideAllowed = false;\
 		_itemSide = NO_SIDE;\
 		{ \
+			diag_log "checking:" + (str _x);\
 			_config = (configFile / _x / _item_to_test );\
 			if (isNumber (_config >> "side")) then { \
 				_itemSide = getNumber (_config >> "side");\
+				diag_log ("found side: " + (str _itemSide));\
 			};\
 			_factionstring = getText(_config >> "faction");\
 			if (_factionstring != "" && _factionstring != "Default") then { \
 				_configFaction = (configFile / "CfgFactionClasses" / _factionstring);\
+				diag_log ("found faction: " + (str _factionstring));\
 				if (isNumber (_configFaction >> "side")) then { \
 					_itemSide = getNumber (_configFaction >> "side"); \
+					diag_log ("found side via faction: " + (str _itemSide));\
 				};\
 			};\
-			_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "-1") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "-1") >= 0) ) ));\
-		} forEach  CONFIG ;\
+			_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "ALL") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "ALL") >= 0) ) ));\
+		} forEach CONFIG ;\
 		if (_sideAllowed) then { \
 			_condition = !((BLIST find _item_to_test) >= 0 );\
 		} else { \
 			_condition = ((WLIST find _item_to_test) >= 0);\
 		};\
 	} else { \
+		diag_log "full version, allowed";\
 		_condition = true;\
 	};\
 	_condition;	
