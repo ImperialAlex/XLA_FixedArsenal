@@ -1756,7 +1756,7 @@ switch _mode do {
 			_ctrlDLC = _display displayctrl IDC_RSCDISPLAYARSENAL_INFO_DLCICON;
 			_ctrlDLCBackground = _display displayctrl IDC_RSCDISPLAYARSENAL_INFO_DLCBACKGROUND;
 			_dlc = gettext (_itemCfg >> "dlc");
-			if (_dlc != "" && _fullVersion) then {
+			if ( _dlc != "" ) then {
 
 				_cfgDLC = configfile >> "cfgMods" >> _dlc;
 				_logo = gettext (_cfgDLC >> "logo");
