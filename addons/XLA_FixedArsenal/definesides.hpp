@@ -1,14 +1,13 @@
 
-#define NO_SIDE side = -1;
-#define EAST_SIDE side = 0;
-#define WEST_SIDE side = 1;
-#define INDEP_SIDE side = 2;
-#define CIV_SIDE side = 3;
-#define NEUTRAL_SIDE side = 4;
-#define ENEMY_SIDE side = 5;
-#define FRIENDLY_SIDE side = 6;
-#define LOGIC_SIDE side = 7;
-
+#define NO_SIDE XLA_arsenal_side = -1;
+#define EAST_SIDE XLA_arsenal_side = 0;
+#define WEST_SIDE XLA_arsenal_side = 1;
+#define INDEP_SIDE XLA_arsenal_side = 2;
+#define CIV_SIDE XLA_arsenal_side = 3;
+#define NEUTRAL_SIDE XLA_arsenal_side = 4;
+#define ENEMY_SIDE XLA_arsenal_side = 5;
+#define FRIENDLY_SIDE XLA_arsenal_side = 6;
+#define LOGIC_SIDE XLA_arsenal_side = 7;
 
 
 class CfgWeapons {
@@ -17,7 +16,7 @@ class CfgWeapons {
 	//		Vanilla Arma 3 equipment
 	// -------------------------------------------------------------------
 
-	class Default;
+	class Default { FRIENDLY_SIDE };
 	class Rifle_Base_F;
 
 	class arifle_Katiba_Base_F: Rifle_Base_F { EAST_SIDE };

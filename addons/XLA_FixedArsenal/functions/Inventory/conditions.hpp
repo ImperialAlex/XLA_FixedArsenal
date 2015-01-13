@@ -65,6 +65,9 @@
 					_itemSide = getNumber (_configFaction >> "side"); \
 				};\
 			};\
+			if (isNumber (_config >> "XLA_arsenal_side")) then { \
+				_itemSide = getNumber (_config >> "XLA_arsenal_side");\
+			};\
 			_sideAllowed = (_sideAllowed || ( ( ((WSIDES find (str _itemSide)) >= 0) || ((WSIDES find "ALL") >= 0) ) && !( ((BSIDES find _itemSide) >= 0 ) || ((BSIDES find "ALL") >= 0) ) ));\
 		} forEach CONFIG ;\
 		if (_sideAllowed) then { \
