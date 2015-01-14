@@ -3283,6 +3283,8 @@ switch _mode do {
 		_box = [_this,0,objnull,[objnull]] call bis_fnc_param;
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
+		_string = [_this,3,"",[""]] call bis_fnc_param;
+		_box setVariable ["XLA_fnc_arsenal_string", _string];
 
 		if ({} isequalto {}) then {
 			_box setvariable ["XLA_fnc_arsenal_condition",_condition,true];
@@ -3321,8 +3323,11 @@ switch _mode do {
 		_boxes = missionnamespace getvariable ["XLA_fnc_arsenal_boxes",[]];
 		{
 			if (isnil {_x getvariable "XLA_fnc_arsenal_action"}) then {
+				_string = (_x getVariable ["XLA_fnc_arsenal_string",""]);
+				if (  _string == "" ) then { _string = localize "STR_A3_Arsenal"};
+				diag_log ("string: " + _string);
 				_action = _x addaction [
-					localize "STR_A3_Arsenal",
+					_string,
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
@@ -3334,7 +3339,7 @@ switch _mode do {
 					false,
 					"",
 					"
-						_cargo = _target getvariable ['XLA_addVirtualWeaponCargo_cargo',[[],[],[],[]]];
+						_cargo = _target getvariable ['XLA_addVirtualWeaponCargo_cargo',[[],[],[],[],[]]];						
 						if ({count _x > 0} count _cargo == 0) then {
 							_target removeaction (_target getvariable ['XLA_fnc_arsenal_action',-1]);
 							_target setvariable ['XLA_fnc_arsenal_action',nil];
