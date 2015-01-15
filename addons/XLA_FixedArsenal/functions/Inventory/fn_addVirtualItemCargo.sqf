@@ -38,13 +38,14 @@ if (count _classes == 0 && _add < 0) then {
 	{
 		//--- Use config classnames (conditions are case sensitive)
 		private ["_class"];
-		_x = [_x,0,"",["",true]] call bis_fnc_paramin;
+		_x = [_x,0,"",["",true,1]] call bis_fnc_paramin;
 		if (typename _x == typename true) then {_x = "%ALL";};
 		_class = switch _type do {
 			case 0;
 			case 1: {configname (configfile >> "cfgweapons" >> _x);};
 			case 2: {configname (configfile >> "cfgmagazines" >> _x);};
 			case 3: {configname (configfile >> "cfgvehicles" >> _x);};
+			case 4: {str _x;};
 			default {""};
 		};
 		if (_class == "") then {_class = _x;};
