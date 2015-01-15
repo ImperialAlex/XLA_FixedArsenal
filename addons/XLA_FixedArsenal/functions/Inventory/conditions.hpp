@@ -47,8 +47,6 @@
 // ADVANCED CONDITION:
 #define GETCONDITION(WLIST,WSIDES,BLIST,BSIDES,ITEM,CONFIG)\
 	_item_to_test = ITEM;\
-	diag_log ("item to test: " + (str ITEM));\
-	diag_log ("configs to test: " + (str CONFIG));\
 	_condition = false;\
 	if (!_fullVersion) then { \
 		_sideAllowed = false;\

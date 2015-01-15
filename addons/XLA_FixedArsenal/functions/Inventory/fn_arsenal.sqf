@@ -3325,7 +3325,6 @@ switch _mode do {
 			if (isnil {_x getvariable "XLA_fnc_arsenal_action"}) then {
 				_string = (_x getVariable ["XLA_fnc_arsenal_string",""]);
 				if (  _string == "" ) then { _string = localize "STR_A3_Arsenal"};
-				diag_log ("string: " + _string);
 				_action = _x addaction [
 					_string,
 					{
