@@ -328,6 +328,21 @@ class CfgWeapons {
 	class H_RacingHelmet_1_F : H_HelmetB_camo { CIV_SIDE };
 
 
+	// -------------------------------------------------------------------	
+	//	TFAR Radios (ITEM)
+	// 	Sadly these cannot be included since they inherit from things with
+	// 	scope = 2 (ItemWatch, ItemRadio)
+	//--------------------------------------------------------------------
+	/*
+	class tf_microdagr: ItemWatch { FRIENDLY_SIDE };
+	class tf_anprc152 : ItemRadio { WEST_SIDE };
+	class tf_rf7800str : ItemRadio { WEST_SIDE };
+	class tf_anprc148jem : ItemRadio { INDEP_SIDE };
+	class tf_anprc154 : ItemRadio { INDEP_SIDE };
+	class tf_fadak : ItemRadio { EAST_SIDE };
+	class tf_pnr1000a : ItemRadio { EAST_SIDE };
+	*/
+
 };
 
 class CfgMagazines {
@@ -390,8 +405,15 @@ class CfgGlasses {
 
 
 class CfgVehicles {
+
+	// -------------------------------------------------------------------	
+	//	Vanilla A3 Backpacks. 
+	//	!! Most mods seem to inherit from one of these
+	// -------------------------------------------------------------------
+
 	// static-weapon related backpacks have factions set,
 	// so we only need to set the 'cargo' backpacks.
+
 	class ReammoBox;
 	class Bag_Base: ReammoBox { FRIENDLY_SIDE };
 	class B_AssaultPack_Base;
@@ -410,4 +432,27 @@ class CfgVehicles {
 	class B_TacticalPack_mcamo : B_TacticalPack_Base { WEST_SIDE };
 	class B_TacticalPack_ocamo : B_AssaultPack_Base { EAST_SIDE };
 
+	// -------------------------------------------------------------------	
+	//	TFAR Radios (Backpacks)
+	//	These are safe to include since they inherit from Bag_Base (scope=1)
+	// -------------------------------------------------------------------
+
+	class TFAR_Bag_Base : Bag_Base {};
+	class tf_rt1523g : TFAR_Bag_Base { WEST_SIDE };
+	class tf_rt1523g_big : tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_black : tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_fabric : tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_green : tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_rhs : tf_rt1523g{ WEST_SIDE };
+	class tf_rt1523g_sage : tf_rt1523g { WEST_SIDE };
+	class tf_anarc210 : TFAR_Bag_Base { WEST_SIDE };
+
+	class tf_anprc155 : TFAR_Bag_Base { INDEP_SIDE };
+	class tf_anprc155_coyote : tf_anprc155 { INDEP_SIDE	};
+	class tf_anarc164: TFAR_Bag_Base { INDEP_SIDE };
+
+	class tf_mr3000 : TFAR_Bag_Base { EAST_SIDE };
+	class tf_mr3000_multicam : tf_mr3000 { EAST_SIDE };
+	class tf_mr3000_rhs : tf_mr3000 { EAST_SIDE };
+	class tf_mr6000l: TFAR_Bag_Base { EAST_SIDE };
 };
