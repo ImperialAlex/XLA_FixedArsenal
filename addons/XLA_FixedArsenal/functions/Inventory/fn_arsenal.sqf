@@ -2252,12 +2252,13 @@ switch _mode do {
 		_ctrlLoadCargoText = _display displayCtrl IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT;
 		_ctrlLoadCargo progresssetposition _load;
 
-		diag_log "button_carg";
-		diag_log _load;
-		// We want the actual values as Xkg/Ykg:
-		MASSCONVERT(_capacity);
+
 		//Remember that MASSCONVERT overrides the variable, so take a new one here
 		_loadKG  = _load * _capacity;
+		MASSCONVERT(_loadKG);
+		// We want the actual values as Xkg/Ykg:
+		MASSCONVERT(_capacity);
+				
 		_ctrlLoadCargoText ctrlSetText (format ["%1%2/%3%4",_loadKG,_massunit,_capacity,_massunit]);
 
 		_value = {_x == _item} count _items;
