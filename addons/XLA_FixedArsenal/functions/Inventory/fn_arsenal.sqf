@@ -138,6 +138,11 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 // especially if we want the values to fit with what AGM says about total weight....
 // This is based on the way AGM calulcates overall inventory weight:
 // Compatible with AGM's Imperial/Metric switch:
+
+// Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc 
+// TODO: Actually calculate the maximum weight possible with the currently available relevant items
+// (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
+
 #define MAXINVENTORYMASS 1220
 
 #define MASSCONVERT(MASS)\
@@ -1480,6 +1485,7 @@ switch _mode do {
 				};
 				default {[]};
 			};
+			diag_log _load;
 			_capacity = getnumber (configfile >> "CfgVehicles" >> _container >> "maximumLoad");
 
 			_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYARSENAL_LOADCARGO;
@@ -1489,7 +1495,7 @@ switch _mode do {
 			MASSCONVERT(_capacity);
 			//Remember that MASSCONVERT overrides the variable, so take a new one here
 			_loadKG  = _load;
-			MASSCONVERT(_loadKG); 
+			MASSCONVERT(_loadKG); 		
 			_ctrlLoadCargoText ctrlSetText (format ["%1%2/%3%4",_loadKG,_massunit,_capacity,_massunit]);
 
 
@@ -1943,7 +1949,7 @@ switch _mode do {
 							if (_item == "H_Beret_blk") then {[0.95,localize "STR_difficulty3"]} else {[]}, //--- Easter egg
 							// We can't add the values as 5th/6th/.. etc parameters, since _fnc_showStats uses _foreachindex
 							// So, instead, we had them add the end of the respective array. (Better style,too!)
-							// We also need to access the units (kg, seconnds, etc) iteratively, so we add them, too
+							// We also need to access the units (kg, seconds, etc) iteratively, so we add them, too
 							[_statArmor,localize "str_a3_rscdisplayarsenal_stat_armor",_valueArmor,""], //armor has no real unit
 							[_statMaximumLoad,localize "str_a3_rscdisplayarsenal_stat_load",_valueMaximumLoad,_massunit],
 							[_statMass,localize "str_a3_rscdisplayarsenal_stat_weight",_valueMass,_massunit]
@@ -2246,11 +2252,12 @@ switch _mode do {
 		_ctrlLoadCargoText = _display displayCtrl IDC_RSCDISPLAYARSENAL_LOADCARGOTEXT;
 		_ctrlLoadCargo progresssetposition _load;
 
+		diag_log "button_carg";
+		diag_log _load;
 		// We want the actual values as Xkg/Ykg:
 		MASSCONVERT(_capacity);
 		//Remember that MASSCONVERT overrides the variable, so take a new one here
-		_loadKG  = _load;
-		MASSCONVERT(_loadKG); 
+		_loadKG  = _load * _capacity;
 		_ctrlLoadCargoText ctrlSetText (format ["%1%2/%3%4",_loadKG,_massunit,_capacity,_massunit]);
 
 		_value = {_x == _item} count _items;
