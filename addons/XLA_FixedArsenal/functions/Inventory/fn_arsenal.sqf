@@ -2431,10 +2431,13 @@ switch _mode do {
 				(_inventory select 8 select 0) //--- Handgun
 			] - [""];
 			_inventoryMagazines = (
-				(_inventory select 0 select 1) + //--- Uniform
-				(_inventory select 1 select 1) + //--- Vest
+				(_inventory select 0 select 1) + //--- Uniform items
+				(_inventory select 1 select 1) + //--- Vest items
 				(_inventory select 2 select 1) //--- Backpack items
 			) - [""];
+			_inventoryUniform = _inventory select 0 select 0;
+			_inventoryVest = _inventory select 1 select 0;
+			_inventoryBackpack = _inventory select 2 select 0;		
 			_inventoryItems = (
 				[_inventory select 0 select 0] + (_inventory select 0 select 1) + //--- Uniform
 				[_inventory select 1 select 0] + (_inventory select 1 select 1) + //--- Vest
@@ -2467,6 +2470,13 @@ switch _mode do {
 			//  blue = non existing class (but whitelisted) - indicates typo/error in whitelist!
 			_whitelisted = true;
 			_isclass = true;
+
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryUniform,["CfgWeapons"])
+			_whitelisted = _whitelisted && _condition;
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryVest,["CfgWeapons"])
+			_whitelisted = _whitelisted && _condition;
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryBackpack,["CfgVehicles"])
+			_whitelisted = _whitelisted && _condition;
 			if (
 				{
 					_item = _x; 
@@ -2498,6 +2508,12 @@ switch _mode do {
 			};
 
 			if (
+				!(isclass(configfile >> "cfgweapons" >> _inventoryUniform))
+			||
+				!(isclass(configfile >> "cfgweapons" >> _inventoryVest))
+			||
+				!(isclass(configfile >> "cfgvehicles" >> _inventoryBackpack))
+			||
 			{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 			||
 			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
@@ -2559,10 +2575,13 @@ switch _mode do {
 				(_inventory select 8 select 0) //--- Handgun
 			] - [""];
 			_inventoryMagazines = (
-				(_inventory select 0 select 1) + //--- Uniform
-				(_inventory select 1 select 1) + //--- Vest
+				(_inventory select 0 select 1) + //--- Uniform items
+				(_inventory select 1 select 1) + //--- Vest items
 				(_inventory select 2 select 1) //--- Backpack items
 			) - [""];
+			_inventoryUniform = _inventory select 0 select 0;
+			_inventoryVest = _inventory select 1 select 0;
+			_inventoryBackpack = _inventory select 2 select 0;		
 			_inventoryItems = (
 				[_inventory select 0 select 0] + (_inventory select 0 select 1) + //--- Uniform
 				[_inventory select 1 select 0] + (_inventory select 1 select 1) + //--- Vest
@@ -2609,6 +2628,13 @@ switch _mode do {
 			if (_inventoryStarred) then {
 				_whitelisted = true;
 				_isclass = true;
+
+				GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryUniform,["CfgWeapons"])
+				_whitelisted = _whitelisted && _condition;
+				GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryVest,["CfgWeapons"])
+				_whitelisted = _whitelisted && _condition;
+				GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryBackpack,["CfgVehicles"])
+				_whitelisted = _whitelisted && _condition;
 				if (
 					{
 						_item = _x; 
@@ -2639,7 +2665,13 @@ switch _mode do {
 					_whitelisted = false;		
 				};
 
-				if (
+				if (			
+					!(isclass(configfile >> "cfgweapons" >> _inventoryUniform))
+				||
+					!(isclass(configfile >> "cfgweapons" >> _inventoryVest))
+				||
+					!(isclass(configfile >> "cfgvehicles" >> _inventoryBackpack))
+				||
 				{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 				||
 				{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
@@ -2701,10 +2733,13 @@ switch _mode do {
 				(_inventory select 8 select 0) //--- Handgun
 			] - [""];
 			_inventoryMagazines = (
-				(_inventory select 0 select 1) + //--- Uniform
-				(_inventory select 1 select 1) + //--- Vest
+				(_inventory select 0 select 1) + //--- Uniform items
+				(_inventory select 1 select 1) + //--- Vest items
 				(_inventory select 2 select 1) //--- Backpack items
 			) - [""];
+			_inventoryUniform = _inventory select 0 select 0;
+			_inventoryVest = _inventory select 1 select 0;
+			_inventoryBackpack = _inventory select 2 select 0;		
 			_inventoryItems = (
 				[_inventory select 0 select 0] + (_inventory select 0 select 1) + //--- Uniform
 				[_inventory select 1 select 0] + (_inventory select 1 select 1) + //--- Vest
@@ -2737,6 +2772,13 @@ switch _mode do {
 			//  blue = non existing class (but whitelisted) - indicates typo/error in whitelist!
 			_whitelisted = true;
 			_isclass = true;
+
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryUniform,["CfgWeapons"])
+			_whitelisted = _whitelisted && _condition;
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryVest,["CfgWeapons"])
+			_whitelisted = _whitelisted && _condition;
+			GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_inventoryBackpack,["CfgVehicles"])
+			_whitelisted = _whitelisted && _condition;
 			if (
 				{
 					_item = _x; 
@@ -2768,6 +2810,12 @@ switch _mode do {
 			};
 
 			if (
+				!(isclass(configfile >> "cfgweapons" >> _inventoryUniform))
+			||
+				!(isclass(configfile >> "cfgweapons" >> _inventoryVest))
+			||
+				!(isclass(configfile >> "cfgvehicles" >> _inventoryBackpack))
+			||
 			{_item = _x; !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 			||
 			{_item = _x; {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
@@ -2926,8 +2974,7 @@ switch _mode do {
 						if (_fullVersion) then {_center setspeaker _item;};
 					};
 					case "bis_fnc_setunitinsignia": {
-						//TODO: Allow insignia/face/speaker by adding a "fake" side for them?
-						if (_fullVersion) then {[_center,_importArray select ((_foreachindex - 3) max 0)] call bis_fnc_setunitinsignia;};
+						[_center,_importArray select ((_foreachindex - 3) max 0)] call bis_fnc_setunitinsignia;
 					};
 				};
 			} foreach _importArray;
