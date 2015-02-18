@@ -341,7 +341,8 @@ if !("weapons" in _blacklist) then {
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
 	if !("uniform" in _blacklist) then {{
-			GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo) ,_virtualSideCargo, (_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist) ,_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
+			_macroArray = ["CfgWeapons","CfgMagazines"];
+			GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo) ,_virtualSideCargo, (_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist) ,_virtualSideBlacklist,_x,_macroArray)
 			if (_condition) then {
 				_object additemtouniform _x;
 			} else {
@@ -349,7 +350,8 @@ if !(_isCfg) then {
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
-		GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),_virtualSideCargo, (_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist) ,_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
+		_macroArray = ["CfgWeapons","CfgMagazines"];
+		GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),_virtualSideCargo, (_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist) ,_virtualSideBlacklist,_x,_macroArray)
 		if (_condition) then {
 			_object additemtovest _x;
 		} else {
@@ -357,7 +359,8 @@ if !(_isCfg) then {
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
-		GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),_virtualSideCargo,(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
+		_macroArray = ["CfgWeapons","CfgMagazines"];
+		GETCONDITION((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),_virtualSideCargo,(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_virtualSideBlacklist,_x,_macroArray)
 		if (_condition) then {
 			_object additemtobackpack _x;
 		} else {
@@ -375,7 +378,8 @@ if !("transportMagazines" in _blacklist) then {
 		} foreach ([_cfg >> "transportMagazines"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_x,["CfgWeapons","CfgMagazines"])
+				_macroArray = ["CfgWeapons","CfgMagazines"];
+				GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_x,_macroArray)
 				if (_condition) then {
 					_object addmagazinecargoglobal _x;
 				} else {
