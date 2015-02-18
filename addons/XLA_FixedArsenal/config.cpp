@@ -466,7 +466,7 @@ class RscDisplayFixedArsenal: RscDisplayArsenal {
 				class ButtonCustom: RscButtonMenu
 				{
 					idc = 27360;
-					text = "FAVOURITES";					
+					text = "STARRED";					
 					x = "6.83333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
 					y = "1.6 * 					(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
 					w = "6.33333 * 					(			((safezoneW / safezoneH) min 1.2) / 40)";
