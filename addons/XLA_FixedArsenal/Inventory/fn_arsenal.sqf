@@ -272,6 +272,9 @@ switch _mode do {
 		_ctrlButtonOK = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONOK;
 		_ctrlButtonOK ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonOK',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
 
+		_ctrlButtonTry = _display displayctrl IDC_RSCDISPLAYARSENAL_CONTROLSBAR_BUTTONTRY;
+		_ctrlButtonTry ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTry',[ctrlparent (_this select 0)]] call bis_fnc_garage;};"];
+
 		_ctrlArrowLeft = _display displayctrl IDC_RSCDISPLAYARSENAL_ARROWLEFT;
 		_ctrlArrowLeft ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonCargo',[ctrlparent (_this select 0),-1]] call bis_fnc_arsenal;};"];
 
@@ -289,7 +292,7 @@ switch _mode do {
 
 		_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_VALUENAME;
 		_ctrlTemplateValue ctrladdeventhandler ["lbselchanged","with uinamespace do {['templateSelChanged',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
-		_ctrlTemplateValue ctrladdeventhandler ["lbdblclick","with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call bis_fnc_arsenal;};"];
+		_ctrlTemplateValue ctrladdeventhandler ["lbdblclick",format ["with uinamespace do {['buttonTemplateOK',[ctrlparent (_this select 0)]] call %1;};",_function]];
 
 		//--- Menus
 		_ctrlIcon = _display displayctrl IDC_RSCDISPLAYARSENAL_TAB;
@@ -372,6 +375,10 @@ switch _mode do {
 					[IDC_RSCDISPLAYARSENAL_SPACE_SPACEARSENAL,IDC_RSCDISPLAYARSENAL_SPACE_SPACEARSENALBACKGROUND],
 					[IDC_RSCDISPLAYARSENAL_SPACE_SPACEGARAGE,IDC_RSCDISPLAYARSENAL_SPACE_SPACEGARAGEBACKGROUND]
 				];
+			} else {
+				_ctrlSpace = _display displayctrl IDC_RSCDISPLAYARSENAL_SPACE_SPACE;
+				_ctrlSpace ctrlsetposition [-1,-1,0,0];
+				_ctrlSpace ctrlcommit 0;
 			};
 		} else {
 			{
@@ -759,7 +766,8 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["BIS_fnc_arsenal_center",player]);
 		_target = (missionnamespace getvariable ["BIS_fnc_arsenal_target",player]);
 
-		_disMax = if (bis_fnc_arsenal_type > 0) then {sizeof typeof _center * 1.5} else {5};
+		_disMax = if (bis_fnc_arsenal_type > 0) then {((boundingboxreal _center select 0) vectordistance (boundingboxreal _center select 1)) * 1.5} else {5};
+		//_disMax = if (bis_fnc_arsenal_type > 0) then {sizeof typeof _center * 1.5} else {5};
 		_disMin = _disMax * 0.15;
 		_z = _this select 1;
 		_dis = BIS_fnc_arsenal_campos select 0;
@@ -1070,9 +1078,9 @@ switch _mode do {
 				_ctrlLineTabPosX = (_ctrlTabPos select 0) + (_ctrlTabPos select 2) - 0.01;
 				_ctrlLineTabPosY = (_ctrlTabPos select 1);
 				_ctrlLineTabLeft ctrlsetposition [
-					_ctrlLineTabPosX,
+					safezoneX,//_ctrlLineTabPosX,
 					_ctrlLineTabPosY,
-					(ctrlposition _ctrlList select 0) - _ctrlLineTabPosX,
+					(ctrlposition _ctrlList select 0) - safezoneX,//_ctrlLineTabPosX,
 					ctrlposition _ctrlTab select 3
 				];
 				_ctrlLineTabLeft ctrlcommit 0;
@@ -1191,7 +1199,7 @@ switch _mode do {
 				_ctrlLineTabRight ctrlsetposition [
 					_ctrlLineTabPosX,
 					_ctrlLineTabPosY,
-					(_ctrlTabPos select 0) - _ctrlLineTabPosX + 0.01,
+					safezoneX + safezoneW - _ctrlLineTabPosX,//(_ctrlTabPos select 0) - _ctrlLineTabPosX + 0.01,
 					ctrlposition _ctrlTab select 3
 				];
 				_ctrlLineTabRight ctrlcommit 0;
@@ -2521,6 +2529,7 @@ switch _mode do {
 			IDC_RSCDISPLAYARSENAL_FRAMERIGHT,
 			IDC_RSCDISPLAYARSENAL_LINEICON,
 			IDC_RSCDISPLAYARSENAL_LINETABLEFT,
+			IDC_RSCDISPLAYARSENAL_LINETABLEFTSELECTED,
 			IDC_RSCDISPLAYARSENAL_LINETABRIGHT,
 			IDC_RSCDISPLAYARSENAL_ICON,
 			IDC_RSCDISPLAYARSENAL_TAB,

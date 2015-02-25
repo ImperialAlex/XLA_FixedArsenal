@@ -43,8 +43,6 @@ _handgunMagazine = "";
 	};
 } foreach weaponsitems _center;
 
-[_primaryWeaponMagazine] call bis_fnc_log;
-
 //--- Get current values
 private ["_export"];
 _export = [
