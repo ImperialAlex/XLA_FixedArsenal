@@ -2363,7 +2363,7 @@ switch _mode do {
 		_ctrlTemplateButtonAddCustom ctrlEnable false;
 		_ctrlTemplateButtonAddCustom ctrlEnable true;
 		//Update the screen!
-		['showTemplatesCustom',[_display]] call XLA_fnc_arsenal;
+		['buttonTemplateCustom',[_display]] call XLA_fnc_arsenal;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -2479,20 +2479,23 @@ switch _mode do {
 			_whitelisted = _whitelisted && _condition;
 			if (
 				{
-					_item = _x; 
-					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
+					_item = _x;
+					_macroArray = ["CfgWeapons","CfgMagazines"];
+					GETCONDITION(_virtualWeaponCargo,_virtualSideCargo,_virtualWeaponBlacklist,_virtualSideBlacklist,_item,_macroArray)
 					!_condition
 				} count _inventoryWeapons > 0
 				||
 				{	
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
+					_macroArray = ["CfgWeapons","CfgMagazines"];
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray) 
 					!_condition
 				} count _inventoryMagazines > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+					_macroArray = ["CfgWeapons","CfgMagazines"];
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 					!_condition
 				} count _inventoryItems > 0
 				||
@@ -2528,19 +2531,19 @@ switch _mode do {
 			};
 
 			if (!_whitelisted) then {
-				// yelllow
+				// yelllow -- at least one ting not whitelisted but all classes found
 				//"Marking as yellow" call bis_fnc_log;
 				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
 			};
 
 			if (!_isclass) then {
-			 	// orange
+			 	// orange -- at least one thing not whitelisted and at least one class not found
 			 	//"Marking as orange" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
 			};
 			
 			if (_whitelisted&&!_isclass) then {
-				// blue
+				// blue -- everything whitelisted but at least one class not found
 				//"Marking as blue" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
 			};
@@ -2644,13 +2647,15 @@ switch _mode do {
 					||
 					{	
 						_item = _x;
-						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray) 
 						!_condition
 					} count _inventoryMagazines > 0
 					||
 					{
 						_item = _x;
-						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 						!_condition
 					} count _inventoryItems > 0
 					||
@@ -2686,19 +2691,19 @@ switch _mode do {
 				};
 
 				if (!_whitelisted) then {
-					// yelllow
+					// yelllow -- at least one ting not whitelisted but all classes found
 					//"Marking as yellow" call bis_fnc_log;
 					_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
 				};
 
 				if (!_isclass) then {
-				 	// orange
+				 	// orange -- at least one thing not whitelisted and at least one class not found
 				 	//"Marking as orange" call bis_fnc_log;
 				 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
 				};
 				
 				if (_whitelisted&&!_isclass) then {
-					// blue
+					// blue -- everything whitelisted but at least one class not found
 					//"Marking as blue" call bis_fnc_log;
 				 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
 				};
@@ -2788,13 +2793,15 @@ switch _mode do {
 				||
 				{	
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"]) 
+					_macroArray = ["CfgWeapons","CfgMagazines"];
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray) 
 					!_condition
 				} count _inventoryMagazines > 0
 				||
 				{
 					_item = _x;
-					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+					_macroArray = ["CfgWeapons","CfgMagazines"];
+					GETCONDITION((_virtualItemCargo + _virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist + _virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 					!_condition
 				} count _inventoryItems > 0
 				||
@@ -2830,19 +2837,19 @@ switch _mode do {
 			};
 
 			if (!_whitelisted) then {
-				// yelllow
+				// yelllow -- at least one ting not whitelisted but all classes found
 				//"Marking as yellow" call bis_fnc_log;
 				_ctrlList lnbsetcolor [[_lbAdd,0],[1,1,0,0.75]];
 			};
 
 			if (!_isclass) then {
-			 	// orange
+			 	// orange -- at least one thing not whitelisted and at least one class not found
 			 	//"Marking as orange" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[1,0.5,0,0.75]];
 			};
 			
 			if (_whitelisted&&!_isclass) then {
-				// blue
+				// blue -- everything whitelisted but at least one class not found
 				//"Marking as blue" call bis_fnc_log;
 			 	_ctrlList lnbsetcolor [[_lbAdd,0],[0,0,1,0.75]];
 			};
@@ -2912,21 +2919,24 @@ switch _mode do {
 					};
 
 					case "additemtouniform": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtouniform _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtovest": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtovest _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtobackpack": {
-						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,["CfgWeapons","CfgMagazines"])
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION((_virtualItemCargo+_virtualMagazineCargo),_virtualSideCargo,(_virtualItemBlacklist+_virtualMagazineBlacklist),_virtualSideBlacklist,_item,_macroArray)
 						if (_condition) then {
 							for "_n" from 1 to _to do {_center additemtobackpack _item;};
 						} else {ERROR};
@@ -2955,7 +2965,8 @@ switch _mode do {
 						if (_condition) then {_center addmagazine _item;} else {ERROR};
 					};
 					case "additem": {
-						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,["CfgWeapons"])
+						_macroArray = ["CfgWeapons","CfgMagazines"];
+						GETCONDITION(_virtualItemCargo,_virtualSideCargo,_virtualItemBlacklist,_virtualSideBlacklist,_item,_macroArray)
 						if (_condition) then {_center additem _item;} else {ERROR};
 					};
 					case "assignitem": {
@@ -3051,6 +3062,7 @@ switch _mode do {
 		_ctrlTemplateButtonAddCustom ctrlSetText "STAR";
 		_ctrlTemplateButtonAddCustom ctrlRemoveAllEventHandlers "ButtonClick";
 		_ctrlTemplateButtonAddCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateAddCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+		_ctrlTemplateButtonAddCustom ctrlShow true;
 
 		//--- Disable LOAD and DELETE buttons when no items are available
 		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
@@ -3101,6 +3113,11 @@ switch _mode do {
 		_ctrlTemplateButtonDelete = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONDELETE;
 		_ctrlTemplateButtonDelete ctrlenable ((lnbsize _ctrlTemplateValue select 0) > 0);
 
+		// Hide the "STAR" button
+		_ctrlTemplateButtonAddCustom = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlEnable false;
+		_ctrlTemplateButtonAddCustom ctrlShow false;
+
 		['showMessage',[_display,localize "STR_A3_RscDisplayArsenal_message_save"]] call XLA_fnc_arsenal;
 	};
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -3140,6 +3157,7 @@ switch _mode do {
 		_ctrlTemplateButtonAddCustom ctrlSetText "UN-STAR";
 		_ctrlTemplateButtonAddCustom ctrlRemoveAllEventHandlers "ButtonClick";
 		_ctrlTemplateButtonAddCustom ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonTemplateRemoveCustom',[ctrlparent (_this select 0)]] call XLA_fnc_arsenal;};"];
+		_ctrlTemplateButtonAddCustom ctrlShow true;
 
 		//--- Disable LOAD, DELETE and UN-STAR buttons when no items are available
 		_enableButtons = (lnbsize _ctrlTemplateValue select 0) > 0;
@@ -3196,7 +3214,9 @@ switch _mode do {
 
 		// Also disable the "STAR" button - sorry, but you need to copy that over into your "own" outfit first!
 		_ctrlTemplateButtonAddCustom = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONADDCUSTOM;
+		_ctrlTemplateButtonAddCustom ctrlSetText "STAR";
 		_ctrlTemplateButtonAddCustom ctrlEnable false;
+		_ctrlTemplateButtonAddCustom ctrlShow true;
 
 		//Set highlight for tab		
 		_ctrlTemplateButtonMission = _display displayCtrl IDC_RSCDISPLAYARSENAL_TEMPLATE_BUTTONMISSION;
