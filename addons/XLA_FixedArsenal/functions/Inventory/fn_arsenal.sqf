@@ -157,8 +157,17 @@ switch _mode do {
 	case "Init": {
 		["bis_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
+		_toggleSpace = uinamespace getvariable ["BIS_fnc_arsenal_toggleSpace",false];
 		BIS_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
 		BIS_fnc_arsenal_toggleSpace = nil;
+
+		if (_fullVersion) then {
+			if (vehicle player != player) then {
+				moveout player;
+				player switchaction "playerstand";
+				[player,0] call bis_fnc_setheight;
+			};
+		};
 
 		INITTYPES
 		["InitGUI",[_display,"bis_fnc_arsenal"]] call bis_fnc_arsenal;
@@ -199,7 +208,7 @@ switch _mode do {
 		};
 
 		with missionnamespace do {
-			[missionnamespace,"arsenalOpened",[_display]] call bis_fnc_callscriptedeventhandler;
+			[missionnamespace,"arsenalOpened",[_display,_toggleSpace]] call bis_fnc_callscriptedeventhandler;
 		};
 		["bis_fnc_arsenal"] call bis_fnc_endloadingscreen;
 	};
@@ -356,6 +365,10 @@ switch _mode do {
 		if (missionname != "arsenal") then {
 			_ctrlButtonOK ctrlsettext "";
 			_ctrlButtonOK ctrlenable false;
+			_ctrlButtonOK ctrlsettooltip "";
+			_ctrlButtonTry ctrlsettext "";
+			_ctrlButtonTry ctrlenable false;
+			_ctrlButtonTry ctrlsettooltip "";
 		};
 
 		if (_fullVersion) then {
@@ -448,7 +461,8 @@ switch _mode do {
 			_progressStep = 1 / count _configArray;
 			{
 				_class = _x;
-				if ((getnumber (_class >> "scope") == 2 || getnumber (_class >> "scopeArsenal") == 2) && {gettext (_class >> "model") != ""} && {count (_class >> "linkeditems") == 0}) then {
+				_scope = if (isnumber (_class >> "scopeArsenal")) then {getnumber (_class >> "scopeArsenal")} else {getnumber (_class >> "scope")};
+				if (_scope == 2 && {gettext (_class >> "model") != ""} && {count (_class >> "linkeditems") == 0}) then {
 					private ["_weaponType","_weaponTypeCategory"];
 					_weaponType = ((configname _class) call bis_fnc_itemType);
 					_weaponTypeCategory = _weaponType select 0;
@@ -485,7 +499,8 @@ switch _mode do {
 
 				//--- Voices
 				{
-					if ((getnumber (_x >> "scope") == 2 || getnumber (_x >> "scopeArsenal") == 2) && gettext (_x >> "protocol") != "RadioProtocolBase") then {
+					_scope = if (isnumber (_x >> "scopeArsenal")) then {getnumber (_x >> "scopeArsenal")} else {getnumber (_x >> "scope")};
+					if (_scope == 2 && gettext (_x >> "protocol") != "RadioProtocolBase") then {
 						private ["_items"];
 						_items = _data select IDC_RSCDISPLAYARSENAL_TAB_VOICE;
 						_items set [count _items,configname _x];
@@ -495,8 +510,11 @@ switch _mode do {
 				//--- Insignia
 				{
 					private ["_items"];
-					_items = _data select IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA;
-					_items set [count _items,configname _x];
+					_scope = if (isnumber (_x >> "scopeArsenal")) then {getnumber (_x >> "scopeArsenal")} else {getnumber (_x >> "scope")};
+					if (_scope == 2) then {
+						_items = _data select IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA;
+						_items set [count _items,configname _x];
+					};
 				} foreach ("isclass _x" configclasses (configfile >> "cfgunitinsignia"));
 			};
 
@@ -572,7 +590,7 @@ switch _mode do {
 			curatorcamera cameraeffect ["internal","back"];
 		};
 		with missionnamespace do {
-			[missionnamespace,"arsenalClosed",[]] call bis_fnc_callscriptedeventhandler;
+			[missionnamespace,"arsenalClosed",[displaynull,uinamespace getvariable ["BIS_fnc_arsenal_toggleSpace",false]]] call bis_fnc_callscriptedeventhandler;
 		};
 	};
 
@@ -1516,7 +1534,9 @@ switch _mode do {
 				{
 					private ["_item"];
 					_item = _x;
-					if (CONDITION(_virtualItemCargo)) then {
+					_itemCfg = configfile >> "cfgweapons" >> _item;
+					_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
+					if (_scope == 2 && CONDITION(_virtualItemCargo)) then {
 						_type = _item call bis_fnc_itemType;
 						_idcList = switch (_type select 1) do {
 							case "AccessoryMuzzle": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE};
@@ -1525,9 +1545,9 @@ switch _mode do {
 							default {-1};
 						};
 						_ctrlList = _display displayctrl _idcList;
-						_lbAdd = _ctrlList lbadd gettext (configfile >> "cfgweapons" >> _item >> "displayName");
+						_lbAdd = _ctrlList lbadd gettext (_itemCfg >> "displayName");
 						_ctrlList lbsetdata [_lbAdd,_item];
-						_ctrlList lbsetpicture [_lbAdd,gettext (configfile >> "cfgweapons" >> _item >> "picture")];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_itemCfg >> "picture")];
 						if (_fullVersion) then {
 							_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
 						};
@@ -1719,11 +1739,15 @@ switch _mode do {
 					if (count _x > 0) then {
 						_ctrlStat progresssetposition (_x select 0);
 						_ctrlText ctrlsettext toupper (_x select 1);
-						_ctrlText ctrlshow true;
+						_ctrlText ctrlsetfade 0;
+						_ctrlText ctrlcommit 0;
+						//_ctrlText ctrlshow true;
 						_h = _h + _rowH;
 					} else {
 						_ctrlStat progresssetposition 0;
-						_ctrlText ctrlshow false;
+						_ctrlText ctrlsetfade 1;
+						_ctrlText ctrlcommit 0;
+						//_ctrlText ctrlshow false;
 					};
 				} foreach _this;
 				_ctrlStatsPos set [1,(_ctrlStatsPos select 3) * (1 - _h)];

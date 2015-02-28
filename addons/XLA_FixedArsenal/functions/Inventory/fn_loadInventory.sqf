@@ -95,6 +95,7 @@ if (_isCfg) then {
 		if (isclass (configfile >> "cfgglasses" >> _item)) then {
 			_goggles = _item;
 		} else {
+			private ["_type"];
 			_type = getnumber (configfile >> "cfgweapons" >> _item >> "iteminfo" >> "type");
 			switch _type do {
 				case VEST_SLOT: {_vest = _item;};
@@ -108,7 +109,12 @@ if (_isCfg) then {
 	_vest = _inventory select 1 select 0;
 	_headgear = _inventory select 3;
 	_goggles = _inventory select 4;
-	_linkedItemsMisc = (_inventory select 9) + (_inventory select 6 select 1) + (_inventory select 7 select 1) + (_inventory select 8 select 1);
+	//_linkedItemsMisc = (_inventory select 9) + (_inventory select 6 select 1) + (_inventory select 7 select 1) + (_inventory select 8 select 1);
+	//--- Do isNil check because weaponAccessories command can return nil
+	_linkedItemsMisc = (_inventory select 9);
+	if (!isnil {_inventory select 6 select 1}) then {_linkedItemsMisc = _linkedItemsMisc + (_inventory select 6 select 1)} else {_linkedItemsMisc = _linkedItemsMisc + ["","",""];};
+	if (!isnil {_inventory select 7 select 1}) then {_linkedItemsMisc = _linkedItemsMisc + (_inventory select 7 select 1)} else {_linkedItemsMisc = _linkedItemsMisc + ["","",""];};
+	if (!isnil {_inventory select 8 select 1}) then {_linkedItemsMisc = _linkedItemsMisc + (_inventory select 8 select 1)} else {_linkedItemsMisc = _linkedItemsMisc + ["","",""];};
 };
 
 //--- Remove
