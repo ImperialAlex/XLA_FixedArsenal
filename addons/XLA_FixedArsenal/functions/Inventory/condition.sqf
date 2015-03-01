@@ -10,7 +10,7 @@
 		[uniform _center,vest _center,headgear _center,goggles _center];\
 	_virtualWeaponCargo = [];\
 	{\
-		_weapon = _x;\
+		_weapon = _x call XLA_fnc_baseWeapon;\
 		_virtualWeaponCargo set [count _virtualWeaponCargo,_weapon];\
 		{\
 			private ["_item"];\
