@@ -33,6 +33,7 @@
 
 #include "\A3\ui_f\hpp\defineDIKCodes.inc"
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
+#include "condition.sqf"
 
 #define FADE_DELAY	0.15
 
@@ -101,29 +102,6 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 		_types set [IDC_RSCDISPLAYARSENAL_TAB_CARGOPUT,[/*"Mine","MineBounding","MineDirectional"*/]];\
 		_types set [IDC_RSCDISPLAYARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
 
-#define GETVIRTUALCARGO\
-	_virtualItemCargo =\
-		(missionnamespace call XLA_fnc_getVirtualItemCargo) +\
-		(_cargo call XLA_fnc_getVirtualItemCargo) +\
-		items _center +\
-		assigneditems _center +\
-		primaryweaponitems _center +\
-		secondaryweaponitems _center +\
-		handgunitems _center +\
-		[uniform _center,vest _center,headgear _center,goggles _center];\
-	_virtualWeaponCargo = [];\
-	{\
-		_weapon = _x call XLA_fnc_baseWeapon;\
-		_virtualWeaponCargo set [count _virtualWeaponCargo,_weapon];\
-		{\
-			private ["_item"];\
-			_item = gettext (_x >> "item");\
-			if !(_item in _virtualItemCargo) then {_virtualItemCargo set [count _virtualItemCargo,_item];};\
-		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponCargo) + (_cargo call XLA_fnc_getVirtualWeaponCargo) + weapons _center + [binocular _center]);\
-	_virtualMagazineCargo = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo) + magazines _center;\
-	_virtualBackpackCargo = (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo) + [backpack _center];
-
 #define STATS_WEAPONS\
 	["reloadtime","dispersion","maxrange","hit","mass","initSpeed"],\
 	[true,true,true,true,false,false]
@@ -132,7 +110,6 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	["armor","maximumLoad","mass"],\
 	[true,false,false]
 
-#define CONDITION(LIST)	(_fullVersion || {"%ALL" in LIST} || {{_item == _x} count LIST > 0})
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
 
@@ -2650,10 +2627,12 @@ switch _mode do {
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
 		_string = [_this,3,(localize "STR_A3_Arsenal"),[""]] call bis_fnc_param;
+		_allowEquipped = [_this,4,true,[true]] call bis_fnc_param;
 
 		if ({} isequalto {}) then {
 			_box setvariable ["XLA_fnc_arsenal_condition",_condition,true];
 			_box setvariable ["XLA_fnc_arsenal_string",_string,true];
+			_box setvariable ["XLA_fnc_arsenal_allowEquipped",_allowEquipped,true];
 		};
 
 		if (_allowAll) then {
