@@ -1290,7 +1290,7 @@ switch _mode do {
 						_center removeweapon primaryweapon _center;
 					} else {
 						_weaponAccessories = primaryweaponitems _center - [""];
-						[_center,_item,4] call XLA_fnc_addWeapon;
+						[_center,_item,4] call bis_fnc_addWeapon;
 						{_center addprimaryweaponitem _x;} foreach _weaponAccessories;
 					};
 				};
@@ -1303,7 +1303,7 @@ switch _mode do {
 						_center removeweapon secondaryweapon _center;
 					} else {
 						_weaponAccessories = secondaryweaponitems _center - [""];
-						[_center,_item,2] call XLA_fnc_addWeapon;
+						[_center,_item,2] call bis_fnc_addWeapon;
 						{_center addsecondaryweaponitem _x;} foreach _weaponAccessories;
 					};
 				};
@@ -1316,7 +1316,7 @@ switch _mode do {
 						_center removeweapon handgunweapon _center;
 					} else {
 						_weaponAccessories = handgunitems _center - [""];
-						[_center,_item,4] call XLA_fnc_addWeapon;
+						[_center,_item,4] call bis_fnc_addWeapon;
 						{_center addhandgunitem _x;} foreach _weaponAccessories;
 					};
 				};
