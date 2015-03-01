@@ -21,6 +21,7 @@
 			1 (Optional): BOOL - true to make all weapons and items in the game available in the box (default: false)
 			2 (Optional): Condition for showing the Arsenal action (default: {true})
 				      Passed arguments are the same as in addAction condition, i.e., _target - the box, _this - caller
+			3 (Optional, XLA): String - Message to show for the Arsenal action (default: "Arsenal")
 
 		"AmmoboxExit" - Remove virtual ammobox
 			0: OBJECT - ammobox
@@ -2648,9 +2649,11 @@ switch _mode do {
 		_box = [_this,0,objnull,[objnull]] call bis_fnc_param;
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
+		_string = [_this,3,(localize "STR_A3_Arsenal"),[""]] call bis_fnc_param;
 
 		if ({} isequalto {}) then {
 			_box setvariable ["XLA_fnc_arsenal_condition",_condition,true];
+			_box setvariable ["XLA_fnc_arsenal_string",_string,true];
 		};
 
 		if (_allowAll) then {
@@ -2687,7 +2690,7 @@ switch _mode do {
 		{
 			if (isnil {_x getvariable "XLA_fnc_arsenal_action"}) then {
 				_action = _x addaction [
-					localize "STR_A3_Arsenal",
+					(_x getVariable ["XLA_fnc_arsenal_string",(localize "STR_A3_Arsenal")]),
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
