@@ -1,6 +1,6 @@
 // XLA FixedArsenal by Alexander (ImperialAlex)
 
-#include "uiconfig.cpp"
+#include "uiconfig.h"
 
 class CfgPatches
 {
