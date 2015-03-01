@@ -1,6 +1,7 @@
 // XLA FixedArsenal by Alexander (ImperialAlex)
 
 #include "uiconfig.h"
+#include "definesides.h"
 
 class CfgPatches
 {
@@ -53,12 +54,3 @@ class CfgFunctions {
 class CfgScriptPaths {
 	FixedArsenal = "\XLA_FixedArsenal\scripts\"; // "
 };
-
-
-
-
-
-
-
-		
-
