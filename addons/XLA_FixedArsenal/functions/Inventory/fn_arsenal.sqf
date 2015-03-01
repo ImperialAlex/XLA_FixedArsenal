@@ -1273,14 +1273,37 @@ switch _mode do {
 			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_GOGGLES: {
 				if (_item == "") then {removegoggles _center} else {_center addgoggles _item;};
 			};
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_NVGS;
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS: {
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_NVGS: {
 				if (_item == "") then {
-					_weapons = [];
-					for "_l" from 0 to (lbsize _ctrlList) do {_weapons set [count _weapons,tolower (_ctrlList lbdata _l)];};
+					// In order to remove the current NVG, we'd have to know its name.
+					// Since mods might introduce their own NVG's, we can't just hard-code this
+					// Instead, we need to get all the assigned items:
+					_assigned = assignedItems _center;
 					{
-						if (tolower _x in _weapons) then {_center removeweapon _x;};
-					} foreach (assigneditems _center);
+						//For each assigned item we need to check if it's an NVG
+						// if it is, we unlink (=unassign + remove ) it.
+						_type = _x call bis_fnc_itemType;
+						if ((_type select 1) == "NVGoggles") then {
+							_center unlinkItem _x;
+						}
+					} forEach  _assigned;
+				} else {_center addweapon _item;};
+			};
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS: {
+			if (_item == "") then {
+					// In order to remove the current BINOCULAR, we'd have to know its name.
+					// Since mods might introduce their own BINOCULAR's, we can't just hard-code this
+					// Instead, we need to get all the assigned items:
+					_assigned = assignedItems _center;
+					{
+						//For each assigned item we need to check if it's an BINOCULAR
+						// if it is, we unlink (=unassign + remove ) it.
+						_type = _x call bis_fnc_itemType;
+						if ((_type select 1) == "Binocular") then {
+							_center unlinkItem _x;
+							_center removeWeapon _x;
+						}
+					} forEach  _assigned;
 				} else {_center addweapon _item;};
 			};
 			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON: {
@@ -1322,17 +1345,84 @@ switch _mode do {
 					};
 				};
 			};
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_MAP;
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_GPS;
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO;
-			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS;
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_MAP: {
+				if (_item == "") then {
+						// In order to remove the current MAP, we'd have to know its name.
+						// Since mods might introduce their own MAP's , we can't just hard-code this
+						// Instead, we need to get all the assigned items:
+						_assigned = assignedItems _center;
+						{
+							//For each assigned item we need to check if it's an MAP
+							// if it is, we unlink (=unassign + remove ) it.
+							_type = _x call bis_fnc_itemType;
+							if ((_type select 1) == "Map") then {
+								_center unlinkItem _x;
+							}
+						} forEach  _assigned;
+					} else {_center linkitem _item;};
+				};
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_GPS: {
+				if (_item == "") then {
+					// In order to remove the current GPS, we'd have to know its name.
+					// Since mods might introduce their own GPS's, we can't just hard-code this
+					// Instead, we need to get all the assigned items:
+					_assigned = assignedItems _center;
+					{
+						//For each assigned item we need to check if it's an GPS
+						// if it is, we unlink (=unassign + remove ) it.
+						_type = _x call bis_fnc_itemType;
+						if ((_type select 1) == "GPS") then {
+							_center unlinkItem _x;
+						}
+					} forEach  _assigned;
+				} else {_center linkitem _item;};
+			};
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO: {
+				if (_item == "") then {
+					// In order to remove the current RADIO, we'd have to know its name.
+					// Since mods might introduce their own RADIO's, we can't just hard-code this
+					// Instead, we need to get all the assigned items:
+					_assigned = assignedItems _center;
+					{
+						//For each assigned item we need to check if it's an RADIO
+						// if it is, we unlink (=unassign + remove ) it.
+						_type = _x call bis_fnc_itemType;
+						if ((_type select 1) == "Radio") then {
+							_center unlinkItem _x;
+						}
+					} forEach  _assigned;
+				} else {_center linkitem _item;};
+			};
+			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS: {
+				if (_item == "") then {
+					// In order to remove the current NVG, we'd have to know its name.
+					// Since mods might introduce their own NVG's, we can't just hard-code this
+					// Instead, we need to get all the assigned items:
+					_assigned = assignedItems _center;
+					{
+						//For each assigned item we need to check if it's an NVG
+						// if it is, we unlink (=unassign + remove ) it.
+						_type = _x call bis_fnc_itemType;
+						if ((_type select 1) == "Compass") then {
+							_center unlinkItem _x;
+						}
+					} forEach  _assigned;
+				} else {_center linkitem _item;};
+			};
 			case IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH: {
 				if (_item == "") then {
-					_items = [];
-					for "_l" from 0 to (lbsize _ctrlList) do {_items set [count _items,tolower (_ctrlList lbdata _l)];};
-					{
-						if (tolower _x in _items) then {_center unassignitem _x; _center removeitem _x;};
-					} foreach (assigneditems _center);
+						// In order to remove the current WATCH, we'd have to know its name.
+						// Since mods might introduce their own WATCH's, we can't just hard-code this
+						// Instead, we need to get all the assigned items:
+						_assigned = assignedItems _center;
+						{
+							//For each assigned item we need to check if it's an WATCH
+							// if it is, we unlink (=unassign + remove ) it.
+							_type = _x call bis_fnc_itemType;
+							if ((_type select 1) == "Watch") then {
+								_center unlinkItem _x;
+							}
+						} forEach  _assigned;	
 				} else {
 					_center linkitem _item;
 				};
