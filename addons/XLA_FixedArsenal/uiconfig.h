@@ -12,7 +12,7 @@ class RscProgress;
 class RscText;
 class RscTitle;
 
-class RscButtonArsenal: RscButtonMenu
+class RscButtonFixedArsenal: RscButtonMenu
 {
  animTextureNormal = "#(argb,8,8,3)color(1,1,1,0.8)";
  animTextureDisabled = "#(argb,8,8,3)color(1,1,1,1.0)";
@@ -45,14 +45,14 @@ class RscButtonArsenal: RscButtonMenu
  };
 };
 
-class RscDisplayArsenal
+class RscDisplayFixedArsenal
 {
  idd = -1;
  enableSimulation = 1;
- scriptName = "RscDisplayArsenal";
- scriptPath = "GUI";
- onLoad = "[""onLoad"",_this,""RscDisplayArsenal"",'GUI'] call 	(uinamespace getvariable 'BIS_fnc_initDisplay')";
- onUnload = "[""onUnload"",_this,""RscDisplayArsenal"",'GUI'] call 	(uinamespace getvariable 'BIS_fnc_initDisplay')";
+ scriptName = "RscDisplayFixedArsenal";
+ scriptPath = "FixedArsenal";
+ onLoad = "[""onLoad"",_this,""RscDisplayFixedArsenal"",'GUI'] call 	(uinamespace getvariable 'BIS_fnc_initDisplay')";
+ onUnload = "[""onUnload"",_this,""RscDisplayFixedArsenal"",'GUI'] call 	(uinamespace getvariable 'BIS_fnc_initDisplay')";
  icon = "\A3\Ui_f\data\Logos\a_64_ca.paa";
  logo = "\A3\Ui_f\data\Logos\arsenal_1024_ca.paa";
  class ControlsBackground
@@ -661,11 +661,11 @@ class RscDisplayArsenal
    };
   };
   class MessageBox: RscMessageBox{};
-  class TabPrimaryWeapon: RscButtonArsenal
+  class TabPrimaryWeapon: RscButtonFixedArsenal
   {
    idc = "930 + 						0";
    idcx = 930;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\PrimaryWeapon_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\PrimaryWeapon_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 0 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -678,12 +678,12 @@ class RscDisplayArsenal
    idcx = 900;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListPrimaryWeapon: RscListBox
@@ -703,11 +703,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabSecondaryWeapon: RscButtonArsenal
+  class TabSecondaryWeapon: RscButtonFixedArsenal
   {
    idc = "930 + 				1";
    idcx = 931;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\SecondaryWeapon_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\SecondaryWeapon_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 1.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -720,12 +720,12 @@ class RscDisplayArsenal
    idcx = 901;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListSecondaryWeapon: RscListBox
@@ -745,11 +745,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabHandgun: RscButtonArsenal
+  class TabHandgun: RscButtonFixedArsenal
   {
    idc = "930 + 						2";
    idcx = 932;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Handgun_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Handgun_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 3 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -762,12 +762,12 @@ class RscDisplayArsenal
    idcx = 902;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListHandgun: RscListBox
@@ -787,11 +787,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabUniform: RscButtonArsenal
+  class TabUniform: RscButtonFixedArsenal
   {
    idc = "930 + 						3";
    idcx = 933;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Uniform_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Uniform_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 4.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -804,12 +804,12 @@ class RscDisplayArsenal
    idcx = 903;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListUniform: RscListBox
@@ -829,11 +829,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabVest: RscButtonArsenal
+  class TabVest: RscButtonFixedArsenal
   {
    idc = "930 + 								4";
    idcx = 934;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Vest_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Vest_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 6 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -846,12 +846,12 @@ class RscDisplayArsenal
    idcx = 904;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListVest: RscListBox
@@ -871,11 +871,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabBackpack: RscButtonArsenal
+  class TabBackpack: RscButtonFixedArsenal
   {
    idc = "930 + 						5";
    idcx = 935;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Backpack_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Backpack_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 7.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -888,12 +888,12 @@ class RscDisplayArsenal
    idcx = 905;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListBackpack: RscListBox
@@ -913,11 +913,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabHeadgear: RscButtonArsenal
+  class TabHeadgear: RscButtonFixedArsenal
   {
    idc = "930 + 						6";
    idcx = 936;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Headgear_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Headgear_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 9 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -930,12 +930,12 @@ class RscDisplayArsenal
    idcx = 906;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListHeadgear: RscListBox
@@ -955,11 +955,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabGoggles: RscButtonArsenal
+  class TabGoggles: RscButtonFixedArsenal
   {
    idc = "930 + 						7";
    idcx = 937;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Goggles_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Goggles_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 10.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -972,12 +972,12 @@ class RscDisplayArsenal
    idcx = 907;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListGoggles: RscListBox
@@ -997,11 +997,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabNVGs: RscButtonArsenal
+  class TabNVGs: RscButtonFixedArsenal
   {
    idc = "930 + 								8";
    idcx = 938;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\NVGs_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\NVGs_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 12 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1014,12 +1014,12 @@ class RscDisplayArsenal
    idcx = 908;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListNVGs: RscListBox
@@ -1039,11 +1039,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabBinoculars: RscButtonArsenal
+  class TabBinoculars: RscButtonFixedArsenal
   {
    idc = "930 + 						9";
    idcx = 939;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Binoculars_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Binoculars_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 13.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1056,12 +1056,12 @@ class RscDisplayArsenal
    idcx = 909;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListBinoculars: RscListBox
@@ -1081,11 +1081,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabMap: RscButtonArsenal
+  class TabMap: RscButtonFixedArsenal
   {
    idc = "930 + 								10";
    idcx = 940;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Map_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Map_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 15 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1098,12 +1098,12 @@ class RscDisplayArsenal
    idcx = 910;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListMap: RscListBox
@@ -1123,11 +1123,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabGPS: RscButtonArsenal
+  class TabGPS: RscButtonFixedArsenal
   {
    idc = "930 + 								11";
    idcx = 941;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\GPS_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\GPS_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 16.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1140,12 +1140,12 @@ class RscDisplayArsenal
    idcx = 911;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListGPS: RscListBox
@@ -1165,11 +1165,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabRadio: RscButtonArsenal
+  class TabRadio: RscButtonFixedArsenal
   {
    idc = "930 + 								12";
    idcx = 942;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Radio_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Radio_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 18 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1182,12 +1182,12 @@ class RscDisplayArsenal
    idcx = 912;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListRadio: RscListBox
@@ -1207,11 +1207,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabCompass: RscButtonArsenal
+  class TabCompass: RscButtonFixedArsenal
   {
    idc = "930 + 						13";
    idcx = 943;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Compass_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Compass_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 19.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1224,12 +1224,12 @@ class RscDisplayArsenal
    idcx = 913;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListCompass: RscListBox
@@ -1249,11 +1249,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabWatch: RscButtonArsenal
+  class TabWatch: RscButtonFixedArsenal
   {
    idc = "930 + 								14";
    idcx = 944;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Watch_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Watch_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 21 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1266,12 +1266,12 @@ class RscDisplayArsenal
    idcx = 914;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListWatch: RscListBox
@@ -1291,11 +1291,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabFace: RscButtonArsenal
+  class TabFace: RscButtonFixedArsenal
   {
    idc = "930 + 								15";
    idcx = 945;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Face_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Face_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 22.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1308,12 +1308,12 @@ class RscDisplayArsenal
    idcx = 915;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListFace: RscListBox
@@ -1333,11 +1333,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabVoice: RscButtonArsenal
+  class TabVoice: RscButtonFixedArsenal
   {
    idc = "930 + 								16";
    idcx = 946;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Voice_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Voice_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 24 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1350,12 +1350,12 @@ class RscDisplayArsenal
    idcx = 916;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListVoice: RscListBox
@@ -1375,11 +1375,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabInsignia: RscButtonArsenal
+  class TabInsignia: RscButtonFixedArsenal
   {
    idc = "930 + 						17";
    idcx = 947;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Insignia_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\Insignia_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + 0.5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 25.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1392,12 +1392,12 @@ class RscDisplayArsenal
    idcx = 917;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListInsignia: RscListBox
@@ -1417,11 +1417,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabItemOptic: RscButtonArsenal
+  class TabItemOptic: RscButtonFixedArsenal
   {
    idc = "930 + 						18";
    idcx = 948;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemOptic_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemOptic_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 0 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1434,12 +1434,12 @@ class RscDisplayArsenal
    idcx = 918;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListItemOptic: RscListBox
@@ -1459,11 +1459,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabItemAcc: RscButtonArsenal
+  class TabItemAcc: RscButtonFixedArsenal
   {
    idc = "930 + 						19";
    idcx = 949;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemAcc_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemAcc_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 1.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1476,12 +1476,12 @@ class RscDisplayArsenal
    idcx = 919;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListItemAcc: RscListBox
@@ -1501,11 +1501,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabItemMuzzle: RscButtonArsenal
+  class TabItemMuzzle: RscButtonFixedArsenal
   {
    idc = "930 + 						20";
    idcx = 950;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemMuzzle_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\ItemMuzzle_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 3 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1518,12 +1518,12 @@ class RscDisplayArsenal
    idcx = 920;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListItemMuzzle: RscListBox
@@ -1543,11 +1543,11 @@ class RscDisplayArsenal
    colorSelect2[] = {1,1,1,1};
    colorPictureRightSelected[] = {1,1,1,1};
   };
-  class TabCargoMag: RscButtonArsenal
+  class TabCargoMag: RscButtonFixedArsenal
   {
    idc = "930 + 						21";
    idcx = 951;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoMag_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoMag_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 0 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1560,12 +1560,12 @@ class RscDisplayArsenal
    idcx = 921;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListCargoMag: RscListNBox
@@ -1586,11 +1586,11 @@ class RscDisplayArsenal
    colorSelect[] = {1,1,1,1};
    colorSelect2[] = {1,1,1,1};
   };
-  class TabCargoThrow: RscButtonArsenal
+  class TabCargoThrow: RscButtonFixedArsenal
   {
    idc = "930 + 						22";
    idcx = 952;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoThrow_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoThrow_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 1.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1603,12 +1603,12 @@ class RscDisplayArsenal
    idcx = 922;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListCargoThrow: RscListNBox
@@ -1629,11 +1629,11 @@ class RscDisplayArsenal
    colorSelect[] = {1,1,1,1};
    colorSelect2[] = {1,1,1,1};
   };
-  class TabCargoPut: RscButtonArsenal
+  class TabCargoPut: RscButtonFixedArsenal
   {
    idc = "930 + 						23";
    idcx = 953;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoPut_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoPut_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 3 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1646,12 +1646,12 @@ class RscDisplayArsenal
    idcx = 923;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListCargoPut: RscListNBox
@@ -1672,11 +1672,11 @@ class RscDisplayArsenal
    colorSelect[] = {1,1,1,1};
    colorSelect2[] = {1,1,1,1};
   };
-  class TabCargoMisc: RscButtonArsenal
+  class TabCargoMisc: RscButtonFixedArsenal
   {
    idc = "930 + 						24";
    idcx = 954;
-   text = "<img image='\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoMisc_ca.paa' align='center' size='1.2' />";
+   text = "<img image='\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\CargoMisc_ca.paa' align='center' size='1.2' />";
    x = "safezoneX + safezoneW - 2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
    y = "safezoneY + 0.5 * 0.04 + 4.5 * 0.04";
    w = "1.4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
@@ -1689,12 +1689,12 @@ class RscDisplayArsenal
    idcx = 924;
    x = -1;
    y = -1;
-   animTextureNormal = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDisabled = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureOver = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureFocused = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTexturePressed = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
-   animTextureDefault = "\A3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureNormal = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDisabled = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureOver = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureFocused = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTexturePressed = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
+   animTextureDefault = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\icon_ca.paa";
    color[] = {1,1,1,0.7};
   };
   class ListCargoMisc: RscListNBox
