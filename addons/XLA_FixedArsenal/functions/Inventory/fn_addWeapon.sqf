@@ -15,12 +15,12 @@
 	Primary muzzle name for a followup selectWeapon.
 	
 	How to use:
-	_muzzle = [player, "arifle_SDAR_F", 6] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6] call XLA_fnc_addWeapon;
 	Equips the player with an underwater rifle and six dual purpose magazines.
 	
-	_muzzle = [player, "arifle_SDAR_F", 6, 1] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6, 1] call XLA_fnc_addWeapon;
 	OR
-	_muzzle = [player, "arifle_SDAR_F", 6, "30Rnd_556x45_Stanag"] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6, "30Rnd_556x45_Stanag"] call XLA_fnc_addWeapon;
 	Equips the player with an underwater rifle and six normal magazines.
 */
 
