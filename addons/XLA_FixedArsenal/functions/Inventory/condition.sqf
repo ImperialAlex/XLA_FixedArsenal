@@ -34,4 +34,4 @@
 		} foreach (weapons _center + [binocular _center]);\
 	};
 
-#define CONDITION(LIST)	(_fullVersion || {"%ALL" in LIST} || {{_item == _x} count LIST > 0})
+#define GETCONDITION(LIST)	_XLA_condition = (_fullVersion || {"%ALL" in LIST} || {{_item == _x} count LIST > 0});
