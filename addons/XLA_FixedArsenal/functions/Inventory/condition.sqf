@@ -34,4 +34,8 @@
 		} foreach (weapons _center + [binocular _center]);\
 	};
 
-#define GETCONDITION(LIST)	_XLA_condition = (_fullVersion || {"%ALL" in LIST} || {{_item == _x} count LIST > 0});
+#define GETVIRTUALBLACKLIST hint "blacklisting not yet implemented";
+
+#define GETCONDITION3(WLIST,BLIST,ITEM)	_XLA_condition = (_fullVersion || {"%ALL" in WLIST} || {{ITEM == _x} count WLIST > 0});
+
+#define GETCONDITION(LIST) GETCONDITION3(LIST,[],_item) 
