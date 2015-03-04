@@ -34,7 +34,11 @@
 		} foreach (weapons _center + [binocular _center]);\
 	};
 
-#define GETVIRTUALBLACKLIST hint "blacklisting not yet implemented";
+#define GETVIRTUALBLACKLIST\
+	_virtualItemBlacklist = [];\
+	_virtualMagazineBlacklist = [];\
+	_virtualBackpackBlacklist = [];\
+	_virtualWeaponBlacklist = [];
 
 #define GETCONDITION3(WLIST,BLIST,ITEM)	_XLA_condition = (_fullVersion || {"%ALL" in WLIST} || {{ITEM == _x} count WLIST > 0});
 
