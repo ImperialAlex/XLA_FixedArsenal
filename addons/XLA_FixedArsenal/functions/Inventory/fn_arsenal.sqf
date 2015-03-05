@@ -789,6 +789,8 @@ switch _mode do {
 		};
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
+
 		{	
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _foreachindex);
 			switch _foreachindex do {
@@ -1484,6 +1486,8 @@ switch _mode do {
 		) then {
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 			GETVIRTUALCARGO
+			GETVIRTUALBLACKLIST
+
 
 			private ["_ctrlList"];
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG);
@@ -1579,6 +1583,8 @@ switch _mode do {
 
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 			GETVIRTUALCARGO
+			GETVIRTUALBLACKLIST
+
 
 			{
 				_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _x);
@@ -2328,6 +2334,8 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
+
 
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
@@ -2394,6 +2402,8 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		GETVIRTUALCARGO
+		GETVIRTUALBLACKLIST
+
 
 		_disabledItems = [];
 
