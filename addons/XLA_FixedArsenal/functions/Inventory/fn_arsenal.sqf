@@ -1587,44 +1587,70 @@ switch _mode do {
 			} foreach [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE,IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC,IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC];
 
 			//--- Attachments
-			{
-				_compatibleItems = [];
-				_cfgCompatibleItems = _x >> "compatibleItems";
-				if (isarray _cfgCompatibleItems) then {
-					_compatibleItems = getarray _cfgCompatibleItems;
-				} else {
-					if (isclass _cfgCompatibleItems) then {
-						for "_i" from 0 to (count _cfgCompatibleItems - 1) do {
-							_entry = _cfgCompatibleItems select _i;
-							if (getnumber _entry > 0) then {_compatibleItems set [count _compatibleItems,configname _entry];};
-						};
-					};
-				};
-
+			_compatibleItems = [];
+			if (!(isnil "asdg_jointrails_fnc_getCompatibleAttachments" )) then {
+				_compatibleItems = [_item] call asdg_jointrails_fnc_getCompatibleAttachments;
 				{
 					private ["_item"];
 					_item = _x;
-					_itemCfg = configfile >> "cfgweapons" >> _item;
-					_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
 					GETCONDITION(_virtualItemCargo)
-					if (_scope == 2 && _XLA_condition) then {
+					if (_XLA_condition) then {
 						_type = _item call bis_fnc_itemType;
 						_idcList = switch (_type select 1) do {
-							case "AccessoryMuzzle": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE};
-							case "AccessoryPointer": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC};
-							case "AccessorySights": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC};
+							case "AccessoryMuzzle": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE};
+							case "AccessoryPointer": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMACC};
+							case "AccessorySights": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC};
 							default {-1};
 						};
 						_ctrlList = _display displayctrl _idcList;
-						_lbAdd = _ctrlList lbadd gettext (_itemCfg >> "displayName");
+						_lbAdd = _ctrlList lbadd gettext (configfile >> "cfgweapons" >> _item >> "displayName");
 						_ctrlList lbsetdata [_lbAdd,_item];
-						_ctrlList lbsetpicture [_lbAdd,gettext (_itemCfg >> "picture")];
+						_ctrlList lbsetpicture [_lbAdd,gettext (configfile >> "cfgweapons" >> _item >> "picture")];
 						if (_fullVersion) then {
 							_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
 						};
 					};
 				} foreach _compatibleItems;
-			} foreach ((configfile >> "cfgweapons" >> _item >> "WeaponSlotsInfo") call bis_fnc_returnchildren);
+			} else {
+				{
+					_compatibleItems = [];
+					_cfgCompatibleItems = _x >> "compatibleItems";
+					if (isarray _cfgCompatibleItems) then {
+						_compatibleItems = getarray _cfgCompatibleItems;
+					} else {
+						if (isclass _cfgCompatibleItems) then {
+							for "_i" from 0 to (count _cfgCompatibleItems - 1) do {
+								_entry = _cfgCompatibleItems select _i;
+								if (getnumber _entry > 0) then {_compatibleItems set [count _compatibleItems,configname _entry];};
+							};
+						};
+					};
+
+					{
+						private ["_item"];
+						_item = _x;
+						_itemCfg = configfile >> "cfgweapons" >> _item;
+						_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
+						GETCONDITION(_virtualItemCargo)
+						if (_scope == 2 && _XLA_condition) then {
+							_type = _item call bis_fnc_itemType;
+							_idcList = switch (_type select 1) do {
+								case "AccessoryMuzzle": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE};
+								case "AccessoryPointer": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC};
+								case "AccessorySights": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC};
+								default {-1};
+							};
+							_ctrlList = _display displayctrl _idcList;
+							_lbAdd = _ctrlList lbadd gettext (_itemCfg >> "displayName");
+							_ctrlList lbsetdata [_lbAdd,_item];
+							_ctrlList lbsetpicture [_lbAdd,gettext (_itemCfg >> "picture")];
+							if (_fullVersion) then {
+								_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
+							};
+						};
+					} foreach _compatibleItems;
+				} foreach ((configfile >> "cfgweapons" >> _item >> "WeaponSlotsInfo") call bis_fnc_returnchildren);
+			};
 
 			//--- Magazines
 			_weapon = switch true do {
