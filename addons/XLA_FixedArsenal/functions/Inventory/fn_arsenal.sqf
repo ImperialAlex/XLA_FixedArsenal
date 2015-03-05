@@ -2386,7 +2386,7 @@ switch _mode do {
 				{_item = _x; GETCONDITION(_virtualBackpackCargo) !_XLA_condition || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
 			) then {
 				_ctrlTemplateValue lnbsetcolor [[_lbAdd,0],[1,1,1,0.25]];
-				_ctrlTemplateValue lbsetvalue [_lbAdd,-1];
+				//_ctrlTemplateValue lbsetvalue [_lbAdd,-1];
 			};
 		};
 
