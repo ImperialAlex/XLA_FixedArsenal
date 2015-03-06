@@ -2379,9 +2379,9 @@ switch _mode do {
 			if (
 				{_item = _x; GETCONDITION(_virtualWeaponCargo) !_XLA_condition || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
 				||
-				{_item = _x; GETCONDITION(_virtualItemCargo + _virtualMagazineCargo) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
+				{_item = _x; GETCONDITION(_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
 				||
-				{_item = _x; GETCONDITION(_virtualItemCargo + _virtualMagazineCargo) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
+				{_item = _x; GETCONDITION(_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
 				||
 				{_item = _x; GETCONDITION(_virtualBackpackCargo) !_XLA_condition || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
 			) then {
