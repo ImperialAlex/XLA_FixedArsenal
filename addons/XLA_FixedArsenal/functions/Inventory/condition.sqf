@@ -64,6 +64,8 @@
 		_xla_wlist = WLIST; _xla_blist = BLIST; _xla_item = ITEM;\
 		diag_log ("TESTING: ");\
 		diag_log _xla_item;\
+		diag_log _xla_wlist;\
+		diag_log _xla_blist;\
 		_xla_config = configFile;\
 		{ \
 			diag_log ("pre-class-test: " + str diag_log (configFile / _x / _xla_item));\
