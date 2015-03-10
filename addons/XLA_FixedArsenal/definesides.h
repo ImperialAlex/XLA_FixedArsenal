@@ -347,7 +347,13 @@ class CfgWeapons {
 
 class CfgMagazines {
  	class Default { FRIENDLY_SIDE };
+ 	class CA_Magazine;
+ 	class B_IR_Grenade: CA_Magazine { WEST_SIDE };
+ 	class I_IR_Grenade: B_IR_Grenade { INDEP_SIDE };
+ 	class O_IR_Grenade: B_IR_Grenade { EAST_SIDE };
+
  	// All magazines are available to all sides since the arsenal only offers gun-specific ammo
+ 	// Exceptions: Grenades that are obviously faction specific.
 };
 
 class CfgAmmos {

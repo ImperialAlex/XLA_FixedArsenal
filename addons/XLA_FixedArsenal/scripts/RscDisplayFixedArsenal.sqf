@@ -4,7 +4,7 @@ _class = _this select 2;
 
 switch _mode do {
 	case "onLoad": {
-		if (isnil {missionnamespace getvariable "bis_fnc_arsenal_data"}) then {
+		if (isnil {missionnamespace getvariable "XLA_fnc_arsenal_data"}) then {
 			startloadingscreen [""];
 			['Init',_params] spawn (uinamespace getvariable "XLA_fnc_arsenal");
 		} else {

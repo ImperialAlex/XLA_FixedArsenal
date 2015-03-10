@@ -13,7 +13,7 @@
 		3 (Optional): BOOL - true to add Arsenal action (default: true)
 
 	Returns:
-	ARRAY of ARRAYs - all virtual items within the object's space in format [<items>,<weapons>,<magazines>,<backpacks>]
+	ARRAY of ARRAYs - all virtual items within the object's space in format [<items>,<weapons>,<magazines>,<backpacks>,<sides>]
 
 */
 
