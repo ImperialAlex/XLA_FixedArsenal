@@ -127,10 +127,12 @@ class CfgWeapons {
 	class Vest_Camo_Base;
 	class V_BandollierB_khk: Vest_Camo_Base {EAST_SIDE};
 	class V_Chestrig_khk: Vest_Camo_Base {EAST_SIDE};
+	class V_Press_F: Vest_Camo_Base { CIV_SIDE };
 
 	class V_TacVest_khk: Vest_Camo_Base {FRIENDLY_SIDE};
 
-	class V_Rebreather: Vest_Camo_Base {WEST_SIDE};
+	class V_Rebreather: Vest_Camo_Base { NO_SIDE };
+	class V_RebreatherB: V_Rebreather { WEST_SIDE };
 	class V_RebreatherIR: V_Rebreather {EAST_SIDE};
 	class V_RebreatherIA: V_Rebreather {INDEP_SIDE};
 
@@ -191,6 +193,7 @@ class CfgWeapons {
 	class U_IG_Guerilla2_3 { INDEP_SIDE };
 	class U_IG_Guerilla3_1 { INDEP_SIDE };
 	class U_IG_Guerilla3_2 { INDEP_SIDE };
+	class U_IG_Guerrilla_6_1 { INDEP_SIDE};
 	class U_IG_leader { INDEP_SIDE };
 	class U_I_G_Story_Protagonist_F { INDEP_SIDE };
 	class U_I_G_resistanceLeader_F { INDEP_SIDE };
@@ -201,6 +204,7 @@ class CfgWeapons {
 	class U_BG_Guerilla2_3 { WEST_SIDE };
 	class U_BG_Guerilla3_1 { WEST_SIDE };
 	class U_BG_Guerilla3_2 { WEST_SIDE };
+	class U_BG_Guerrilla_6_1 { WEST_SIDE };
 	class U_BG_leader { WEST_SIDE };
 
 
@@ -210,6 +214,7 @@ class CfgWeapons {
 	class U_OG_Guerilla2_3 { EAST_SIDE };
 	class U_OG_Guerilla3_1 { EAST_SIDE };
 	class U_OG_Guerilla3_2 { EAST_SIDE };
+	class U_OG_Guerrilla_6_1 { EAST_SIDE };
 	class U_OG_leader { EAST_SIDE };
 
 
@@ -255,6 +260,9 @@ class CfgWeapons {
 	class U_C_ShirtSurfer_shorts { CIV_SIDE };
 	class U_C_TeeSurfer_shorts_1 { CIV_SIDE };
 	class U_C_TeeSurfer_shorts_2 { CIV_SIDE };
+	class U_C_Journalist { CIV_SIDE };
+	class U_C_Scientist { CIV_SIDE };
+	class U_Marshal { CIV_SIDE };
 
 	class H_HelmetB { WEST_SIDE };
 
