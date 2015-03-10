@@ -793,9 +793,7 @@ switch _mode do {
 		_lbAdd = -1;
 		_xCfg = configfile;
 		_fnc_addModIcon = {
-			if (_fullVersion) then {
 				_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (_this >> "dlc")) >> "logo")];
-			};
 		};
 
 		GETVIRTUALCARGO
@@ -1616,9 +1614,7 @@ switch _mode do {
 						_lbAdd = _ctrlList lbadd gettext (configfile >> "cfgweapons" >> _item >> "displayName");
 						_ctrlList lbsetdata [_lbAdd,_item];
 						_ctrlList lbsetpicture [_lbAdd,gettext (configfile >> "cfgweapons" >> _item >> "picture")];
-						if (_fullVersion) then {
-							_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
-						};
+						_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
 					};
 				} foreach _compatibleItems;
 			} else {
@@ -1654,9 +1650,7 @@ switch _mode do {
 							_lbAdd = _ctrlList lbadd gettext (_itemCfg >> "displayName");
 							_ctrlList lbsetdata [_lbAdd,_item];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_itemCfg >> "picture")];
-							if (_fullVersion) then {
-								_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
-							};
+							_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (configfile >> "cfgweapons" >> _item >> "dlc")) >> "logo")];
 						};
 					} foreach _compatibleItems;
 				} foreach ((configfile >> "cfgweapons" >> _item >> "WeaponSlotsInfo") call bis_fnc_returnchildren);
@@ -1687,12 +1681,10 @@ switch _mode do {
 		//--- Calculate Player load
 		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOAD;
 		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOADTEXT;
-		_maxLoad = MAXINVENTORYMASS;
-		MASSCONVERT(_maxLoad)
 		_currentLoad = loadAbs _center;
 		MASSCONVERT(_currentLoad)
 		_ctrlLoad progresssetposition load _center;
-		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
+		_ctrlLoadText ctrlSetText (format ["%1%2",_currentLoad,_massunit]);
 
 
 		if (ctrlenabled _ctrlList) then {
@@ -1748,12 +1740,10 @@ switch _mode do {
 		//--- Calculate Player load
 		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOAD;
 		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOADTEXT;
-		_maxLoad = MAXINVENTORYMASS;
-		MASSCONVERT(_maxLoad)
 		_currentLoad = loadAbs _center;
 		MASSCONVERT(_currentLoad)
 		_ctrlLoad progresssetposition load _center;
-		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
+		_ctrlLoadText ctrlSetText (format ["%1%2",_currentLoad,_massunit]);
 
 		//-- Disable too heavy items
 		_rows = lnbsize _ctrlList select 0;
@@ -1787,7 +1777,7 @@ switch _mode do {
 			_ctrlDLC = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_INFO_DLCICON;
 			_ctrlDLCBackground = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_INFO_DLCBACKGROUND;
 			_dlc = gettext (_itemCfg >> "dlc");
-			if (_dlc != "" && _fullVersion) then {
+			if (_dlc != "" ) then {
 
 				_cfgDLC = configfile >> "cfgMods" >> _dlc;
 				_logo = gettext (_cfgDLC >> "logo");
