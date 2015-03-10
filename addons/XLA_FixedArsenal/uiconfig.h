@@ -175,16 +175,28 @@ class RscDisplayFixedArsenal
   };
   class Load: RscProgress
   {
-   fade = 1;
-   idc = 990;
-   style = 0;
-   texture = "#(argb,8,8,3)color(1,1,1,1)";
-   colorBar[] = {1,1,1,1};
-   colorFrame[] = {0,0,0,1};
-   x = "safezoneX";
-   y = "safezoneY + safezoneH - 0.0 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-   w = "safezoneW";
-   h = "1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+    idc = 990; //same as in vanilla arsenal
+    texture = "#(argb,8,8,3)color(1,1,1,1)";
+    colorBar[] = {1,1,1,1};
+    colorFrame[] = {0,0,0,0.5};
+    x = "safezoneX + 18 *       (     ((safezoneW / safezoneH) min 1.2) / 40)";
+    y = "safezoneY + 0.5 *      (     (     ((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+    w = "safezoneW - 36 *       (     ((safezoneW / safezoneH) min 1.2) / 40)";
+    h = "1 *      (     (     ((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+  };
+  class LoadText: RscText
+  {
+    shadow = 0;
+    colorShadow[] = {1,1,1,1.0};
+    idc = 997;
+    x = "safezoneX + 18 *       (     ((safezoneW / safezoneH) min 1.2) / 40)";
+    y = "safezoneY + 0.5 *      (     (     ((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+    w = "safezoneW - 36 *       (     ((safezoneW / safezoneH) min 1.2) / 40)";
+    h = "1 *      (     (     ((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+    colorText[] = {0,0,0,1};
+    colorBackground[] = {1,1,1,0.1};
+    sizeEx = "0.8 *       (     (     ((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
+
   };
   class LoadCargo: Load
   {
@@ -208,56 +220,6 @@ class RscDisplayFixedArsenal
    shadow = 0;
    text = "";
    sizeEx = "0.8 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-  };
-  class Space: RscControlsGroup
-  {
-   x = "safezoneX + safezoneW * 0.5 - 4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-   y = "safezoneY";
-   show = 0;
-   idc = 27903;
-   w = "8.1 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-   h = "2 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-   class controls
-   {
-    class SpaceArsenalBackground: RscText
-    {
-     idc = 26603;
-     x = "0 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     y = "0 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     w = "4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     h = "2 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     colorBackground[] = {0,0,0,0.7};
-    };
-    class SpaceArsenal: RscActivePicture
-    {
-     idc = 26803;
-     text = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\spaceArsenal_ca.paa";
-     x = "1 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     y = "0 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     w = "2 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     h = "2 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     tooltip = "$STR_A3_Arsenal";
-    };
-    class SpaceGarageBackground: SpaceArsenalBackground
-    {
-     idc = 26604;
-     x = "4.1 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     y = "0 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     w = "4 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     h = "2 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     colorBackground[] = {0,0,0,0.7};
-    };
-    class SpaceGarage: SpaceArsenal
-    {
-     idc = 26804;
-     text = "\a3\Ui_f\data\GUI\Rsc\RscDisplayArsenal\spaceGarage_ca.paa";
-     x = "5 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     y = "0 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     w = "1.99996 * 			(			((safezoneW / safezoneH) min 1.2) / 40)";
-     h = "2 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)";
-     tooltip = "$STR_A3_Garage";
-    };
-   };
   };
   class ControlBar: RscControlsGroupNoScrollbars
   {

@@ -72,7 +72,7 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG,\
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW,\
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,\
-	IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC\
+	IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC
 
 #define IDCS	[IDCS_LEFT,IDCS_RIGHT]
 
@@ -114,6 +114,31 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
+// CONVERTING "MASS" TO REAL UNITS, OVERRIDES THE VARIABLE
+// Since Mass is really "mass*volume*fudge" it's going to be hard to turn this into real values, 
+// especially if we want the values to fit with what AGM says about total weight....
+// This is based on the way AGM calulcates overall inventory weight:
+// Compatible with AGM's Imperial/Metric switch:
+
+// Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc 
+// TODO: Actually calculate the maximum weight possible with the currently available relevant items
+// (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
+
+#define MAXINVENTORYMASS 1220
+
+#define MASSCONVERT(MASS)\
+	if (profileNamespace getVariable ["AGM_useImperial", false]) then {\
+  		MASS = (round (MASS * 10)) / 100;\
+	} else {\
+  		MASS = (round (MASS * (1/2.2046) * 10)) / 100;\
+	};
+
+_massunit = "kg";
+if (profileNamespace getVariable ["AGM_useImperial", false]) then {
+	_massunit = "lb";
+} else {
+  	_massunit = "kg";
+};
 
 switch _mode do {
 
@@ -352,26 +377,11 @@ switch _mode do {
 		};
 
 		if (_fullVersion) then {
-			if (!isnil "bis_fnc_garage") then { //--- Allow garage only in internal version until it's released. ToDo: Remove
-				_ctrlSpace = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACE;
-				_ctrlSpace ctrlshow true;
-				{
-					_ctrl = _display displayctrl (_x select 0);
-					_ctrlBackground = _display displayctrl (_x select 1);
-					_ctrl ctrladdeventhandler ["buttonclick","with uinamespace do {['buttonSpace',_this] spawn XLA_fnc_arsenal;}; true"];
-					if (_foreachindex == XLA_fnc_arsenal_type) then {
-						_ctrl ctrlenable false;
-						_ctrl ctrlsettextcolor [1,1,1,1];
-						_ctrlBackground ctrlsetbackgroundcolor [0,0,0,1];
-					};
-				} foreach [
-					[IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACEARSENAL,IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACEARSENALBACKGROUND],
-					[IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACEGARAGE,IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACEGARAGEBACKGROUND]
-				];
+			if (!isnil "bis_fnc_garage") then { 
 			} else {
-				_ctrlSpace = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACE;
-				_ctrlSpace ctrlsetposition [-1,-1,0,0];
-				_ctrlSpace ctrlcommit 0;
+				//_ctrlSpace = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACE;
+				//_ctrlSpace ctrlsetposition [-1,-1,0,0];
+				//_ctrlSpace ctrlcommit 0;
 			};
 		} else {
 			{
@@ -1597,9 +1607,9 @@ switch _mode do {
 					if (_XLA_condition) then {
 						_type = _item call bis_fnc_itemType;
 						_idcList = switch (_type select 1) do {
-							case "AccessoryMuzzle": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMMUZZLE};
-							case "AccessoryPointer": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMACC};
-							case "AccessorySights": {IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_ITEMOPTIC};
+							case "AccessoryMuzzle": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE};
+							case "AccessoryPointer": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC};
+							case "AccessorySights": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC};
 							default {-1};
 						};
 						_ctrlList = _display displayctrl _idcList;
@@ -1674,9 +1684,15 @@ switch _mode do {
 			} foreach [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE,IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC,IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC];
 		};
 
-		//--- Calculate load
+		//--- Calculate Player load
 		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOAD;
+		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOADTEXT;
+		_maxLoad = MAXINVENTORYMASS;
+		MASSCONVERT(_maxLoad)
+		_currentLoad = loadAbs _center;
+		MASSCONVERT(_currentLoad)
 		_ctrlLoad progresssetposition load _center;
+		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
 
 
 		if (ctrlenabled _ctrlList) then {
@@ -1728,6 +1744,16 @@ switch _mode do {
 
 		_ctrlLoadCargo = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOADCARGO;
 		_load = _maximumLoad * (1 - progressposition _ctrlLoadCargo);
+
+		//--- Calculate Player load
+		_ctrlLoad = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOAD;
+		_ctrlLoadText = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_LOADTEXT;
+		_maxLoad = MAXINVENTORYMASS;
+		MASSCONVERT(_maxLoad)
+		_currentLoad = loadAbs _center;
+		MASSCONVERT(_currentLoad)
+		_ctrlLoad progresssetposition load _center;
+		_ctrlLoadText ctrlSetText (format ["%1%2/%3%4",_currentLoad,_massunit,_maxLoad,_massunit]);
 
 		//-- Disable too heavy items
 		_rows = lnbsize _ctrlList select 0;
@@ -2676,13 +2702,13 @@ switch _mode do {
 			IDC_RSCDISPLAYFIXEDARSENAL_TAB,
 			IDC_RSCDISPLAYFIXEDARSENAL_LIST,
 			IDC_RSCDISPLAYFIXEDARSENAL_LOAD,
+			IDC_RSCDISPLAYFIXEDARSENAL_LOADTEXT,
 			IDC_RSCDISPLAYFIXEDARSENAL_LOADCARGO,
 			IDC_RSCDISPLAYFIXEDARSENAL_BACKGROUNDLEFT,
 			IDC_RSCDISPLAYFIXEDARSENAL_BACKGROUNDRIGHT,
 			IDC_RSCDISPLAYFIXEDARSENAL_STATS_STATS,
 			IDC_RSCDISPLAYFIXEDARSENAL_INFO_DLCBACKGROUND,
-			IDC_RSCDISPLAYFIXEDARSENAL_INFO_DLCICON,
-			IDC_RSCDISPLAYFIXEDARSENAL_SPACE_SPACE
+			IDC_RSCDISPLAYFIXEDARSENAL_INFO_DLCICON
 		];
 	};
 
