@@ -43,9 +43,7 @@
 				if !(_item in _virtualItemCargo) then {_virtualItemCargo set [count _virtualItemCargo,_item];};\
 			} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
 		} foreach (weapons _center + [binocular _center]);\
-	};
-
-#define GETVIRTUALBLACKLIST\
+	};\
 	_virtualItemBlacklist = (missionnamespace call XLA_fnc_getVirtualItemCargo) +	(_cargo call XLA_fnc_getVirtualItemCargo);\
 	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo);\
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo);\
@@ -59,10 +57,9 @@
 			_item = gettext (_x >> "item");\
 			if !(_item in _virtualItemBlacklist) then {_virtualItemBlacklist set [count _virtualItemBlacklist,_item];};\
 		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));
+	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));\
+	diag_log "GOT CARGO AND BLACKLIST";
 
-// IDEA: Do baseweapon/attachment split in arsenal/loadinventory
-//that way we can attach all allowed items and leave out only the non-allowed ones!
 
 #define GETCONDITION3(WLIST,BLIST,ITEM)\
 	_XLA_condition = false;\
@@ -116,5 +113,3 @@
 		};\
 	};\
 	_XLA_condition;
-
-#define GETCONDITION(WLIST,BLIST) GETCONDITION3(WLIST,BLIST,_item) 

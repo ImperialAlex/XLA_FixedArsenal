@@ -53,7 +53,6 @@ _fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",fals
 // XLA: Grab the cargo and blacklist
 #include "condition.sqf"
 GETVIRTUALCARGO
-GETVIRTUALBLACKLIST //not yet implemented
 
 _inventory = [];
 switch (typename _cfg) do {
