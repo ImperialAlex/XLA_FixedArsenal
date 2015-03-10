@@ -19,18 +19,30 @@ class CfgFunctions {
 
 		class Inventory { 
 			file = "\XLA_FixedArsenal\functions\Inventory"; //"
+			class addVirtualBackpackBlacklist {};
 			class addVirtualBackpackCargo {};
+			class addVirtualItemBlacklist {};
 			class addVirtualItemCargo {};
+			class addVirtualMagazineBlacklist {};
 			class addVirtualMagazineCargo {};
+			class addVirtualSideBlacklist {};
+			class addVirtualSideCargo {};
+			class addVirtualWeaponBlacklist {};
 			class addVirtualWeaponCargo {};
 			class arsenal {};
 			class baseWeapon {};
 			class basicBackpack {};
 			class deleteInventory {};
 			class exportInventory {};
+			class getVirtualBackpackBlacklist {};
 			class getVirtualBackpackCargo {};
+			class getVirtualItemBlacklist {};
 			class getVirtualItemCargo {};
+			class getVirtualMagazineBlacklist {};
 			class getVirtualMagazineCargo {};
+			class getVirtualSideBlacklist {};
+			class getVirtualSideCargo {};
+			class getVirtualWeaponBlacklist {};			
 			class getVirtualWeaponCargo {};
 			class inv {};
 			class invAdd {};
@@ -41,12 +53,17 @@ class CfgFunctions {
 			class invString {};
 			class itemType {};
 			class loadInventory {};
+			class removeVirtualBackpackBlacklist {};
 			class removeVirtualBackpackCargo {};
+			class removeVirtualItemBlacklist {};
 			class removeVirtualItemCargo {};
+			class removeVirtualMagazineBlacklist {};
 			class removeVirtualMagazineCargo {};
+			class removeVirtualSideBlacklist {};
+			class removeVirtualSideCargo {};
+			class removeVirtualWeaponBlacklist {};
 			class removeVirtualWeaponCargo {};
 			class saveInventory {};
-
 		};
 	};
 };
