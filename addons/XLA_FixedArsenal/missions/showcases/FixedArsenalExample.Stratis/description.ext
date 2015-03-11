@@ -24,6 +24,9 @@ aikills = 1;
 enableDebugConsole = 1;
 allowFunctionsRecompile = 1;
 
+saving = 0;
+briefing = 0;
+
 
 author = Alexander (ImperialAlex);
 onLoadMission = "Sample scripts can be found in the addon folder!";
