@@ -12,33 +12,34 @@ Partial Loading
 ================
 Partial Loading means that outfits that contain non-whitelisted or non-existing (classname not found) items can still be loaded, but any item that is non-whitelisted/not found will be skipped. 
 If the non-whitelisted item is a uniform, backpack or vest, the currently equipped uniform,backpack or vest (respectively) will be kept.
-Outfits that contain non-available (either due to classname-not-found or non-whitelisted) will be highlighted in the virtual arsenal's "load" view.
+Outfits that contain non-available (either due to classname-not-found or non-whitelisted) will be greyed-out in the virtual arsenal's "load" view.
 
-white = outfit is loadable in its entirety.  
-yellow = at least one non whitelisted item   
-orange = at least one non existing class (i.e. wrong classname or mod not loaded)  
-N.B: orange will take precedence over yellow if both apply  
+Side-based white/blacklisting
+=================
+In addition the usual system of whitelisting items by classname, you can also white/blacklist specific sides.
+This relies on the item having either a "side", "faction" or "XLA_arsenal_side" attribute in their config.
+For all vanilla items this has been done as part of the mod, however modded content will usually not have this set.
+(Or, worse, it will have it set/inherited in non-sensible ways). To fix this, compatibility pbos will eventually be made available for popular mods.
 
-
-Better Performance
-==================
-When opening the "load" menu in a whitelisted arsenal each item in each outfit has to be checked against the whitelist.
-This was done in a way where the whitelist was always traversed in its entirety. In this mod, the search stops once the item has been found.
-
-
-Semantics Change
+(Optional) Semantics Change
 ================
-Apart from the indirect changes induced by partial loading, a deliberate change was made to the semantics of white listing. In the vanilla arsenal (and previous versions), any item currently equipped by the soldier was automatically available in the arsenal. (Effectively, the white-list was computed as the white list + any current equipment the soldier had). This has two effects: Firstly, it allows players to duplicate items like grenades even if they are not part of the white-list. Secondly, it makes it hard for players and mission designers to predict what items will be available when a certain player visits the arsenal.
+In the vanilla arsenal, any item currently equipped by the soldier is automatically available in the arsenal. (Effectively, the white-list was computed as the white list + any current equipment the soldier had). This has two effects: Firstly, it allows players to duplicate items like grenades even if they are not part of the white-list. Secondly, it makes it hard for players and mission designers to predict what items will be available when a certain player visits the arsenal.
+With v2 of FixedArsenal you can enable or disable this. Disabling is highly recommended since it makes the semantics of loadouts much easier to understand.
 
-Composite Weapons
-==================
-This mod introduces proper support for composite weapons, i.e. weapons that have things pre-attached.
-(effectively a one-line change, fixing [#20978](http://feedback.arma3.com/view.php?id=20978)
+Usage
+=============
+If you don't want to use the side/blacklisting features, this works exactly like the vanilla arsenal.
+Just use "xla_fnc_arsenal" instead of "bis_fnc_arsenal".
+Documentation on the advanced features will be completed soon TM.
 
 Showcase
 ===========
-This mod is designed to work together in conjunction with my [XLA_RestrictedArsenal.sqf](http://hastebin.com/tixatuvodu.md) script.  
-To test that script, try my sample mission [CO8_WhitelistedArsenalShowcase](http://steamcommunity.com/sharedfiles/filedetails/?id=331806334) on steam.
+This mod includes a simple showcase and debugging mission under Play -> Showcases -> XLA | Arsenal Showcase.
+
+
+Usage
+===========
+
 
 Feedback
 ==========
