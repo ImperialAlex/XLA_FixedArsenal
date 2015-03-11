@@ -198,6 +198,7 @@ class CfgWeapons {
 	class U_I_G_Story_Protagonist_F { INDEP_SIDE };
 	class U_I_G_resistanceLeader_F { INDEP_SIDE };
 
+	/*
 	class U_BG_Guerilla1_1 { WEST_SIDE };
 	class U_BG_Guerilla2_1 { WEST_SIDE };
 	class U_BG_Guerilla2_2 { WEST_SIDE };
@@ -216,6 +217,7 @@ class CfgWeapons {
 	class U_OG_Guerilla3_2 { EAST_SIDE };
 	class U_OG_Guerrilla_6_1 { EAST_SIDE };
 	class U_OG_leader { EAST_SIDE };
+	*/
 
 
 	class U_C_Poloshirt_blue { CIV_SIDE };
@@ -445,6 +447,9 @@ class CfgVehicles {
 	class B_TacticalPack_Base;
 	class B_TacticalPack_mcamo : B_TacticalPack_Base { WEST_SIDE };
 	class B_TacticalPack_ocamo : B_AssaultPack_Base { EAST_SIDE };
+	class O_UAV_01_backpack_F { EAST_SIDE };
+	class B_UAV_01_backpack_F { WEST_SIDE };
+	class I_UAV_01_backpack_F { INDEP_SIDE };
 
 	// -------------------------------------------------------------------	
 	//	TFAR Radios (Backpacks)
