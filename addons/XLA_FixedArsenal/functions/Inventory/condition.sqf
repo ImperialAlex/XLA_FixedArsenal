@@ -57,8 +57,7 @@
 			_item = gettext (_x >> "item");\
 			if !(_item in _virtualItemBlacklist) then {_virtualItemBlacklist set [count _virtualItemBlacklist,_item];};\
 		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));\
-	diag_log "GOT CARGO AND BLACKLIST";
+	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));
 
 
 #define GETCONDITION3(WLIST,BLIST,ITEM)\
@@ -68,25 +67,17 @@
 	} else { \
 		private ["_xla_config","_xla_wlist","_xla_blist","_xla_item","_xla_side","_xla_factionstring","_xla_sideallowed"];\
 		_xla_wlist = WLIST; _xla_blist = BLIST; _xla_item = ITEM;\
-		diag_log ("TESTING: ");\
-		diag_log _xla_item;\
-		diag_log _xla_wlist;\
-		diag_log _xla_blist;\
 		_xla_config = configFile;\
 		{ \
-			diag_log ("pre-class-test: " + str diag_log (configFile / _x / _xla_item));\
 			if (isClass(configFile / _x / _xla_item)) then	{ \
-				diag_log (str (configFile / _x / _xla_item) + "ISCLASS");\
 				_xla_config = configFile / _x / _xla_item;\
 			};\
 		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines"];\
 		if (_xla_config != configFile ) then { \
-			diag_log ("Entering side check");\
 			_xla_side = NO_SIDE;\
 			if (isNumber (_xla_config >> "side")) then { \
 				_xla_side = getNumber (_xla_config >> "side");\
 			};\
-			diag_log("tested side :" + str _xla_side);\
 			_xla_factionstring = getText(_xla_config >> "faction");\
 			if (_xla_factionstring != "" && _xla_factionstring != "Default") then { \
 				_configFaction = (configFile / "CfgFactionClasses" / _xla_factionstring);\
@@ -94,21 +85,16 @@
 					_xla_side = getNumber (_configFaction >> "side");\
 				};\
 			};\
-			diag_log("Tested faction :" + str _xla_side);\
 			if (isNumber (_xla_config >> "XLA_arsenal_side")) then { \
 				_xla_side = getNumber (_xla_config >> "XLA_arsenal_side");\
 			};\
-			diag_log("Tested XLA_arsenal_side :" + str _xla_side);\
-			_xla_sideallowed = ( ((_virtualSideCargo find (str _xla_side)) >= 0) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((_virtualSideBlacklist find (str _xla_side)) >= 0 ) || ((_virtualSideBlacklist find "%ALL") >= 0) );\
-			diag_log "SIDEALLOWED: ";\
-			diag_log _xla_sideallowed ;\
+			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );\
 			if (_xla_sideallowed) then { \
 				_XLA_condition = !((_xla_blist find _xla_item) >= 0 );\
 			} else { \
 				_XLA_condition = ((_xla_wlist find _xla_item) >= 0);\
 			};\
 		} else { \
-			diag_log("Skipping side check. Setting to false");\
 			_XLA_condition = false;\
 		};\
 	};\
