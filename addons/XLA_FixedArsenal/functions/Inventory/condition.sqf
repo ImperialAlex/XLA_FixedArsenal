@@ -48,16 +48,7 @@
 	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineBlacklist) + (_cargo call XLA_fnc_getVirtualMagazineBlacklist);\
 	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);\
 	_virtualSideBlacklist =  (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);\
-	_virtualWeaponBlacklist = [];\
-	{\
-		_weapon = _x call XLA_fnc_baseWeapon;\
-		_virtualWeaponBlacklist set [count _virtualWeaponBlacklist,_weapon];\
-		{\
-			private ["_item"];\
-			_item = gettext (_x >> "item");\
-			if !(_item in _virtualItemBlacklist) then {_virtualItemBlacklist set [count _virtualItemBlacklist,_item];};\
-		} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
-	} foreach ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));
+	_virtualWeaponBlacklist = ((missionnamespace call XLA_fnc_getVirtualWeaponBlacklist) + (_cargo call XLA_fnc_getVirtualWeaponBlacklist));
 
 
 #define GETCONDITION3(WLIST,BLIST,ITEM)\
