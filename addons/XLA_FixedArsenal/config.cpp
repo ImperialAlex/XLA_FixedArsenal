@@ -13,6 +13,22 @@ class CfgPatches
 	};
 };
 
+class CfgMissions
+{
+	class Showcases
+	{
+    class XLA_Showcase
+		{
+			briefingName = "XLA | FixedArsenal Showcase";
+			directory = "XLA_FixedArsenal\missions\XLA_FixedArsenalExample.Stratis";
+			overviewText = "This mission shows how to use xla_fnc_arsenal with examples. It also includes a few handy tools for debugging the mod's definesides.hpp";
+			author = "Alexander (ImperialAlex)";
+		};
+	
+	};
+
+};
+
 class CfgFunctions {
 	
 	class XLA {
