@@ -421,25 +421,19 @@ _tfarItems = [
 			"hgun_mas_m9_F", "hgun_mas_bhp_F", "hgun_mas_glock_F", "hgun_mas_m9_F_sd", "hgun_mas_bhp_F_sd", "hgun_mas_glock_F_sd",
 			"hgun_mas_acp_F", "hgun_mas_acp_F_sd", "hgun_mas_usp_F", "hgun_mas_usp_l_F", "hgun_mas_glocksf_F", "hgun_mas_glocksf_F_sd", "hgun_mas_usp_F_sd", "hgun_mas_usp_l_F_sd",
 
-
+			// broken CUP launcher
+			"CUP_launch_NLAW",
 			"XLA_Dummy"
 		];
 
 		_blacklistItems = [
+			// F18
 			"JS_JC_FA18_PilotCoveralls", //looks exactly the same as normal pilot uniform
 			// african conflict stuff:
 			"U_mas_afr_B_uniform", "U_mas_afr_B_uniform_s", "U_mas_afr_B_contract1", "U_mas_afr_B_contract2","U_mas_afr_B_contract3", "U_mas_afr_B_contract4", "U_mas_afr_B_pilot", "U_mas_afr_I_uniform", "U_mas_afr_I_uniformo1", "U_mas_afr_I_uniformo2", "U_mas_afr_I_uniform_s", "U_mas_afr_O_uniform1", "U_mas_afr_O_uniform2", "U_mas_afr_O_uniform3", "U_mas_afr_O_uniformo1", "U_mas_afr_O_uniform4", "U_mas_afr_O_uniform5", "U_mas_afr_O_uniform6", "U_mas_afr_O_uniform7", "U_mas_afr_O_uniform8", "U_mas_afr_O_uniformR", "U_mas_afr_O_rebel1", "U_mas_afr_O_rebel2", "U_mas_afr_O_rebel3", "U_mas_afr_O_rebel4", "U_mas_afr_O_rebel5", "U_mas_afr_O_rebel6", "U_mas_afr_O_rebel7", "U_mas_afr_O_rebel8", "U_mas_afr_O_rebel9", "U_mas_afr_O_rebel10", "U_mas_afr_C_Civil1", "U_mas_afr_C_Civil2", "U_mas_afr_C_Civil3", "U_mas_afr_C_Civil4", "U_mas_afr_C_Civil5", "U_mas_afr_C_Civil6", "U_mas_afr_C_Civil7", "U_mas_afr_C_Civil8", "U_mas_afr_C_Civil9", "U_mas_afr_C_Civil10",
 			"V_mas_afr_BandollierB_rgr", "V_mas_afr_BandollierO_rgr", "V_mas_afr_Rangemaster_belt", "V_mas_afr_BandollierB_blk", "V_mas_afr_PlateCarrier1_rgr", "V_mas_afr_ChestrigB_rgr_g", "V_mas_afr_ChestrigB_rgr", "V_mas_afr_TacVest_b", "V_mas_afr_TacVest_i", "V_mas_afr_TacVest_o", "V_mas_afr_PlateCarrierIA1_B",
 			"H_mas_afr_PilotHelmetHeli_B", "H_mas_afr_PilotHelmetHeli_I", "H_mas_afr_CrewHelmetHeli_B", "H_mas_afr_HelmetCrew_B", "H_mas_afr_HelmetB", "H_mas_afr_HelmetI", "H_mas_afr_HelmetO", "H_mas_afr_Cap_headphones", "H_mas_afr_Cap_headphones_d", "H_mas_afr_Cap", "H_mas_afr_Cap_onu", "H_mas_afr_Bandana_h", "H_mas_afr_Bandana", "H_mas_afr_c1", "H_mas_afr_c2", "H_mas_afr_c3", "H_mas_afr_c4", "H_mas_afr_MilCap_b", "H_mas_afr_MilCap_bs", "H_mas_afr_MilCap_i", "H_mas_afr_MilCap_is", "H_mas_afr_MilCap_o", "H_mas_afr_MilCap_os", "H_mas_afr_Booniehat_b", "H_mas_afr_Booniehat_b2", "H_mas_afr_Booniehat_o", "H_mas_afr_Booniehat_o2", "H_mas_afr_Booniehat_i", "H_mas_afr_Booniehat_i2", "H_mas_afr_Booniehat_c", "H_mas_afr_Booniehat_c2", "H_mas_afr_beret_b", "H_mas_afr_beret_bs", "H_mas_afr_beret_i", "H_mas_afr_beret_is", "H_mas_afr_beret_o", "H_mas_afr_pro_ht", "H_mas_afr_helmet_ht", "H_mas_afr_headset_b", "H_mas_afr_helmet_ops_sf", "H_mas_afr_helmet_ops_sf_g", "H_mas_afr_helmet_ops_sf_gog", "H_mas_afr_helmet_ops_sf_gog_g", "H_mas_afr_helmet_ops_sf_h", "H_mas_afr_helmet_ops_sf_h_g", "H_mas_afr_HelmetCrew_O",
 			// rhs gear
-			"rhs_6b27m_green","rhs_6b27m_green_ess","rhs_6b27m_green_bala","rhs_6b27m_green_ess_bala","rhs_6b27m","rhs_6b27m_ess","rhs_6b27m_bala","rhs_6b27m_ess_bala","rhs_6b27m_digi","rhs_6b27m_digi_bala","rhs_6b27m_ml",
-			"rhs_6b28_green","rhs_6b28_green_ess","rhs_6b28_green_bala","rhs_6b28_green_ess_bala","rhs_6b28","rhs_6b28_ess","rhs_6b28_bala","rhs_6b28_ess_bala","rhs_6b28_flora","rhs_6b28_flora_ess","rhs_6b28_flora_bala","rhs_6b28_ess_bala",
-			"rhs_Booniehat_flora","rhs_Booniehat_digi",
-			"rhs_6b26_green","rhs_6b26_ess_green","rhs_6b26_ess_bala_green","rhs_6b26","rhs_6b26_bala","rhs_6b26_ess","rhs_6b26_bala_green",
-			"rhs_fieldcap","rhs_fieldcap_helm","rhs_fieldcap","rhs_fieldcap_helm_digi","rhs_fieldcap_helm_ml","rhs_fieldcap_digi","rhs_fieldcap_ml","rhs_gssh18",
-			"rhs_tsh4","rhs_tsh4_ess","rhs_tsh4_bala","rhs_tsh4_ess_bala","rhs_6b26_ess_bala","rhs_6b27m_digi_ess","rhs_6b27m_digi_ess_bala","rhs_6b27m_ml_bala","rhs_6b27m_ml_ess","rhs_6b27m_ML_ess_bala","rhs_6b28_flora_ess_bala",
-			"rhs_zsh7a_mike","rhs_zsh7a",
-			"rhs_balaclava","rhs_scarf",
 			"rhs_uniform_flora","rhs_uniform_vdv_flora","rhs_uniform_flora_patchless","rhs_uniform_vdv_mflora","rhs_uniform_mflora_patchless","rhs_uniform_msv_emr","rhs_uniform_vdv_emr","rhs_uniform_emr_patchless","rhs_uniform_df15",
 			// massis specops
 			"G_mas_wpn_gog", "G_mas_wpn_gog_d", "G_mas_wpn_gog_m", "G_mas_wpn_gog_md", "G_mas_wpn_gog_g", "G_mas_wpn_gog_gd", "G_mas_wpn_mask", "G_mas_wpn_mask_b", "G_mas_wpn_wrap", "G_mas_wpn_wrap_f", "G_mas_wpn_wrap_t", "G_mas_wpn_wrap_b", "G_mas_wpn_wrap_c", "G_mas_wpn_wrap_g", "G_mas_wpn_wrap_gog", "G_mas_wpn_wrap_gog_f", "G_mas_wpn_wrap_gog_t", "G_mas_wpn_wrap_gog_b", "G_mas_wpn_wrap_gog_c", "G_mas_wpn_wrap_gog_g", "G_mas_wpn_wrap_mask", "G_mas_wpn_wrap_mask_t", "G_mas_wpn_wrap_mask_f", "G_mas_wpn_wrap_mask_b", "G_mas_wpn_wrap_mask_c", "G_mas_wpn_wrap_mask_g", "G_mas_wpn_bala", "G_mas_wpn_bala_b", "G_mas_wpn_bala_t", "G_mas_wpn_bala_gog", "G_mas_wpn_bala_gog_b", "G_mas_wpn_bala_gog_t", "G_mas_wpn_bala_mask", "G_mas_wpn_bala_mask_b", "G_mas_wpn_bala_mask_t", "G_mas_wpn_shemag", "G_mas_wpn_shemag_r", "G_mas_wpn_shemag_w", "G_mas_wpn_shemag_gog", "G_mas_wpn_shemag_mask",
@@ -520,6 +514,8 @@ _tfarItems = [
 			"IS_Bag_AT",
 			"IR_Bag_AT",
 			"KR_Bag_AT",
+			"IS_Bag_S",
+			"IR_Bag_S",
 			"RHS_NSV_Gun_Bag",
 			"RHS_NSV_Tripod_Bag",
 			"XLA_Dummy"
@@ -535,9 +531,9 @@ _availableGuns 				= [];
 _availableMagazines 	= [];
 _availableAttachments = [];
 _availableItems 			= [];
-_availableUniforms 		= [];
+_availableUniforms 		= _3CB_uniforms;
 _availableVests 			= [];
-_availableHeadgear 		= [];
+_availableHeadgear 		= _3CB_helmets;
 _availableGoggles  		= [];
 _availableBackpacks 	= [];
 
