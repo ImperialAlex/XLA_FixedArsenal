@@ -44,10 +44,10 @@
 			} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);\
 		} foreach (weapons _center + [binocular _center]);\
 	};\
-	_virtualItemBlacklist = (missionnamespace call XLA_fnc_getVirtualItemCargo) +	(_cargo call XLA_fnc_getVirtualItemCargo);\
-	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo);\
-	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo);\
-	_virtualSideBlacklist =  (missionnamespace call XLA_fnc_getVirtualBackpackCargo) + (_cargo call XLA_fnc_getVirtualBackpackCargo);\
+	_virtualItemBlacklist = (missionnamespace call XLA_fnc_getVirtualItemBlacklist) +	(_cargo call XLA_fnc_getVirtualItemBlacklist);\
+	_virtualMagazineBlacklist = (missionnamespace call XLA_fnc_getVirtualMagazineBlacklist) + (_cargo call XLA_fnc_getVirtualMagazineBlacklist);\
+	_virtualBackpackBlacklist = (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);\
+	_virtualSideBlacklist =  (missionnamespace call XLA_fnc_getVirtualBackpackBlacklist) + (_cargo call XLA_fnc_getVirtualBackpackBlacklist);\
 	_virtualWeaponBlacklist = [];\
 	{\
 		_weapon = _x call XLA_fnc_baseWeapon;\
