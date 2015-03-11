@@ -27,7 +27,6 @@ allowFunctionsRecompile = 1;
 
 author = Alexander (ImperialAlex);
 onLoadMission = "Sample scripts can be found in the addon folder!";
-onLoadName = XLA | Arsenal Showcase;
 onLoadIntroTime = true;
 onLoadMissionTime = true;
 onLoadName = XLA | Arsenal Examples;
