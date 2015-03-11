@@ -266,7 +266,19 @@ class CfgWeapons {
 	class U_C_Scientist { CIV_SIDE };
 	class U_Marshal { CIV_SIDE };
 
-	class H_HelmetB { WEST_SIDE };
+	class H_HelmetB { 
+		scope = 0;
+		arsenalScope = 0;
+		NO_SIDE
+	}; //This is the base class of all helmets. Sadly it's also a real helmet
+
+	class XLA_HelmetB : H_HelmetB {
+		author = "Bohemia Interactive";
+		dlc = "XLA_FixedArsenal";
+		scope = 2;
+		arsenalScope = 2;
+		WEST_SIDE
+	};
 
 	class H_Booniehat_khk { FRIENDLY_SIDE };
 	class H_Booniehat_dgtl : H_Booniehat_khk { INDEP_SIDE };
@@ -402,6 +414,7 @@ class CfgGlasses {
 	class G_O_Diving: G_Diving { EAST_SIDE };
 	class G_I_Diving: G_Diving { INDEP_SIDE };
 	class G_Goggles_VR: None { FRIENDLY_SIDE };
+	class G_Goggles_clear : None { FRIENDLY_SIDE };
 	class G_Balaclava_blk: None { FRIENDLY_SIDE };
 	class G_Balaclava_oli: G_Balaclava_blk { FRIENDLY_SIDE };
 	class G_Balaclava_combat: G_Balaclava_blk { FRIENDLY_SIDE };
