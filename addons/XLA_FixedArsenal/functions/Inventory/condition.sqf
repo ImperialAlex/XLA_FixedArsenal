@@ -58,17 +58,25 @@
 	} else { \
 		private ["_xla_config","_xla_wlist","_xla_blist","_xla_item","_xla_side","_xla_factionstring","_xla_sideallowed"];\
 		_xla_wlist = WLIST; _xla_blist = BLIST; _xla_item = ITEM;\
+		diag_log ("TESTING: ");\
+		diag_log _xla_item;\
+		diag_log _xla_wlist;\
+		diag_log _xla_blist;\
 		_xla_config = configFile;\
 		{ \
+			diag_log ("pre-class-test: " + str diag_log (configFile / _x / _xla_item));\
 			if (isClass(configFile / _x / _xla_item)) then	{ \
+				diag_log (str (configFile / _x / _xla_item) + "ISCLASS");\
 				_xla_config = configFile / _x / _xla_item;\
 			};\
 		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGoggles"];\
 		if (_xla_config != configFile ) then { \
+			diag_log ("Entering side check");\
 			_xla_side = NO_SIDE;\
 			if (isNumber (_xla_config >> "side")) then { \
 				_xla_side = getNumber (_xla_config >> "side");\
 			};\
+			diag_log("tested side :" + str _xla_side);\
 			_xla_factionstring = getText(_xla_config >> "faction");\
 			if (_xla_factionstring != "" && _xla_factionstring != "Default") then { \
 				_configFaction = (configFile / "CfgFactionClasses" / _xla_factionstring);\
@@ -76,16 +84,25 @@
 					_xla_side = getNumber (_configFaction >> "side");\
 				};\
 			};\
+			diag_log("Tested faction :" + str _xla_side);\
 			if (isNumber (_xla_config >> "XLA_arsenal_side")) then { \
 				_xla_side = getNumber (_xla_config >> "XLA_arsenal_side");\
 			};\
+			diag_log("Tested XLA_arsenal_side :" + str _xla_side);\
 			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );\
+			diag_log "SIDEALLOWED: ";\
+			diag_log _xla_sideallowed ;\
 			if (_xla_sideallowed) then { \
 				{if (_x == _xla_item) exitWith {_XLA_condition = false;}} forEach _xla_blist;\
+				diag_log "not-in-blist check";\
+				diag_log _XLA_condition;\
 			} else { \
 				{if (_x == _xla_item) exitWith {_XLA_condition = true;}} forEach _xla_wlist;\
+				diag_log "in-wlist check";\
+				diag_log _XLA_condition;\
 			};\
 		} else { \
+			diag_log("Skipping side check. Setting to false");\
 			_XLA_condition = false;\
 		};\
 	};\
