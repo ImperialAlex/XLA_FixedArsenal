@@ -81,6 +81,7 @@
 			};\
 			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );\
 			if (_xla_sideallowed) then { \
+				_XLA_condition = true;\
 				{if (_x == _xla_item) exitWith {_XLA_condition = false;}} forEach _xla_blist;\
 			} else { \
 				{if (_x == _xla_item) exitWith {_XLA_condition = true;}} forEach _xla_wlist;\
