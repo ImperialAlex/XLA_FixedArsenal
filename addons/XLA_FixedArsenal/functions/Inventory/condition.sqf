@@ -69,7 +69,7 @@
 				diag_log (str (configFile / _x / _xla_item) + "ISCLASS");\
 				_xla_config = configFile / _x / _xla_item;\
 			};\
-		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGoggles"];\
+		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGlasses"];\
 		if (_xla_config != configFile ) then { \
 			diag_log ("Entering side check");\
 			_xla_side = NO_SIDE;\
