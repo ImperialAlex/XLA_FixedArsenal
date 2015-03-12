@@ -63,7 +63,7 @@
 			if (isClass(configFile / _x / _xla_item)) then	{ \
 				_xla_config = configFile / _x / _xla_item;\
 			};\
-		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines"];\
+		}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGoggles"];\
 		if (_xla_config != configFile ) then { \
 			_xla_side = NO_SIDE;\
 			if (isNumber (_xla_config >> "side")) then { \
