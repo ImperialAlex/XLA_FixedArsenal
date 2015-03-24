@@ -16,7 +16,7 @@
 	_virtualSideCargo =  (missionnamespace call XLA_fnc_getVirtualSideCargo) + (_cargo call XLA_fnc_getVirtualSideCargo);\
 	_virtualWeaponCargo = [];\
 	{\
-		_weapon = _x call XLA_fnc_baseWeapon;\
+		_weapon = _x;\
 		_virtualWeaponCargo set [count _virtualWeaponCargo,_weapon];\
 		{\
 			private ["_item"];\
@@ -81,17 +81,19 @@
 			};\
 			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );\
 			if (_xla_sideallowed) then { \
-				_XLA_condition = true;\
-				if ( _xla_blist isEqualTo ["%ALL"] ) then {\
+				if ( "%ALL" in _xla_blist ) then {\
+					_XLA_condition = false;\
 					{if (_x == _xla_item) exitWith {_XLA_condition = true;}} forEach _xla_wlist;\
 				} else {\
+					_XLA_condition = true;\
 					{if (_x == _xla_item) exitWith {_XLA_condition = false;}} forEach _xla_blist;\
 				};\
 			} else { \
-				_XLA_condition = false;\
-				if ( _xla_wlist isEqualTo ["%ALL"] ) then {\
+				if ( "%ALL" in _xla_wlist ) then {\
+					_XLA_condition = true;\
 					{if (_x == _xla_item) exitWith {_XLA_condition = false;}} forEach _xla_blist;\
 				} else {\
+					_XLA_condition = false;\
 					{if (_x == _xla_item) exitWith {_XLA_condition = true;}} forEach _xla_wlist;\
 				};\
 			};\
