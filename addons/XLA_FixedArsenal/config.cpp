@@ -44,6 +44,7 @@ class CfgFunctions {
 			class addVirtualSideCargo {};
 			class addVirtualWeaponBlacklist {};
 			class addVirtualWeaponCargo {};
+			class addWeapon {};
 			class arsenal {};
 			class baseWeapon {};
 			class basicBackpack {};
