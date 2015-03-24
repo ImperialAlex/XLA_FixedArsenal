@@ -50,12 +50,12 @@ if (_magazineCount > 0) then
 	if (typeName _magazineClass == typeName 0) then
 	{
 		_magazines = getArray (configFile / "CfgWeapons" / _weapon / "magazines");
+		_magazineClass = "";
 		if (count _magazines > 0 && _weaponExists) then {
-		 { 
+		{ 
 		 		GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
+
 		 		if (_XLA_condition) exitWith {_magazineClass = _x;}; } forEach _magazines;
-		} else {
-			_magazineClass = "";
 		};
 	};
 	if (isClass (configFile / "CfgMagazines" / _magazineClass)) then
