@@ -29,6 +29,7 @@
 			AccessoryMuzzle
 			AccessoryPointer
 			AccessorySights
+			AccessoryBipod
 			Binocular
 			Compass
 			FirstAidKit
@@ -139,6 +140,7 @@ switch (true) do {
 							case 101: {"AccessoryMuzzle"};
 							case 201: {"AccessorySights"};
 							case 301: {"AccessoryPointer"};
+							case 302: {"AccessoryBipod"};
 							case 401: {"FirstAidKit"};
 							case 605: {_itemCategory = "Equipment"; "Headgear"};
 							case 619: {"Medikit"};
