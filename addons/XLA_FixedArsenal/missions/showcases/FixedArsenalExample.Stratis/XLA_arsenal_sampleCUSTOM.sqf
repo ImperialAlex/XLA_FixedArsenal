@@ -592,7 +592,7 @@ if (isServer) then {
 
 		// Start the arsenal on it
 		_addActionText = "<t color='#45B6EA'>Open Armoury (CUSTOM)";
-		["AmmoboxInit",[_box,false,true,_addActionText,false]] spawn XLA_fnc_arsenal;
+		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
 
 
 
