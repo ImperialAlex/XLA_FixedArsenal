@@ -5,16 +5,16 @@
 	Return class of given backpack without a bakened-in equipment (an empty backpack).
 
 	Example:
-	_class:string = _class:string call BIS_fnc_basicBackpack;
-	"b_assaultpack_rgr" = "b_assaultpack_rgr_medic" call BIS_fnc_basicBackpack;
+	_class:string = _class:string call XLA_fnc_basicBackpack;
+	"b_assaultpack_rgr" = "b_assaultpack_rgr_medic" call XLA_fnc_basicBackpack;
 */
 
-BIS_fnc_basicBackpack_debug =
+XLA_fnc_basicBackpack_debug =
 {
 	private["_class"];
 
 	{
-		_class = toLower(_x call BIS_fnc_basicBackpack);
+		_class = toLower(_x call XLA_fnc_basicBackpack);
 
 		if (_class != _x) then
 		{
@@ -202,7 +202,7 @@ _input = _this;
 _output = "";
 
 //debug all backpacks
-if (_input == "") exitWith {[] call BIS_fnc_basicBackpack_debug;""};
+if (_input == "") exitWith {[] call XLA_fnc_basicBackpack_debug;""};
 
 _fn_hasCargo =
 {

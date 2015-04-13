@@ -52,7 +52,7 @@ switch _type do {
 		};
 
 		//--- Arsenal label
-		if !(isnil {uinamespace getvariable "BIS_fnc_arsenal_display"}) then {
+		if !(isnil {uinamespace getvariable "XLA_fnc_arsenal_display"}) then {
 			if (true) then {
 				private "_br";
 				_br = "";
@@ -121,7 +121,7 @@ switch _type do {
 
 		if (_identity) then {
 			"Set identity" call _fnc_addComment;
-			_export = _export + format ["%1 setFace ""%2"";",_var,_center getvariable ["BIS_fnc_arsenal_face",face _center]] + _br;
+			_export = _export + format ["%1 setFace ""%2"";",_var,_center getvariable ["XLA_fnc_arsenal_face",face _center]] + _br;
 			_export = _export + format ["%1 setSpeaker ""%2"";",_var,speaker _center] + _br;
 
 			_insignia = _center call bis_fnc_getUnitInsignia;
@@ -142,7 +142,7 @@ switch _type do {
 		};
 
 		//--- Arsenal label
-		if !(isnil {uinamespace getvariable "BIS_fnc_arsenal_display"}) then {
+		if !(isnil {uinamespace getvariable "XLA_fnc_arsenal_display"}) then {
 			_export = _export + format ["// Exported from Arsenal by %1",profilename] + _br;
 		};
 
