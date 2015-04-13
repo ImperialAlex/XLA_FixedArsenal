@@ -2,7 +2,7 @@
 	Author: Karel Moricky
 
 	Description:
-	Get virtual items to an object (e.g., ammo box).
+	Get virtual magazines to an object (e.g., ammo box).
 	Virtual items can be selected in the Arsenal.
 
 	Parameter(s):
@@ -14,4 +14,4 @@
 
 private ["_object"];
 _object = [_this,0,missionnamespace,[missionnamespace,objnull]] call bis_fnc_param;
-[_object,[],false,false,0,0] call XLA_fnc_addVirtualItemCargo;
+[_object,[],false,false,0,2] call XLA_fnc_addVirtualItemBlacklist;

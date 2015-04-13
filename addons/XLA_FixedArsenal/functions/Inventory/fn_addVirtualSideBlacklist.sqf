@@ -2,8 +2,7 @@
 	Author: Karel Moricky
 
 	Description:
-	Add virtual weapons to an object (e.g., ammo box).
-	Virtual items can be selected in the Arsenal.
+	Add a side (e.g. "WEST","EAST","%ALL")
 
 	Parameter(s):
 		0: OBJECT - objct to which weapons will be added
@@ -20,4 +19,4 @@ _object = [_this,0,missionnamespace,[missionnamespace,objnull]] call bis_fnc_par
 _classes = [_this,1,[],["",true,[]]] call bis_fnc_param;
 _isGlobal = [_this,2,false,[false]] call bis_fnc_param;
 _initAction = [_this,3,true,[true]] call bis_fnc_param;
-[_object,_classes,_isGlobal,_initAction,1,1] call XLA_fnc_addVirtualItemCargo;
+[_object,_classes,_isGlobal,_initAction,1,4] call XLA_fnc_addVirtualItemBlacklist;
