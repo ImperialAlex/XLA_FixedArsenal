@@ -12,6 +12,8 @@
 	Modes:
 		"Open" - Open the Arsenal
 			0 (Optional): BOOL - true to open full Arsenal, with all categories and items available (default: false)
+			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
+			3 (Optional): Object - unit to use as "_center" (default: player)
 
 		"Preload" - Preload item configs for Arsenal (without preloading, configs are parsed the first time Arsenal is opened)
 			No params
@@ -475,8 +477,13 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Preload": {
-		private ["_data"];
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		private ["_data","_cargo","_space"];
+		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+		_dataspace = missionNamespace;
+		if (_cargo != objNull) then {		
+			_dataspace = _cargo;
+		};
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
 			INITTYPES
@@ -579,7 +586,7 @@ switch _mode do {
 				["put",IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT]
 			];
 
-			missionnamespace setvariable ["XLA_fnc_arsenal_data",_data];
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 			true
 		} else {
@@ -849,9 +856,14 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListAdd": {
 		_display = _this select 0;
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+		_dataspace = missionNamespace;
+		if (_cargo != objNull) then {
+			_dataspace = _cargo;
+		};
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 		_lbAdd = -1;
 		_xCfg = configfile;
 		_fnc_addModIcon = {
@@ -995,9 +1007,13 @@ switch _mode do {
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	case "ListSelectCurrent": {
+	case "ListSelectCurrent": {		
 		_display = [_this,0,uinamespace getvariable ["XLA_fnc_arsenal_display",displaynull],[displaynull]] call bis_fnc_paramin;
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		_dataspace = missionNamespace;
+		if (_cargo != objNull) then {
+			_dataspace = _cargo;
+		};
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 		_defaultItems = uinamespace getvariable ["XLA_fnc_arsenal_defaultItems",[]];
 		_defaultShow = uinamespace getvariable ["XLA_fnc_arsenal_defaultShow",-1];
 		{
