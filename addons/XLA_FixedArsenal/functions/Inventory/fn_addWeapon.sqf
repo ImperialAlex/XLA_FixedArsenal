@@ -15,16 +15,28 @@
 	Primary muzzle name for a followup selectWeapon.
 	
 	How to use:
-	_muzzle = [player, "arifle_SDAR_F", 6] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6] call XLA_fnc_addWeapon;
 	Equips the player with an underwater rifle and six dual purpose magazines.
 	
-	_muzzle = [player, "arifle_SDAR_F", 6, 1] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6, 1] call XLA_fnc_addWeapon;
 	OR
-	_muzzle = [player, "arifle_SDAR_F", 6, "30Rnd_556x45_Stanag"] call BIS_fnc_addWeapon;
+	_muzzle = [player, "arifle_SDAR_F", 6, "30Rnd_556x45_Stanag"] call XLA_fnc_addWeapon;
 	Equips the player with an underwater rifle and six normal magazines.
 */
 
+_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+
+_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
+
+_fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false]);
+
+// XLA: Grab the cargo and blacklist
+#include "condition.sqf"
+GETVIRTUALCARGO
+
 private ["_unit", "_weapon", "_magazineCount", "_magazineClass", "_weaponExists", "_magazines", "_i", "_muzzles", "_muzzle"];
+
+
 
 _unit = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
 _weapon = [_this, 1, "", [""]] call BIS_fnc_param;
@@ -38,13 +50,12 @@ if (_magazineCount > 0) then
 	if (typeName _magazineClass == typeName 0) then
 	{
 		_magazines = getArray (configFile / "CfgWeapons" / _weapon / "magazines");
-		if (count _magazines > 0 && _weaponExists) then
-		{
-			_magazineClass = _magazines select (_magazineClass min (count _magazines - 1));
-		}
-		else
-		{
-			_magazineClass = "";
+		_magazineClass = "";
+		if (count _magazines > 0 && _weaponExists) then {
+		{ 
+		 		GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
+
+		 		if (_XLA_condition) exitWith {_magazineClass = _x;}; } forEach _magazines;
 		};
 	};
 	if (isClass (configFile / "CfgMagazines" / _magazineClass)) then
