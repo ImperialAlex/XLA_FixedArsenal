@@ -821,8 +821,6 @@ switch _mode do {
 				_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (_this >> "dlc")) >> "logo")];
 		};
 
-		GETVIRTUALCARGO
-
 		{	
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _foreachindex);
 			switch _foreachindex do {
@@ -830,14 +828,11 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_SECONDARYWEAPON;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_HANDGUN: {
 					{
-						GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_UNIFORM;
@@ -849,53 +844,40 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH: {
-					_virtualCargo = _virtualItemCargo;
-					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+					{						
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS: {
 					{
-						GETCONDITION3((_virtualWeaponCargo + _virtualItemCargo),(_virtualWeaponBlacklist + _virtualItemBlacklist),_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_GOGGLES: {
 					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgglasses" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgglasses" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BACKPACK: {
 					{
-						GETCONDITION3(_virtualBackpackCargo,_virtualBackpackBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgvehicles" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgvehicles" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_FACE: {
@@ -927,26 +909,20 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT: {
 					{
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgmagazines" >> _x;
-							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
-							_ctrlList lnbsetdata [[_lbAdd,0],_x];
-							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
-							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "mass")];
-						};
+						_xCfg = configfile >> "cfgmagazines" >> _x;
+						_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
+						_ctrlList lnbsetdata [[_lbAdd,0],_x];
+						_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
+						_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "mass")];
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC: {
 					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
-							_ctrlList lnbsetdata [[_lbAdd,0],_x];
-							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
-							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "itemInfo" >> "mass")];
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
+						_ctrlList lnbsetdata [[_lbAdd,0],_x];
+						_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
+						_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "itemInfo" >> "mass")];
 					} foreach _x;
 				};
 			};
@@ -1598,26 +1574,23 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
-						if (_XLA_condition) then {
-							_mag = tolower _item;
-							if !(_mag in _magazines) then {
-								_magazines set [count _magazines,_mag];
-								_value = {_x == _mag} count _itemsCurrent;
-								_displayName = gettext (configfile >> "cfgmagazines" >> _mag >> "displayName");
-								_displayNameArray = toarray _displayName;
-								_tooltip = "";
-								if (count _displayNameArray > 20) then {
-									_displayNameArray resize 20;
-									_displayNameArray = _displayNameArray + toarray "...";
-									_tooltip = _displayName;
-								};
-								_lbAdd = _ctrlList lnbaddrow ["",tostring _displayNameArray,str _value];
-								_ctrlList lnbsetdata [[_lbAdd,0],_mag];
-								_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (configfile >> "cfgmagazines" >> _mag >> "mass")];
-								_ctrlList lnbsetpicture [[_lbAdd,0],gettext (configfile >> "cfgmagazines" >> _mag >> "picture")];
-								_ctrlList lbsettooltip [_lbAdd,_tooltip];
+						_mag = tolower _item;
+						if !(_mag in _magazines) then {
+							_magazines set [count _magazines,_mag];
+							_value = {_x == _mag} count _itemsCurrent;
+							_displayName = gettext (configfile >> "cfgmagazines" >> _mag >> "displayName");
+							_displayNameArray = toarray _displayName;
+							_tooltip = "";
+							if (count _displayNameArray > 20) then {
+								_displayNameArray resize 20;
+								_displayNameArray = _displayNameArray + toarray "...";
+								_tooltip = _displayName;
 							};
+							_lbAdd = _ctrlList lnbaddrow ["",tostring _displayNameArray,str _value];
+							_ctrlList lnbsetdata [[_lbAdd,0],_mag];
+							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (configfile >> "cfgmagazines" >> _mag >> "mass")];
+							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (configfile >> "cfgmagazines" >> _mag >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_tooltip];
 						};
 					} foreach getarray (_cfgMuzzle >> "magazines");
 				} foreach getarray (_cfgWeapon >> "muzzles");
@@ -1678,8 +1651,7 @@ switch _mode do {
 				_item = _x;
 				_itemCfg = configfile >> "cfgweapons" >> _item;
 				_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
-				GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
-				if (_scope == 2 && _XLA_condition) then {
+				if (_scope == 2) then {
 					_type = _item call bis_fnc_itemType;
 					_idcList = switch (_type select 1) do {
 						case "AccessoryMuzzle": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE};
