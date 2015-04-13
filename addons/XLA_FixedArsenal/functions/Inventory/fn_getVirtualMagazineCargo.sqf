@@ -9,9 +9,9 @@
 		0: OBJECT
 
 	Returns:
-	ARRAY of ARRAYs - all virtual items within the object's space in format [<items>,<weapons>,<magazines>,<backpacks>]
+	ARRAY of ARRAYs - all virtual items within the object's space in format [<items>,<weapons>,<magazines>,<backpacks>,<sides>]
 */
 
 private ["_object"];
 _object = [_this,0,missionnamespace,[missionnamespace,objnull]] call bis_fnc_param;
-[_object,[],false,false,0,2] call bis_fnc_addVirtualItemCargo;
+[_object,[],false,false,0,2] call XLA_fnc_addVirtualItemCargo;
