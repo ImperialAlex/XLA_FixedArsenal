@@ -1,5 +1,6 @@
 *.bikey
 *.bisign
+*.biprivatekey
 *.pbo
 *.bin
 DEV_ressources/
