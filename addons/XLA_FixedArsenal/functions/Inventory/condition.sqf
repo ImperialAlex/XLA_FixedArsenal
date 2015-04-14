@@ -9,6 +9,7 @@
 #define LOGIC_SIDE 7
 
 #define GETVIRTUALCARGO\
+	_cargomode = ((missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]) != objNull);\
 	_allowEquipped = _cargo getVariable ["XLA_fnc_arsenal_allowEquipped",true];\
 	_virtualItemCargo = (missionnamespace call XLA_fnc_getVirtualItemCargo) +	(_cargo call XLA_fnc_getVirtualItemCargo);\
 	_virtualMagazineCargo = (missionnamespace call XLA_fnc_getVirtualMagazineCargo) + (_cargo call XLA_fnc_getVirtualMagazineCargo);\
@@ -53,7 +54,7 @@
 
 #define GETCONDITION3(WLIST,BLIST,ITEM)\
 	_XLA_condition = false;\
-	if (_fullVersion) then { \
+	if (_fullVersion || !_cargomode) then { \
 		_XLA_condition = true;\
 	} else { \
 		private ["_xla_config","_xla_wlist","_xla_blist","_xla_item","_xla_side","_xla_factionstring","_xla_sideallowed"];\
