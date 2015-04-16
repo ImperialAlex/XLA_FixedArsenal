@@ -1281,6 +1281,7 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "SelectItem": {
 		private ["_ctrlList","_index","_cursel"];
+		GETVIRTUALCARGO
 		_display = _this select 0;
 		_ctrlList = _this select 1;
 		_index = _this select 2;
@@ -1591,23 +1592,26 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						_mag = tolower _item;
-						if !(_mag in _magazines) then {
-							_magazines set [count _magazines,_mag];
-							_value = {_x == _mag} count _itemsCurrent;
-							_displayName = gettext (configfile >> "cfgmagazines" >> _mag >> "displayName");
-							_displayNameArray = toarray _displayName;
-							_tooltip = "";
-							if (count _displayNameArray > 20) then {
-								_displayNameArray resize 20;
-								_displayNameArray = _displayNameArray + toarray "...";
-								_tooltip = _displayName;
+						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
+						if (_XLA_condition) then {
+							_mag = tolower _item;
+							if !(_mag in _magazines) then {
+								_magazines set [count _magazines,_mag];
+								_value = {_x == _mag} count _itemsCurrent;
+								_displayName = gettext (configfile >> "cfgmagazines" >> _mag >> "displayName");
+								_displayNameArray = toarray _displayName;
+								_tooltip = "";
+								if (count _displayNameArray > 20) then {
+									_displayNameArray resize 20;
+									_displayNameArray = _displayNameArray + toarray "...";
+									_tooltip = _displayName;
+								};
+								_lbAdd = _ctrlList lnbaddrow ["",tostring _displayNameArray,str _value];
+								_ctrlList lnbsetdata [[_lbAdd,0],_mag];
+								_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (configfile >> "cfgmagazines" >> _mag >> "mass")];
+								_ctrlList lnbsetpicture [[_lbAdd,0],gettext (configfile >> "cfgmagazines" >> _mag >> "picture")];
+								_ctrlList lbsettooltip [_lbAdd,_tooltip];
 							};
-							_lbAdd = _ctrlList lnbaddrow ["",tostring _displayNameArray,str _value];
-							_ctrlList lnbsetdata [[_lbAdd,0],_mag];
-							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (configfile >> "cfgmagazines" >> _mag >> "mass")];
-							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (configfile >> "cfgmagazines" >> _mag >> "picture")];
-							_ctrlList lbsettooltip [_lbAdd,_tooltip];
 						};
 					} foreach getarray (_cfgMuzzle >> "magazines");
 				} foreach getarray (_cfgWeapon >> "muzzles");
@@ -1668,7 +1672,8 @@ switch _mode do {
 				_item = _x;
 				_itemCfg = configfile >> "cfgweapons" >> _item;
 				_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
-				if (_scope == 2) then {
+				GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+				if (_scope == 2 && _XLA_condition) then {
 					_type = _item call bis_fnc_itemType;
 					_idcList = switch (_type select 1) do {
 						case "AccessoryMuzzle": {IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE};
