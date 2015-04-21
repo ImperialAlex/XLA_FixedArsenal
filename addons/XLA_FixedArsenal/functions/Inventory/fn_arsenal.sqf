@@ -17,7 +17,10 @@
 			3 (Optional): BOOL - Add equipped items to allowed list (default: true)
 
 		"Preload" - Preload item configs for Arsenal (without preloading, configs are parsed the first time Arsenal is opened)
-			No params
+			0 (Optional): BOOL - _fullVersion (load all _config entries) Defaults to true, for backwards compatiblility (default: true)
+			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
+			2 (Optional): Object - unit to use as "_center" (default: player)
+			3 (Optional): Array - Array of strings (classnames) to force-add to _data. (default: [])		
 
 		"AmmoboxInit" - Add virtual ammobox. Action to access the Arsenal will be added automatically on all clients.
 			0: OBJECT - ammobox
@@ -479,13 +482,28 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Preload": {
-		private ["_data","_cargo","_space"];
-		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+		private ["_fullVersion","_cargo","_center","_additional"];
+		_fullVersion = [_this,0,true,[true]] call bis_fnc_param;
+		_cargo = [_this,1,objNull,[objNull]] call bis_fnc_param;
+		_center  = [_this,2,player,[player]] call bis_fnc_param;
+		_additional = [_this,3,[],[[]]] call bis_fnc_param;
+
+
+			// OLD:
+			//HOW TO FIND OUT FULLVERSION?
+			// 1.) For ammboxinit, save it into object namespace
+			// 2.) What about "Open",false calls? 
+			// 3.) What about _allowEquipped in "OPEN" calls? 
+			// 4.) Do "OPEN" calls need support for all my additional params, too?
+
+		private ["_data","_dataspace"];
 		_dataspace = missionNamespace;
 		if (_cargo != objNull) then {		
 			_dataspace = _cargo;
 		};
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
 			INITTYPES
