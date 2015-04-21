@@ -50,6 +50,7 @@ class CfgFunctions {
 			class baseWeapon {};
 			class basicBackpack {};
 			class compatibleItems {};
+			class constructWhiteBlacklist {};
 			class deleteInventory {};
 			class exportInventory {};
 			class getVirtualBackpackBlacklist {};
