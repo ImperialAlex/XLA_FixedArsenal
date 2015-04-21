@@ -24,8 +24,8 @@
 			1 (Optional): BOOL - true to make all weapons and items in the game available in the box (default: false)
 			2 (Optional): Condition for showing the Arsenal action (default: {true})
 				      Passed arguments are the same as in addAction condition, i.e., _target - the box, _this - caller
-			3 (Optional, XLA): String - Message to show for the Arsenal action (default: "Arsenal")
-			4 (Optional, XLA): BOOL - Add equipped items to allowed list (default: true)
+			3 (Optional): String - Message to show for the Arsenal action (default: "Arsenal")
+			4 (Optional): BOOL - Add equipped items to allowed list (default: true)
 
 		"AmmoboxExit" - Remove virtual ammobox
 			0: OBJECT - ammobox
