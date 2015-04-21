@@ -13,7 +13,8 @@
 		"Open" - Open the Arsenal
 			0 (Optional): BOOL - true to open full Arsenal, with all categories and items available (default: false)
 			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
-			3 (Optional): Object - unit to use as "_center" (default: player)
+			2 (Optional): Object - unit to use as "_center" (default: player)
+			3 (Optional): BOOL - Add equipped items to allowed list (default: true)
 
 		"Preload" - Preload item configs for Arsenal (without preloading, configs are parsed the first time Arsenal is opened)
 			No params
@@ -150,6 +151,7 @@ switch _mode do {
 	case "Open": {
 		if !(isnull (uinamespace getvariable ["XLA_fnc_arsenal_cam",objnull])) exitwith {"Arsenal Viewer is already running" call bis_fnc_logFormat;};
 		missionnamespace setvariable ["XLA_fnc_arsenal_fullArsenal",[_this,0,false,[false]] call bis_fnc_param];
+		missionNamespace setvariable ["XLA_fnc_arsenal_allowEquipped",[_this,3,true,[true]] call bis_fnc_param];
 
 		with missionnamespace do {
 			XLA_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
