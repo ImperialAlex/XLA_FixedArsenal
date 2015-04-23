@@ -41,7 +41,6 @@
 #include "\A3\ui_f\hpp\defineDIKCodes.inc"
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
 #include "defineResincDesign_Arsenal.hpp"
-#include "condition.sqf"
 
 #define FADE_DELAY	0.15
 
@@ -553,7 +552,7 @@ switch _mode do {
 			// => in "init", we'll have to manually add the things. Should be easy since we know where they came from?
 			
 			// Get the whitelist of the object/mission
-			_list = ammobox call xla_fnc_constructWhiteBlacklist;
+			_list = _cargo call xla_fnc_constructWhiteBlacklist;
 			_wlist = (_list select 0);
 			_blist = (_list select 1);
 
@@ -1412,8 +1411,7 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "SelectItem": {
-		private ["_ctrlList","_index","_cursel"];
-		GETVIRTUALCARGO
+		private ["_ctrlList","_index","_cursel"];		
 		_display = _this select 0;
 		_ctrlList = _this select 1;
 		_index = _this select 2;
@@ -1699,8 +1697,6 @@ switch _mode do {
 			ctrlenabled (_display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _index))
 		) then {
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
-			GETVIRTUALCARGO
-
 			private ["_ctrlList"];
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG);
 			lbclear _ctrlList;
@@ -1734,7 +1730,13 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
+
+						// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
+						_list = _cargo call xla_fnc_constructWhiteBlacklist;
+						_wlist = _list select 0;
+						_blist = _list select 1;
+						// 2 is for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
@@ -1794,7 +1796,10 @@ switch _mode do {
 			private ["_ctrlList"];
 
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
-			GETVIRTUALCARGO
+			// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
+			_list = _cargo call xla_fnc_constructWhiteBlacklist;
+			_wlist = _list select 0;
+			_blist = _list select 1;
 
 			{
 				_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _x);
@@ -1814,7 +1819,8 @@ switch _mode do {
 				_item = _x;
 				_itemCfg = configfile >> "cfgweapons" >> _item;
 				_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
-				GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+				// 0 is for virtualItemCargo/Blacklist
+				_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_scope == 2 && _XLA_condition) then {
 					_type = _item call bis_fnc_itemType;
 					_idcList = switch (_type select 1) do {
@@ -2527,8 +2533,6 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
-		GETVIRTUALCARGO
-		
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
 			_inventory = _data select (_i + 1);
@@ -2581,7 +2585,10 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
-		GETVIRTUALCARGO
+		// Get the whitelist of the object/mission
+		_list = _cargo call xla_fnc_constructWhiteBlacklist;
+		_wlist = (_list select 0);
+		_blist = (_list select 1);
 		
 		_disabledItems = [];
 
@@ -2611,42 +2618,50 @@ switch _mode do {
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
 					case "adduniform": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center forceadduniform _item;} else {ERROR};
 					};
 					case "addvest": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addvest _item;} else {ERROR};
 					};
 					case "addbackpack": {
-						GETCONDITION3(_virtualBackpackCargo,_virtualItemBlacklist,_item)
+						// 3 for virtualBackpackmCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[3],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addbackpack _item;} else {ERROR};
 					};
 					case "addheadgear": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addheadgear _item;} else {ERROR};
 					};
 					case "addgoggles": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addgoggles _item;} else {ERROR};
 					};
 
 					case "additemtouniform": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtouniform _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtovest": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtovest _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtobackpack": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtobackpack _item;};
 						} else {ERROR};
@@ -2654,7 +2669,8 @@ switch _mode do {
 					};
 
 					case "addweapon": {
-						GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_item)
+						// 1 for virtualWeaponCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[1],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_center addweapon _item;
 							if (((_item call bis_fnc_itemType) select 0) == "LaserDesignator") then {ADDBINOCULARSMAG};
@@ -2663,32 +2679,39 @@ switch _mode do {
 						};
 					};
 					case "addprimaryweaponitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addprimaryweaponitem _item;} else {ERROR};
 					};
 					case "addsecondaryweaponitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addsecondaryweaponitem _item;} else {ERROR};
 					};
 					case "addhandgunitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addhandgunitem _item;} else {ERROR};
 					};
 
 					case "addmagazine": {
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
+						// 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addmagazine _item;} else {ERROR};
 					};
 					case "additem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center additem _item;} else {ERROR};
 					};
 					case "assignitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center assignitem _item;} else {ERROR};
 					};
 					case "linkitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center linkitem _item;} else {ERROR};
 					};
 

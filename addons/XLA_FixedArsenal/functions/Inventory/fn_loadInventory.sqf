@@ -51,8 +51,10 @@ _center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 _fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false]);
 
 // XLA: Grab the cargo and blacklist
-#include "condition.sqf"
-GETVIRTUALCARGO
+// Get the whitelist of the object/mission
+_list = _cargo call xla_fnc_constructWhiteBlacklist;
+_wlist = (_list select 0);
+_blist = (_list select 1);
 
 _inventory = [];
 switch (typename _cfg) do {
@@ -205,7 +207,8 @@ if !("uniform" in _blacklist) then {
 	};
 	if (_uniform != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _uniform)) then {
-			GETCONDITION3((_virtualItemCargo + _virtualWeaponCargo),(_virtualItemBlacklist + _virtualWeaponBlacklist ),_uniform)
+			// 0 for virtualItemCargo/Blacklist, 1 for virtualWeaponCargo/Blacklist
+			_XLA_condition = [_uniform,_wlist,_blist,[0,1],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 				_object forceadduniform _uniform;				
 			} else {
@@ -221,7 +224,8 @@ if !("uniform" in _blacklist) then {
 if !("vest" in _blacklist) then {
 	if (_vest != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _vest)) then {
-			GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_vest)
+			// 0 for virtualItemCargo/Blacklist,
+			_XLA_condition = [_vest,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 				_object addvest _vest;
 			} else {
@@ -237,7 +241,8 @@ if !("vest" in _blacklist) then {
 if !("headgear" in _blacklist) then {
 	if (_headgear != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _headgear)) then {
-			GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_headgear)
+			// 0 for virtualItemCargo/Blacklist,
+			_XLA_condition = [_headgear,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;		
 			if (_XLA_condition) then {
 				_object addheadgear _headgear;
 			} else {
@@ -251,7 +256,8 @@ if !("headgear" in _blacklist) then {
 if !("goggles" in _blacklist) then {
 	if (_goggles != "") then {
 		if (isclass (configfile >> "cfgGlasses" >> _goggles)) then {
-			GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_goggles)
+			// 0 for virtualItemCargo/Blacklist,
+			_XLA_condition = [_goggles,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 			_object addgoggles _goggles;
 		} else {
@@ -273,7 +279,8 @@ if !("backpack" in _blacklist) then {
 	};
 	if (_backpack != "") then {
 		if (isclass (configfile >> "cfgVehicles" >> _backpack)) then {
-			GETCONDITION3((_virtualItemCargo + _virtualBackpackCargo),( _virtualItemBlacklist +  _virtualBackpackBlacklist),_backpack)
+			// 0 for virtualItemCargo/Blacklist, 3 for virtualBackpackCargo/Blacklist
+			_XLA_condition = [_backpack,_wlist,_blist,[0,3],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 				_object addbackpack _backpack;
 			} else {
@@ -294,7 +301,8 @@ if !("magazines" in _blacklist) then {
 			if (_x != "") then {
 				_magazine = _x;
 				if (typename _magazine == typename []) then {_magazine = _magazine call bis_fnc_selectrandom;};
-				GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_magazine)
+				// 2 for virtualMagazineCargo/Blacklist,
+				_XLA_condition = [_magazine,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
 					_object addmagazine _magazine;
 				} else {
@@ -308,7 +316,8 @@ if !("magazines" in _blacklist) then {
 			{
 				if (_x != "") then {
 					if (isClass (configFile >> "CfgMagazines" >> _x)) then {
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
+						// 2 for virtualMagazineCargo/Blacklist,
+						_XLA_condition = [_x,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_object addmagazine _x;
 						} else {
@@ -332,7 +341,8 @@ if !("weapons" in _blacklist) then {
 			_weapon = _x;
 			if (isClass (configFile >> "CfgWeapons" >> _weapon)) then {
 				if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
-				GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_weapon)
+				// 1 for virtualWeaponCargo/Blacklist,
+				_XLA_condition = [_weapon,_wlist,_blist,[1],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
 					_object addweapon _weapon;
 				} else {
@@ -347,7 +357,8 @@ if !("weapons" in _blacklist) then {
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
 	if !("uniform" in _blacklist) then {{
-			GETCONDITION3((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_x)
+			// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
+			_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 				_object additemtouniform _x;
 			} else {
@@ -355,7 +366,8 @@ if !(_isCfg) then {
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
-		GETCONDITION3((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_x)
+		// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
+		_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 		if (_XLA_condition) then {
 			_object additemtovest _x;
 		} else {
@@ -363,7 +375,8 @@ if !(_isCfg) then {
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
-		GETCONDITION3((_virtualMagazineCargo + _virtualWeaponCargo + _virtualItemCargo),(_virtualMagazineBlacklist + _virtualWeaponBlacklist + _virtualItemBlacklist),_x)
+		// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
+		_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 		if (_XLA_condition) then {
 			_object additemtobackpack _x;
 		} else {
@@ -381,7 +394,8 @@ if !("transportMagazines" in _blacklist) then {
 		} foreach ([_cfg >> "transportMagazines"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION3((_virtualItemCargo+_virtualMagazineCargo),(_virtualItemBlacklist+_virtualMagazineBlacklist),_x)
+				// 2 for virtualMagazineCargo/Blacklist, 0 for Items
+				_XLA_condition = [_x,_wlist,_blist,[2,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
 					_object addmagazinecargoglobal _x;
 				} else {
@@ -394,7 +408,8 @@ if !("transportMagazines" in _blacklist) then {
 if !("items" in _blacklist) then {
 	{
 		if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-			GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
+		// 0 for Items
+		_XLA_condition = [_x,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
 			_object additem _x;
 			} else {
@@ -409,7 +424,8 @@ if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
 			if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-				GETCONDITION3((_virtualItemCargo+_virtualWeaponCargo),(_virtualItemBlacklist+_virtualWeaponBlacklist),_x)
+				// 1 for Weapons, 0 for Items
+			_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition)  then {
 					_object linkitem _x;
 					_object addPrimaryWeaponItem _x;
@@ -433,7 +449,8 @@ if !("transportWeapons" in _blacklist) then {
 		} foreach ([_cfg >> "transportWeapons"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION3((_virtualItemCargo+_virtualWeaponCargo),(_virtualItemBlacklist+_virtualWeaponBlacklist),_x)
+				// 1 for Weapons, 0 for Items
+				_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
 					_object addweaponcargoglobal _x;
 				} else {
@@ -452,7 +469,8 @@ if !("transportItems" in _blacklist) then {
 		} foreach ([_cfg >> "transportItems"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
-				GETCONDITION3((_virtualItemCargo+_virtualWeaponCargo),(_virtualItemBlacklist+_virtualWeaponBlacklist),_x)
+				// 1 for Weapons, 0 for Items
+				_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
 					_object additemcargoglobal _x;
 				} else {

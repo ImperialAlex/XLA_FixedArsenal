@@ -30,9 +30,10 @@ _center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 
 _fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false]);
 
-// XLA: Grab the cargo and blacklist
-#include "condition.sqf"
-GETVIRTUALCARGO
+// Get the whitelist of the object/mission
+_list = _cargo call xla_fnc_constructWhiteBlacklist;
+_wlist = (_list select 0);
+_blist = (_list select 1);
 
 private ["_unit", "_weapon", "_magazineCount", "_magazineClass", "_weaponExists", "_magazines", "_i", "_muzzles", "_muzzle"];
 
@@ -53,9 +54,9 @@ if (_magazineCount > 0) then
 		_magazineClass = "";
 		if (count _magazines > 0 && _weaponExists) then {
 		{ 
-		 		GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
-
-		 		if (_XLA_condition) exitWith {_magazineClass = _x;}; } forEach _magazines;
+			// 2 for virtualMagazineCargo/Blacklist
+			_XLA_condition = [_x,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
+		 	if (_XLA_condition) exitWith {_magazineClass = _x;}; } forEach _magazines;
 		};
 	};
 	if (isClass (configFile / "CfgMagazines" / _magazineClass)) then
