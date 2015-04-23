@@ -2573,18 +2573,6 @@ switch _mode do {
 			_ctrlTemplateValue lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
 			_ctrlTemplateValue lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
 
-			if (
-				{_item = _x; GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_item) !_XLA_condition || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
-				||
-				{_item = _x; GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist + _virtualWeaponBlacklist),_item) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
-				||
-				{_item = _x; GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist + _virtualWeaponBlacklist),_item) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
-				||
-				{_item = _x; GETCONDITION3(_virtualBackpackCargo,_virtualBackpackBlacklist,_item) !_XLA_condition || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
-			) then {
-				_ctrlTemplateValue lnbsetcolor [[_lbAdd,0],[1,1,1,0.25]];
-				//_ctrlTemplateValue lbsetvalue [_lbAdd,-1];
-			};
 		};
 
 		["templateSelChanged",[_display]] call XLA_fnc_arsenal;
