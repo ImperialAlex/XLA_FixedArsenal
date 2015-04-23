@@ -18,14 +18,14 @@
 	BOOL - true if item is allowed, false otherwise.
 */
 
-	private ["_item","_whitelist","_blacklist","_fullVersion"];
+	private ["_item","_whitelists","_blacklists","_types","_fullVersion"];
 	_item = [_this,0,"",[""]] call bis_fnc_param;
 	_whitelists = [_this,1,[[],[],[],[],[]],[[]],[5]] call bis_fnc_param;
 	_blacklists = [_this,2,[[],[],[],[],[]],[[]],[5]] call bis_fnc_param;
 	_types = [_this,3,[],[[]],[0,1,2,3,4]] call bis_fnc_param;
 	_fullVersion = [_this,4,false,[false]] call bis_fnc_param;
 
-
+	private ["_whitelist","_blacklist"];
 	/* Construct the whitelist/blacklist from the input */
 	_whitelist = [];
 	_blacklist = [];
@@ -38,6 +38,7 @@
 		};
 	} forEach _types;
 
+ 	private ["_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualSideCargo = (_whitelists select 4);
 	_virtualSideBlacklist = (_blacklists select 4);
 
@@ -51,10 +52,6 @@
 	#define FRIENDLY_SIDE 6
 	#define LOGIC_SIDE 7	
 
-	// current hack to avoid having to deal with side logic:
-	_virtualSideCargo = [];
-	_virtualSideBlacklist = [];
-	
 	_XLA_condition = false;
 	if (_fullVersion) then {
 		_XLA_condition = true;
