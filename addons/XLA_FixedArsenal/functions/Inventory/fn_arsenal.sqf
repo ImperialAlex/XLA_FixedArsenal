@@ -112,6 +112,35 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[/*"Mine","MineBounding","MineDirectional"*/]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
 
+#define LISTINDICES\
+		_listindices = [];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_UNIFORM,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_VEST,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_BACKPACK,[3]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_HEADGEAR,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_GOGGLES,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_NVGS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS,[0,1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_SECONDARYWEAPON,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_HANDGUN,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_MAP,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_GPS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_FACE,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_VOICE,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_INSIGNIA,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0OPTIC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0ACC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0MUZZLE,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0BIPOD,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,[0,1]];
+
 #define STATS_WEAPONS\
 	["reloadtime","dispersion","maxrange","hit","mass","initSpeed"],\
 	[true,true,true,true,false,false]
@@ -173,8 +202,12 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Init": {
+		// called by RscDisplayFixedArsenal, so everything needs to be 'passed in' via getvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
+		_cargo = missionNamespace getvariable XLA_fnc_arsenal_cargo;
+		_center = missionNamespace getvariable XLA_fnc_arsenal_center;
+		
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
 		XLA_fnc_arsenal_toggleSpace = nil;
@@ -222,7 +255,10 @@ switch _mode do {
 
 		INITTYPES
 		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
-		["Preload"] call XLA_fnc_arsenal;
+		["Preload",[_fullVersion,_cargo,_center]] call XLA_fnc_arsenal;
+
+		// !!! DEPENDING ON "allowequipped" we need to add things to _data here in order to be able to see the equipped items in the arsenal
+
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
 		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
 
@@ -507,10 +543,19 @@ switch _mode do {
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
 			INITTYPES
+			LISTINDICES
 			_data = [];
 			{
 				_data set [_x,[]];
 			} foreach IDCS;
+
+			//Crap, what about allowEquipped? When do we add THAT in? xD
+			// => in "init", we'll have to manually add the things. Should be easy since we know where they came from?
+			
+			// Get the whitelist of the object/mission
+			_list = ammobox call xla_fnc_constructWhiteBlacklist;
+			_virtualMagazineCargo = ((_list select 0) select 2);
+			_virtualMagazineBlacklist = ((_list select 1) select 2);
 
 			_configArray = (
 				("isclass _x" configclasses (configfile >> "cfgweapons")) +
@@ -534,7 +579,19 @@ switch _mode do {
 						{
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
 						} foreach _types;
-						if (_weaponTypeID >= 0) then {
+						
+						// grab the indices of the whitelists:
+						_lx = _listindices select _weaponTypeID;
+						// construct the lists
+						_wlist = [];
+						_blist = [];
+						{
+						  _wlist append ((_list select 0) select _x);
+						  _blist append ((_list select 1) select _x);
+						} forEach _lx;
+						//get the condition
+						_XLA_condition = [(configName _class),_wlist,_blist,_fullVersion] call xla_fnc_arsenalCondition;
+						if (_weaponTypeID >= 0 && _XLA_condition) then {
 							private ["_items"];
 							_items = _data select _weaponTypeID;
 							_items set [count _items,configname _class];
@@ -593,7 +650,8 @@ switch _mode do {
 							private ["_cfgMag"];
 							_magazines set [count _magazines,_mag];
 							_cfgMag = configfile >> "cfgmagazines" >> _mag;
-							if (getnumber (_cfgMag >> "scope") == 2 || getnumber (_cfgMag >> "scopeArsenal") == 2) then {
+							_XLA_condition = [(configName _cfgMag),(_virtualMagazineCargo),_virtualMagazineBlacklist,_fullVersion] call xla_fnc_arsenalCondition;
+							if ((getnumber (_cfgMag >> "scope") == 2 || getnumber (_cfgMag >> "scopeArsenal") == 2) && _XLA_condition ) then {
 								private ["_items"];
 								_items = _data select _tab;
 								_items set [count _items,configname _cfgMag];
