@@ -31,6 +31,8 @@
 	// format [<items>,<weapons>,<magazines>,<backpacks>,<sides>]
 	// wlist indices: 0 = items,1 = weapons, 2 = magazines,3 = backpacks,4 = sides
 
+	private ["_virtualItemCargo","_virtualItemBlacklist","_virtualWeaponCargo",
+	"_virtualWeaponBlacklist","_virtualMagazineCargo","_virtualMagazineBlacklist","_virtualBackpackCargo","_virtualBackpackBlacklist","_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualItemCargo =	((_list select 0) select 0);
 	_virtualItemBlacklist = ((_list select 1) select 0);
 	_virtualWeaponCargo =	((_list select 0) select 1);
@@ -74,8 +76,7 @@
 	// When you add a weapon to the whitelist, all it's attachments (if any) are also added to the whitelist.
 	// This is not true for blacklisting. (blacklisting a weapon doesn't blacklist its attachments)
 	{
-		_weapon = _x;
-		_virtualWeaponCargo pushBack _weapon;					
+		_virtualWeaponCargo pushBack _x;					
 		{
 			private ["_item"];
 			_item = gettext (_x >> "item");

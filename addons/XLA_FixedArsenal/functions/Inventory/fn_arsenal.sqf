@@ -131,10 +131,10 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_FACE,[]];\
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_VOICE,[]];\
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_INSIGNIA,[]];\
-		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0OPTIC,[0]];\
-		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0ACC,[0]];\
-		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0MUZZLE,[0]];\
-		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_0BIPOD,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMBIPOD,[0]];\
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG,[2]];\
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW,[2]];\
 		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[2]];\
@@ -200,8 +200,8 @@ switch _mode do {
 		// called by RscDisplayFixedArsenal, so everything needs to be 'passed in' via getvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
-		_cargo = missionNamespace getvariable XLA_fnc_arsenal_cargo;
-		_center = missionNamespace getvariable XLA_fnc_arsenal_center;
+		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
+		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
 		
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
@@ -523,7 +523,6 @@ switch _mode do {
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
 			INITTYPES
-			LISTINDICES
 			_data = [];
 			{
 				_data set [_x,[]];
@@ -561,7 +560,11 @@ switch _mode do {
 						} foreach _types;
 						
 						// grab the indices of the white/blacklists (i.e. what core classes/Cfg...'s to check)
-						_lx = _listindices select _weaponTypeID;
+						LISTINDICES
+						_lx = [];
+						if (_weaponTypeID >= 0) then {
+							_lx = _listindices select _weaponTypeID;
+						};						
 						
 						//get the condition
 						_XLA_condition = [(configName _class),_wlist,_blist,_lx,_fullVersion] call xla_fnc_arsenalCondition;
