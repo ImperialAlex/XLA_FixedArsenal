@@ -6,11 +6,10 @@
 
 	Parameter(s):
 		0: STRING - classname of the item to test	
-		1 (OPTIONAL): ARRAY of STRING - whitelist (default: [])
-		2 (OPTIONAL): ARRAY of STRING - blacklist (default: [])
-		// FUTURE: SIDE WHITELIST?	? (OPTIONAL): ARRAY of INTEGERS - side-whitelist (default [])
-		// FUTURE: SIDE BLACKLSIT?  ? (OPTIONAL): ARRAY of INTEGERS - sideblacklist (default [])
-		3 (Optional): BOOL - fullVersion toggle. true to allow all items, false to use whitelist. (default: false)	
+		1 (OPTIONAL): ARRAY of ARRAY - whitelists (default: [[],[],[],[],[]])
+		2 (OPTIONAL): ARRAY of ARRAY - blacklists (default: [[],[],[],[],[]])
+		3 (OPTIONAL): ARRAY of INTEGER - whitelists to check (default: [])
+		4 (Optional): BOOL - fullVersion toggle. true to allow all items, false to use whitelist. (default: false)	
 
 	Example:
 	["arifle_MX_F",["arifle_MX_F"],[],false] call xla_fnc_arsenalCondition;
@@ -21,9 +20,26 @@
 
 	private ["_item","_whitelist","_blacklist","_fullVersion"];
 	_item = [_this,0,"",[""]] call bis_fnc_param;
-	_whitelist = [_this,1,[],[[]]] call bis_fnc_param;
-	_blacklist = [_this,2,[],[[]]] call bis_fnc_param;
-	_fullVersion = [_this,3,false,[false]] call bis_fnc_param;
+	_whitelists = [_this,1,[[],[],[],[],[]],[[]],[5]] call bis_fnc_param;
+	_blacklists = [_this,2,[[],[],[],[],[]],[[]],[5]] call bis_fnc_param;
+	_types = [_this,3,[],[[]],[0,1,2,3,4]] call bis_fnc_param;
+	_fullVersion = [_this,4,false,[false]] call bis_fnc_param;
+
+
+	/* Construct the whitelist/blacklist from the input */
+	_whitelist = [];
+	_blacklist = [];
+	{
+		if (_x <= 3) then {	
+			_whitelist append (_whitelists select _x);
+			_blacklist append (_blacklists select _x);
+		} else { 
+			["Invalid type index (%1) in input",_x] call bis_fnc_error;
+		};
+	} forEach _types;
+
+	_virtualSideCargo = (_whitelists select 4);
+	_virtualSideBlacklist = (_blacklists select 4);
 
 	#define NO_SIDE -1
 	#define EAST_SIDE 0

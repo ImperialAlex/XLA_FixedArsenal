@@ -554,8 +554,8 @@ switch _mode do {
 			
 			// Get the whitelist of the object/mission
 			_list = ammobox call xla_fnc_constructWhiteBlacklist;
-			_virtualMagazineCargo = ((_list select 0) select 2);
-			_virtualMagazineBlacklist = ((_list select 1) select 2);
+			_wlist = (_list select 0);
+			_blist = (_list select 1);
 
 			_configArray = (
 				("isclass _x" configclasses (configfile >> "cfgweapons")) +
@@ -580,17 +580,11 @@ switch _mode do {
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
 						} foreach _types;
 						
-						// grab the indices of the whitelists:
+						// grab the indices of the white/blacklists (i.e. what core classes/Cfg...'s to check)
 						_lx = _listindices select _weaponTypeID;
-						// construct the lists
-						_wlist = [];
-						_blist = [];
-						{
-						  _wlist append ((_list select 0) select _x);
-						  _blist append ((_list select 1) select _x);
-						} forEach _lx;
+						
 						//get the condition
-						_XLA_condition = [(configName _class),_wlist,_blist,_fullVersion] call xla_fnc_arsenalCondition;
+						_XLA_condition = [(configName _class),_wlist,_blist,_lx,_fullVersion] call xla_fnc_arsenalCondition;
 						if (_weaponTypeID >= 0 && _XLA_condition) then {
 							private ["_items"];
 							_items = _data select _weaponTypeID;
@@ -650,7 +644,8 @@ switch _mode do {
 							private ["_cfgMag"];
 							_magazines set [count _magazines,_mag];
 							_cfgMag = configfile >> "cfgmagazines" >> _mag;
-							_XLA_condition = [(configName _cfgMag),(_virtualMagazineCargo),_virtualMagazineBlacklist,_fullVersion] call xla_fnc_arsenalCondition;
+							// 2 is the index in _wlist/_blist that contains the Magazine whitelist/blacklist
+							_XLA_condition = [(configName _cfgMag),_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 							if ((getnumber (_cfgMag >> "scope") == 2 || getnumber (_cfgMag >> "scopeArsenal") == 2) && _XLA_condition ) then {
 								private ["_items"];
 								_items = _data select _tab;
