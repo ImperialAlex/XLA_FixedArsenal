@@ -37,6 +37,8 @@
 	Returns:
 	NOTHING
 */
+private ["_DEBUG"];
+_DEBUG = true;
 
 #include "\A3\ui_f\hpp\defineDIKCodes.inc"
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
@@ -181,6 +183,7 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
+if (_DEBUG) then { diag_log (_mode + ": " + (str _this)); };
 switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
