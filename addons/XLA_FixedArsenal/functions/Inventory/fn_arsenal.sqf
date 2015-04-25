@@ -311,6 +311,12 @@ switch _mode do {
 
 			// WHAT ABOUT MAGAZINES??
 
+			/* Now we need to store the current white/blacklist and update _data */
+			private ["_list"];
+			_list = _cargo call xla_fnc_constructWhiteBlacklist;			
+			//always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
+			missionNamespace setVariable ["XLA_fnc_arsenal_list",_list]; 
+
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 
@@ -1727,9 +1733,10 @@ switch _mode do {
 						_item = _x;
 
 						// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
-						_list = _cargo call xla_fnc_constructWhiteBlacklist;
+						_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
 						_wlist = _list select 0;
 						_blist = _list select 1;
+
 						// 2 is for virtualMagazineCargo/Blacklist
 						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
@@ -1792,7 +1799,7 @@ switch _mode do {
 
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 			// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
-			_list = _cargo call xla_fnc_constructWhiteBlacklist;
+			_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
 			_wlist = _list select 0;
 			_blist = _list select 1;
 
