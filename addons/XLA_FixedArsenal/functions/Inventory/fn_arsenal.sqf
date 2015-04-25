@@ -49,6 +49,7 @@ disableserialization;
 _mode = [_this,0,"Open",[displaynull,""]] call bis_fnc_param;
 _this = [_this,1,[]] call bis_fnc_param;
 _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false];
+_allowEquipped = missionNamespace getVariable ["XLA_fnc_arsenal_allowEquipped",true];
 
 #define IDCS_LEFT\
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON,\
@@ -257,6 +258,73 @@ switch _mode do {
 		["Preload",[_fullVersion,_cargo,_center]] call XLA_fnc_arsenal;
 
 		// !!! DEPENDING ON "allowequipped" we need to add things to _data here in order to be able to see the equipped items in the arsenal
+		// take the whole types/forEach thing and add to it the "allowEquipped" handling from constructWhitelist?
+		if (_allowEquipped) then {
+
+			private ["_data","_dataspace"];
+			_dataspace = missionNamespace;
+			if (!isNull(_cargo)) then {		
+				_dataspace = _cargo;
+			};
+			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+			/* get current equipment */
+			private["_currentEquipment"];
+			_currentEquipment = 
+				items _center +
+				assigneditems _center +
+				primaryweaponitems _center + 
+				secondaryweaponitems _center +
+				handgunitems _center +
+				magazines _center + 
+				[uniform _center,vest _center,headgear _center,goggles _center,backpack _center];
+			{
+				_currentEquipment set [count _currentEquipment,_x];
+				{
+					private ["_item"];
+					_item = gettext (_x >> "item");
+					if !(_item in _currentEquipment) then {_currentEquipment set [count _currentEquipment,_item];};
+				} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);
+			} foreach (weapons _center + [binocular _center]);
+
+			/* add equipment to _data */
+			{
+				_className = _x;
+				_class = configFile;
+				{
+					if (isClass(configFile / _x / _className)) then	{
+						_class = configFile / _x / _className;
+					};
+				}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGlasses"];
+				_scope = if (isnumber (_class >> "scopeArsenal")) then {getnumber (_class >> "scopeArsenal")} else {getnumber (_class >> "scope")};
+				_isBase = if (isarray (_class >> "muzzles")) then {(_className call bis_fnc_baseWeapon == _className)} else {true}; //-- Check if base weapon (true for all entity types)
+				if (_scope == 2 && {gettext (_class >> "model") != ""} && _isBase) then {
+					private ["_weaponType","_weaponTypeCategory"];
+					_weaponType = (_className call bis_fnc_itemType);
+					_weaponTypeCategory = _weaponType select 0;
+					if (_weaponTypeCategory != "VehicleWeapon") then {
+						private ["_weaponTypeSpecific","_weaponTypeID"];
+						_weaponTypeSpecific = _weaponType select 1;
+						_weaponTypeID = -1;
+						{
+							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
+						} foreach _types;
+					
+						if (_weaponTypeID >= 0) then {
+							private ["_items"];
+							_items = _data select _weaponTypeID;
+							_items set [count _items,configname _class];
+						};
+					};
+				};
+			} foreach _currentEquipment;
+
+			// WHAT ABOUT MAGAZINES??
+
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
+			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
+
+		};
 
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
 		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
@@ -523,17 +591,9 @@ switch _mode do {
 		_center  = [_this,2,player,[player]] call bis_fnc_param;
 		_additional = [_this,3,[],[[]]] call bis_fnc_param;
 
-
-			// OLD:
-			//HOW TO FIND OUT FULLVERSION?
-			// 1.) For ammboxinit, save it into object namespace
-			// 2.) What about "Open",false calls? 
-			// 3.) What about _allowEquipped in "OPEN" calls? 
-			// 4.) Do "OPEN" calls need support for all my additional params, too?
-
 		private ["_data","_dataspace"];
 		_dataspace = missionNamespace;
-		if (_cargo != objNull) then {		
+		if (!isNull(_cargo)) then {
 			_dataspace = _cargo;
 		};
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
@@ -547,9 +607,6 @@ switch _mode do {
 				_data set [_x,[]];
 			} foreach IDCS;
 
-			//Crap, what about allowEquipped? When do we add THAT in? xD
-			// => in "init", we'll have to manually add the things. Should be easy since we know where they came from?
-			
 			// Get the whitelist of the object/mission
 			_list = _cargo call xla_fnc_constructWhiteBlacklist;
 			_wlist = (_list select 0);
@@ -935,7 +992,7 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 		_dataspace = missionNamespace;
-		if (_cargo != objNull) then {
+		if (!isNull(_cargo)) then {
 			_dataspace = _cargo;
 		};
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
@@ -1085,7 +1142,7 @@ switch _mode do {
 	case "ListSelectCurrent": {		
 		_display = [_this,0,uinamespace getvariable ["XLA_fnc_arsenal_display",displaynull],[displaynull]] call bis_fnc_paramin;
 		_dataspace = missionNamespace;
-		if (_cargo != objNull) then {
+		if (!isNull(_cargo)) then {
 			_dataspace = _cargo;
 		};
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
