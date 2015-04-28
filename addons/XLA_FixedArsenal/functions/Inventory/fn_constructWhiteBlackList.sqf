@@ -21,6 +21,14 @@
 	_allowEquipped = [_this,1,true,[true]] call bis_fnc_param;
 	_center = [_this,2,objNull,[objNull]] call bis_fnc_param;
 
+	private ["_DEBUG"];
+	_DEBUG = true;
+	
+	if (_DEBUG) then { 
+		diag_log format ["CONSTRUCT_WHITELIST: _cargo: %1",_cargo];
+		diag_log format ["CONSTRUCT_WHITELIST: _allowEquipped: %1",_allowEquipped];
+		diag_log format ["CONSTRUCT_WHITELIST: _center: %1",_center];
+	};
 
 	/* Input cleaning */	
 	if (_center == objNull) then { _allowEquipped = false; };
@@ -117,4 +125,7 @@
 	_virtualSideBlacklist append (_cargo call XLA_fnc_getVirtualSideBlacklist);
 
 	// Return the entire list
+	if (_DEBUG) then {
+		diag_log format ["CONSTRUCT_WHITELIST: _list: %1",_list];
+	};
 	_list;
