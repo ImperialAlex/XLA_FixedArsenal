@@ -25,6 +25,17 @@
 	_types = [_this,3,[],[[]],[0,1,2,3,4]] call bis_fnc_param;
 	_fullVersion = [_this,4,false,[false]] call bis_fnc_param;
 
+	private ["_DEBUG"];
+	_DEBUG = true;
+
+	if (_DEBUG) then {
+		diag_log format ["ARSENAL CONDITION: _item: %1",_item];
+		diag_log format ["ARSENAL CONDITION: _whitelists: %1",_whitelists];
+		diag_log format ["ARSENAL CONDITION: _blacklists: %1",_blacklists];
+		diag_log format ["ARSENAL CONDITION: _types: %1",_types];
+		diag_log format ["ARSENAL CONDITION: _fullVersion: %1",_fullVersion];
+	};
+
 	private ["_whitelist","_blacklist"];
 	/* Construct the whitelist/blacklist from the input */
 	_whitelist = [];
@@ -38,9 +49,17 @@
 		};
 	} forEach _types;
 
+	if (_DEBUG) then {
+		diag_log format ["ARSENAL CONDITION: _whitelist: %1",_whitelist];
+		diag_log format ["ARSENAL CONDITION: _blacklist: %1",_blacklist];
+	};
+
  	private ["_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualSideCargo = (_whitelists select 4);
 	_virtualSideBlacklist = (_blacklists select 4);
+
+	diag_log _virtualSideCargo;
+	hint str ((_virtualSideCargo find """%ALL""") >= 0);
 
 	#define NO_SIDE -1
 	#define EAST_SIDE 0

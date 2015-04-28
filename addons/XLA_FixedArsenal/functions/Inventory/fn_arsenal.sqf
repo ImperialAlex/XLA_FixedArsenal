@@ -1,5 +1,6 @@
 /*
 	Author: Karel Moricky
+	edits by Alexander (ImperialAlex)
 
 	Description:
 	Splendid arsenal viewer
@@ -37,6 +38,7 @@
 	Returns:
 	NOTHING
 */
+
 private ["_DEBUG"];
 _DEBUG = true;
 
@@ -50,8 +52,20 @@ disableserialization;
 
 _mode = [_this,0,"Open",[displaynull,""]] call bis_fnc_param;
 _this = [_this,1,[]] call bis_fnc_param;
+
 _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false];
 _allowEquipped = missionNamespace getVariable ["XLA_fnc_arsenal_allowEquipped",true];
+if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then {
+	private ["_cargo","_center","_addedEquipment"];
+	_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo", "undef"];
+	_center = missionNamespace getvariable ["XLA_fnc_arsenal_center","undef"];
+	_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment","undef"];
+	diag_log format ["_fullVersion = %1", _fullVersion];
+	diag_log format ["_allowEquipped = %1",_allowEquipped];
+	diag_log format ["_cargo = %1",_cargo];
+	diag_log format ["_center = %1", _center];
+	diag_log format ["_addedEquipment = %1", _addedEquipment]
+};
 
 #define IDCS_LEFT\
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON,\
@@ -161,6 +175,7 @@ _allowEquipped = missionNamespace getVariable ["XLA_fnc_arsenal_allowEquipped",t
 
 // Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc 
 // TODO: Actually calculate the maximum weight possible with the currently available relevant items
+// See https://github.com/ImperialAlex/XLA_FixedArsenal/issues/21 for more information
 // (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
 
 #define MAXINVENTORYMASS 1220
@@ -179,19 +194,21 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
-if (_DEBUG) then { diag_log (_mode + ": " + (str _this)); };
+// trace the execution to the *.rpt file
+if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then { diag_log (_mode + ": " + (str _this)); };
 switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Open": {
 		if !(isnull (uinamespace getvariable ["XLA_fnc_arsenal_cam",objnull])) exitwith {"Arsenal Viewer is already running" call bis_fnc_logFormat;};
-		missionnamespace setvariable ["XLA_fnc_arsenal_fullArsenal",[_this,0,false,[false]] call bis_fnc_param];
-		missionNamespace setvariable ["XLA_fnc_arsenal_allowEquipped",[_this,3,true,[true]] call bis_fnc_param];
 
 		with missionnamespace do {
+			XLA_fnc_arsenal_fullArsenal = [_this,0,false,[false]] call bis_fnc_param;
 			XLA_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
 			XLA_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;
+			XLA_fnc_arsenal_allowEquipped = [_this,3,true,[true]] call bis_fnc_param;
 		};
+
 		with uinamespace do {
 			_displayMission = [] call (uinamespace getvariable "bis_fnc_displayMission");
 			if !(isnull finddisplay 312) then {_displayMission = finddisplay 312;};
@@ -201,7 +218,8 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Init": {
-		// called by RscDisplayFixedArsenal, so everything needs to be 'passed in' via getvariable
+		// called indirectly as part of 'createDisplay "RscDisplayFixedArsenal"'
+		// therefore all information needs to be 'passed in' via get/setvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
 		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
@@ -246,10 +264,45 @@ switch _mode do {
 		INITTYPES
 		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
 		["Preload",[_fullVersion,_cargo,_center]] call XLA_fnc_arsenal;
+		/* 
+			We need to pass in "_fullVersion" since preload will ignore 
+			the missionNamespace variable "XLA_fnc_fullArsenal" and
+			override the "_fullVersion" variable defined at the top 
+			of this file/function with its input (or the default, "true").
 
-		// !!! DEPENDING ON "allowequipped" we need to add things to _data here in order to be able to see the equipped items in the arsenal
-		// take the whole types/forEach thing and add to it the "allowEquipped" handling from constructWhitelist?
+			To see why this is necessary, think about this potential issue:
+			What happens if we ["Open",true] spawn xla_fnc_arsenal,
+		 causing the mission namepsace to contain XLA_fnc_arsenal_fullArsenal
+		 set to true and then call "preload" for a restricted ammobox?
+		 => preload must always make sure to override the _fullVersion
+		 that has been defined at the top with its own input, otherwise
+		 it would no longer be possible to correctly call preload manually. 
+
+		 Due to this, any missions that call preload in the 'old'
+		 or 'vanilla' style, where preload has no parameters and defaults to
+		 _fullVersion = true, will create a fully allowed arsenal.
+		 => The next version breaks backwards compatibility for these 
+		 (advanced) use cases and will therefore be v3.0.0. 
+		*/
+
 		if (_allowEquipped) then {
+			/*
+				Because _data generated by "preload" only contains the items
+				whitelisted through virtualCargo/Blacklist, we need to add 
+				the currently equipped items/weapons/etc to _data.
+
+				We also need a way to remove them later, 
+				but only remove those that weren't in "preload" anyway.
+				We could simply always re-calculate preload _data for
+				allowEquipped arsenal's but that's a bit of a cheap way out.
+
+				To this end, we're keeping a list of things that we need to subtract.
+				We need to then subtract them upon "exit"
+
+				The whitelist/blacklist command already takes care of 
+				_allowedEquipped internally and since that is recalculated on
+				every "init", we don't need to subtract/etc anything later.
+			*/
 
 			private ["_data","_dataspace"];
 			_dataspace = missionNamespace;
@@ -278,6 +331,9 @@ switch _mode do {
 			} foreach (weapons _center + [binocular _center]);
 
 			/* add equipment to _data */
+			private ["_addedEquipment"]; 
+			// equipment we actually added that wasn't already allowed anway
+			_addedEquipment = [];
 			{
 				_className = _x;
 				_class = configFile;
@@ -301,9 +357,12 @@ switch _mode do {
 						} foreach _types;
 					
 						if (_weaponTypeID >= 0) then {
-							private ["_items"];
+							private ["_items","_setArray"];
 							_items = _data select _weaponTypeID;
-							_items set [count _items,configname _class];
+							if ( !((configName _class) in _items) ) then {
+								_items set [count _items,configname _class];
+								_addedEquipment pushBack [count _items,configname _class];
+							};
 						};
 					};
 				};
@@ -313,13 +372,19 @@ switch _mode do {
 
 			/* Now we need to store the current white/blacklist and update _data */
 			private ["_list"];
-			_list = _cargo call xla_fnc_constructWhiteBlacklist;			
-			//always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
+			_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;			
+
+			// always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
 			missionNamespace setVariable ["XLA_fnc_arsenal_list",_list]; 
+			// needed in "Exit" to remove any added equipment
+			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",_addedEquipment];
 
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 
+		} else {
+			// reset the addedEquipment to empty
+			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
 		};
 
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
@@ -598,7 +663,7 @@ switch _mode do {
 			} foreach IDCS;
 
 			// Get the whitelist of the object/mission
-			_list = _cargo call xla_fnc_constructWhiteBlacklist;
+			_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
 			_wlist = (_list select 0);
 			_blist = (_list select 1);
 
@@ -718,6 +783,49 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Exit": {
+		/* check if there is _addedEquipment to remove */
+		if (_allowEquipped) then {
+
+			/* grab _data */
+			private ["_data","_dataspace"];
+			_dataspace = missionNamespace;
+			if (!isNull(_cargo)) then {		
+				_dataspace = _cargo;
+			};
+			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+			/* grab _addedEquipment */
+			private ["_addedEquipment"];
+			_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+			
+			INITTYPES
+			{
+				_index = (_x select 0);
+				_className = (_x select 1);				
+			
+				/* find the weapontype, needed for index in _data */
+				private ["_weaponType","_weaponTypeCategory"];
+				_weaponType = (_className call bis_fnc_itemType);
+				_weaponTypeCategory = _weaponType select 0;
+				if (_weaponTypeCategory != "VehicleWeapon") then {
+					private ["_weaponTypeSpecific","_weaponTypeID"];
+					_weaponTypeSpecific = _weaponType select 1;
+					_weaponTypeID = -1;
+					{
+						if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
+					} foreach _types;
+				
+					if (_weaponTypeID >= 0) then {
+						private ["_items"];
+						_items = _data select _weaponTypeID;					
+						_items deleteAt _index;		
+					};
+				};
+			} foreach _addedEquipment;
+
+		};
+
+		/* proceed with normal exit */		
 		removemissioneventhandler ["draw3D",XLA_fnc_arsenal_draw3D];
 
 		_target = (missionnamespace getvariable ["XLA_fnc_arsenal_target",player]);
@@ -2585,7 +2693,7 @@ switch _mode do {
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
 		// Get the whitelist of the object/mission
-		_list = _cargo call xla_fnc_constructWhiteBlacklist;
+		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
 		_wlist = (_list select 0);
 		_blist = (_list select 1);
 		
@@ -3018,7 +3126,7 @@ switch _mode do {
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
-						["Open",[nil,_box]] call XLA_fnc_arsenal;
+						["Open",[nil,_box,nil,(_box getVariable ["XLA_fnc_arsenal_allowEquipped",true])]] call XLA_fnc_arsenal;
 					},
 					[],
 					6,
