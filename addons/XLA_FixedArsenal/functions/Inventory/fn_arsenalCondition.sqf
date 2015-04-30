@@ -57,9 +57,16 @@
  	private ["_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualSideCargo = (_whitelists select 4);
 	_virtualSideBlacklist = (_blacklists select 4);
+	if (_DEBUG) then {
+		diag_log "ARSENAL CONDITION: _virtualSideCargo:";
+		diag_log _virtualSideCargo;
+		diag_log ((_virtualSideCargo find """%ALL""") >= 0);
+		diag_log ((_virtualSideCargo find "%ALL") >= 0);
+		diag_log "ARSENAL CONDITION: _virtualSideBlacklist:";
+		diag_log _virtualSideBlacklist;
+	};
 
-	diag_log _virtualSideCargo;
-	hint str ((_virtualSideCargo find """%ALL""") >= 0);
+
 
 	#define NO_SIDE -1
 	#define EAST_SIDE 0
