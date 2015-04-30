@@ -126,7 +126,7 @@
 				_xla_ALL_in_wlist = false;
 				{
 				  if (_x <= 3) then {
-				  	_xla_ALL_in_wlist = _xla_ALL_in_wlist || ( "%ALL" in (_blacklists select _x));
+				  	_xla_ALL_in_wlist = _xla_ALL_in_wlist || ( "%ALL" in (_whitelists select _x));
 				  };
 				} forEach  _types;
 				/* end of check whitelists for "%ALL" */
