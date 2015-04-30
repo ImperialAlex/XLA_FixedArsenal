@@ -382,16 +382,14 @@ switch _mode do {
 			} foreach _currentEquipment;
 
 			// WHAT ABOUT MAGAZINES??
+			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw) 
+			// and grabbing all compatible (and whitelisted!) magazines from their "mags"
 
-			/* Now we need to store the current white/blacklist and update _data */
-			private ["_list"];
-			_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;			
-
-			// always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
-			missionNamespace setVariable ["XLA_fnc_arsenal_list",_list]; 
+		
 			// needed in "Exit" to remove any added equipment
 			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",_addedEquipment];
 
+			// save the new _data we just contstructed
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 
@@ -399,6 +397,12 @@ switch _mode do {
 			// reset the addedEquipment to empty
 			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
 		};
+
+		/*store the current white/blacklist */
+		// always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
+		private ["_list"];
+		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
+		missionNamespace setVariable ["XLA_fnc_arsenal_list",_list]; 
 
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
 		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
@@ -1912,9 +1916,12 @@ switch _mode do {
 						_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
 						_wlist = _list select 0;
 						_blist = _list select 1;
+						diag_log "BBBBBBBBBBBBBBBBBBBBBBB";
+						diag_log _wlist;
+						diag_log _blist;
 
 						// 2 is for virtualMagazineCargo/Blacklist
-						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
+						_XLA_condition = [(tolower _item),_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
