@@ -1853,7 +1853,7 @@ switch _mode do {
 						diag_log _blist;
 
 						// 2 is for virtualMagazineCargo/Blacklist
-						_XLA_condition = [(tolower _item),_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
+						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
