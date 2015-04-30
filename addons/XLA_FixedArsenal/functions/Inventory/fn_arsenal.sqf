@@ -372,14 +372,17 @@ switch _mode do {
 						if (_weaponTypeID >= 0) then {
 							private ["_items","_setArray"];
 							_items = _data select _weaponTypeID;
-							if ( !((configName _class) in _items) ) then {
+							if ( !((configName _class) in _items) ) then {								
 								_items set [count _items,configname _class];
-								_addedEquipment pushBack [count _items,configname _class];
+								_addedEquipment pushBack [_weaponTypeID,(count _items)-1,configname _class];
 							};
 						};
 					};
 				};
 			} foreach _currentEquipment;
+
+			diag_log "ADDED EQUIPMENT";
+			diag_log _addedEquipment;
 
 			// WHAT ABOUT MAGAZINES??
 			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw) 
@@ -395,14 +398,14 @@ switch _mode do {
 
 		} else {
 			// reset the addedEquipment to empty
-			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+			//missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
 		};
 
 		/*store the current white/blacklist */
 		// always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
 		private ["_list"];
 		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
-		missionNamespace setVariable ["XLA_fnc_arsenal_list",_list]; 
+		missionNamespace setVariable ["XLA_fnc_arsenal_list",_list];
 
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
 		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
@@ -686,7 +689,9 @@ switch _mode do {
 			} foreach IDCS;
 
 			// Get the whitelist of the object/mission
-			_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
+			_list = [_cargo,false,_center] call xla_fnc_constructWhiteBlacklist;
+			//We always ignore allowEquipped since that is handled seperately, in Init/Exit.
+			// This is done to save us another trip to the loadscreen whenever you come back to the box.
 			_wlist = (_list select 0);
 			_blist = (_list select 1);
 
@@ -808,6 +813,11 @@ switch _mode do {
 	case "Exit": {
 		/* check if there is _addedEquipment to remove */
 		if (_allowEquipped) then {
+			diag_log "ENTERING ALLOW_EQUIPPED BRANCH IN EXIT";
+
+
+			private ["_cargo"];
+			_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo", objNull];
 
 			/* grab _data */
 			private ["_data","_dataspace"];
@@ -816,35 +826,30 @@ switch _mode do {
 				_dataspace = _cargo;
 			};
 			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+			diag_log "DATA";
+			diag_log _data;
 
 			/* grab _addedEquipment */
 			private ["_addedEquipment"];
 			_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+			diag_log "ADDED_EQUIPMENT";
+			diag_log _addedEquipment;
 			
-			INITTYPES
 			{
-				_index = (_x select 0);
-				_className = (_x select 1);				
-			
-				/* find the weapontype, needed for index in _data */
-				private ["_weaponType","_weaponTypeCategory"];
-				_weaponType = (_className call bis_fnc_itemType);
-				_weaponTypeCategory = _weaponType select 0;
-				if (_weaponTypeCategory != "VehicleWeapon") then {
-					private ["_weaponTypeSpecific","_weaponTypeID"];
-					_weaponTypeSpecific = _weaponType select 1;
-					_weaponTypeID = -1;
-					{
-						if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
-					} foreach _types;
-				
-					if (_weaponTypeID >= 0) then {
-						private ["_items"];
-						_items = _data select _weaponTypeID;					
-						_items deleteAt _index;		
-					};
-				};
+				private ["_weaponType","_index","_classname","_items"];
+				_weaponTypeID = (_x select 0);
+				_index = (_x select 1);
+				//_className = (_x select 2); //not needed. Only here for debugging.
+				_items = _data select _weaponTypeID;
+				_items deleteAt _index;				
 			} foreach _addedEquipment;
+
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
+
+			diag_log "DATA AFTER REMOVAL";
+			diag_log _data;
+
+			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
 
 		};
 
