@@ -26,7 +26,7 @@
 	_fullVersion = [_this,4,false,[false]] call bis_fnc_param;
 
 	private ["_DEBUG"];
-	_DEBUG = true;
+	_DEBUG = false;
 
 	if (_DEBUG) then {
 		diag_log format ["ARSENAL CONDITION: _item: %1",_item];
@@ -36,40 +36,10 @@
 		diag_log format ["ARSENAL CONDITION: _fullVersion: %1",_fullVersion];
 	};
 
-	private ["_whitelist","_blacklist"];
-	/* Construct the whitelist/blacklist from the input */
-	/* DONT'T. REALLY BAD PERFORMANCE
-	_whitelist = [];
-	_blacklist = [];
-	{
-		if (_x <= 3) then {	
-			_whitelist append (_whitelists select _x);
-			_blacklist append (_blacklists select _x);
-		} else { 
-			["Invalid type index (%1) in input",_x] call bis_fnc_error;
-		};
-	} forEach _types;
-
-	if (_DEBUG) then {
-		diag_log format ["ARSENAL CONDITION: _whitelist: %1",_whitelist];
-		diag_log format ["ARSENAL CONDITION: _blacklist: %1",_blacklist];
-	};
-	*/
-
  	private ["_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualSideCargo = (_whitelists select 4);
 	_virtualSideBlacklist = (_blacklists select 4);
-	if (_DEBUG) then {
-		diag_log "ARSENAL CONDITION: _virtualSideCargo:";
-		diag_log _virtualSideCargo;
-		diag_log ((_virtualSideCargo find """%ALL""") >= 0);
-		diag_log ((_virtualSideCargo find "%ALL") >= 0);
-		diag_log "ARSENAL CONDITION: _virtualSideBlacklist:";
-		diag_log _virtualSideBlacklist;
-	};
-
-
-
+	
 	#define NO_SIDE -1
 	#define EAST_SIDE 0
 	#define WEST_SIDE 1
