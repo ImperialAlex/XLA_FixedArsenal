@@ -38,6 +38,7 @@
 
 	private ["_whitelist","_blacklist"];
 	/* Construct the whitelist/blacklist from the input */
+	/* DONT'T. REALLY BAD PERFORMANCE
 	_whitelist = [];
 	_blacklist = [];
 	{
@@ -53,6 +54,7 @@
 		diag_log format ["ARSENAL CONDITION: _whitelist: %1",_whitelist];
 		diag_log format ["ARSENAL CONDITION: _blacklist: %1",_blacklist];
 	};
+	*/
 
  	private ["_virtualSideCargo","_virtualSideBlacklist"];
 	_virtualSideCargo = (_whitelists select 4);
@@ -79,10 +81,12 @@
 	#define LOGIC_SIDE 7	
 
 	_XLA_condition = false;
+	scopeName "outermost";
 	if (_fullVersion) then {
 		_XLA_condition = true;
 	} else { 
-		private ["_xla_config","_xla_side","_xla_factionstring","_xla_sideallowed"];
+		/* grab all the necessary information (i.e. SIDE) */
+		private ["_xla_config","_xla_side","_xla_factionstring"];
 		_xla_config = configFile;
 		{ 
 			if (isClass(configFile / _x / _item)) then	{ 
@@ -104,25 +108,87 @@
 			if (isNumber (_xla_config >> "XLA_arsenal_side")) then { 
 				_xla_side = getNumber (_xla_config >> "XLA_arsenal_side");
 			};
+
+			/* Now calculate the actual condition variable */ 
+			private ["_xla_sideallowed","_xla_ALL_in_blist","_xla_ALL_in_wlist"];
 			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );
 			if (_xla_sideallowed) then { 
-				if ( "%ALL" in _blacklist ) then {
-					_XLA_condition = false;
-					{if (_x == _item) exitWith {_XLA_condition = true;}} forEach _whitelist;
-				} else {
-					_XLA_condition = true;
-					{if (_x == _item) exitWith {_XLA_condition = false;}} forEach _blacklist;
+
+				/* check blacklists for "%ALL" */ 
+				_xla_ALL_in_blist = false;
+				{
+				  if (_x <= 3) then {
+				  	_xla_ALL_in_blist = _xla_ALL_in_blist || ( "%ALL" in (_blacklists select _x));
+				  };
+				} forEach  _types;
+				/* end of check blacklists for "%ALL" */
+
+				if (_xla_ALL_in_blist) then {		
+
+					/* check whitelists for _item */ 
+					_XLA_condition = false;		
+					{
+					  if (_x <= 3) then {
+					  	{
+					  		if (_x == _item) then {_XLA_condition = true; breakTo "outermost";}
+					  	} forEach (_whitelists select _x);
+					  };
+					} forEach  _types;
+					/* end of check whitelists for _item */	
+					
+				} else { // "%ALL" is NOT in blacklists
+
+					/* check blacklists for _item */ 
+					_XLA_condition = true;		
+					{
+					  if (_x <= 3) then {
+					  	{
+					  		if (_x == _item) then {_XLA_condition = false; breakTo "outermost";}
+					  	} forEach (_blacklists select _x);
+					  };
+					} forEach  _types;
+					/* end of check blacklists for _item */	
+
 				};
-			} else { 
-				if ( "%ALL" in _whitelist ) then {
-					_XLA_condition = true;
-					{if (_x == _item) exitWith {_XLA_condition = false;}} forEach _blacklist;
+			} else { //not sideallowed
+
+				/* check whitelists for "%ALL" */ 
+				_xla_ALL_in_wlist = false;
+				{
+				  if (_x <= 3) then {
+				  	_xla_ALL_in_wlist = _xla_ALL_in_wlist || ( "%ALL" in (_blacklists select _x));
+				  };
+				} forEach  _types;
+				/* end of check whitelists for "%ALL" */
+
+				if (_xla_ALL_in_wlist) then {
+
+					/* check blacklists for _item */ 
+					_XLA_condition = true;		
+					{
+					  if (_x <= 3) then {
+					  	{
+					  		if (_x == _item) then {_XLA_condition = false; breakTo "outermost";}
+					  	} forEach (_blacklists select _x);
+					  };
+					} forEach  _types;
+					/* end of check blacklists for _item */	
+					
 				} else {
-					_XLA_condition = false;
-					{if (_x == _item) exitWith {_XLA_condition = true;}} forEach _whitelist;
+
+					/* check whitelists for _item */ 
+					_XLA_condition = false;		
+					{
+					  if (_x <= 3) then {
+					  	{
+					  		if (_x == _item) then {_XLA_condition = true; breakTo "outermost";}
+					  	} forEach (_whitelists select _x);
+					  };
+					} forEach  _types;
+					/* end of check whitelists for _item */						
 				};
 			};
-		} else { 
+		} else { // no config found. Not a valid equipment classname
 			_XLA_condition = false;
 		};
 	};
