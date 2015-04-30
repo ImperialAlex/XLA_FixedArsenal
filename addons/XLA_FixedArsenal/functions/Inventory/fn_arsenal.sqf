@@ -1848,9 +1848,6 @@ switch _mode do {
 						_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
 						_wlist = _list select 0;
 						_blist = _list select 1;
-						diag_log "BBBBBBBBBBBBBBBBBBBBBBB";
-						diag_log _wlist;
-						diag_log _blist;
 
 						// 2 is for virtualMagazineCargo/Blacklist
 						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
