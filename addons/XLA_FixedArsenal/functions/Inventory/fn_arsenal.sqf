@@ -21,8 +21,7 @@
 			0 (Optional): BOOL - _fullVersion (load all _config entries) Defaults to true, for backwards compatiblility (default: true)
 			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
 			2 (Optional): Object - unit to use as "_center" (default: player)
-			3 (Optional): Array - Array of config entries to force-add to _data. (default: [])
-									(e.g. [(configFile >> "CfgWeapons" >> "some_classname"),(configFile >> "CfgWeapons" >> "some_other_class")])
+			3 (Optional): Array - Array of classnames to force-add to _data. (default: [])
 
 		"AmmoboxInit" - Add virtual ammobox. Action to access the Arsenal will be added automatically on all clients.
 			0: OBJECT - ammobox
@@ -699,14 +698,16 @@ switch _mode do {
 			_configArray = (
 				("isclass _x" configclasses (configfile >> "cfgweapons")) +
 				("isclass _x" configclasses (configfile >> "cfgvehicles")) +
-				("isclass _x" configclasses (configfile >> "cfgglasses")) +
-				_additional
+				("isclass _x" configclasses (configfile >> "cfgglasses"))
 			);
 			_progressStep = 1 / count _configArray;
 			{
 				_class = _x;
 				_className = configname _x;
 				_scope = if (isnumber (_class >> "scopeArsenal")) then {getnumber (_class >> "scopeArsenal")} else {getnumber (_class >> "scope")};
+				if (_scope != 2 ) then {
+					if (_className in _additional) then {_scope = 2};
+				};
 				_isBase = if (isarray (_x >> "muzzles")) then {(_className call bis_fnc_baseWeapon == _className)} else {true}; //-- Check if base weapon (true for all entity types)
 				if (_scope == 2 && {gettext (_class >> "model") != ""} && _isBase) then {
 					private ["_weaponType","_weaponTypeCategory"];
