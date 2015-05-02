@@ -230,6 +230,7 @@ switch _mode do {
 		// called indirectly as part of 'createDisplay "RscDisplayFixedArsenal"'
 		// therefore all information needs to be 'passed in' via get/setvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
+		diag_log "START XLA_FNC_ARSENAL SCREEN";
 		_display = _this select 0;
 		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
 		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
@@ -478,7 +479,6 @@ switch _mode do {
 
 			// save the new _data we just contstructed
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
-			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 
 		} else {
 			// reset the addedEquipment to empty
@@ -529,7 +529,9 @@ switch _mode do {
 		with missionnamespace do {
 			[missionnamespace,"arsenalOpened",[_display,_toggleSpace]] call bis_fnc_callscriptedeventhandler;
 		};
+
 		["XLA_fnc_arsenal"] call bis_fnc_endloadingscreen;
+		diag_log "END XLA_FNC_ARSENAL SCREEN";
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -766,6 +768,7 @@ switch _mode do {
 
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
+			diag_log "START XLA_FNC_ARSENAL_PRELOAD SCREEN";
 			INITTYPES
 			_data = [];
 			{
@@ -822,6 +825,7 @@ switch _mode do {
 					};
 				};
 				progressloadingscreen (_foreachindex * _progressStep);
+				//diag_log "PROGRESS LOADING SCREEN";
 			} foreach _configArray;
 
 			//--- Faces
@@ -890,6 +894,7 @@ switch _mode do {
 
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
+			diag_log "END XLA_FNC_ARSENAL_PRELOAD SCREEN";
 			true
 		} else {
 			false
@@ -980,6 +985,7 @@ switch _mode do {
 			XLA_fnc_arsenal_target = nil;
 			XLA_fnc_arsenal_center = nil;
 			XLA_fnc_arsenal_cargo = nil;
+			XLA_fnc_arsenal_addedEquipment = nil;
 		};
 
 		setacctime 1;
@@ -2502,7 +2508,9 @@ switch _mode do {
 					_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_MOUSEBLOCK;
 					_ctrlMouseBlock ctrlenable false;
 				} else {
-					if (_fullVersion) then {["buttonClose",[_display]] spawn XLA_fnc_arsenal;} else {_display closedisplay 2;};
+					//if (_fullVersion) then {["buttonClose",[_display]] spawn XLA_fnc_arsenal;} else {_display closedisplay 2;};
+					// We don't care about the "arsenal" handling bits so let's just close it directly:
+					_display closeDisplay 2;
 				};
 				_return = true;
 			};
