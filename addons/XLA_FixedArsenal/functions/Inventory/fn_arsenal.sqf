@@ -16,6 +16,8 @@
 			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
 			2 (Optional): Object - unit to use as "_center" (default: player)
 			3 (Optional): BOOL - Add equipped items to allowed list (default: true)
+			4 (Optional): ARRAY of ARRAY of String - force replace pairs (default: [])
+				// e.g. [["classname_to_replace","new_classname"],["other_classname_to_replace","other_new_classname"]]
 
 		"Preload" - Preload item configs for Arsenal (without preloading, configs are parsed the first time Arsenal is opened)
 			0 (Optional): BOOL - _fullVersion (load all _config entries) Defaults to true, for backwards compatiblility (default: true)
@@ -30,6 +32,8 @@
 				      Passed arguments are the same as in addAction condition, i.e., _target - the box, _this - caller
 			3 (Optional): String - Message to show for the Arsenal action (default: "Arsenal")
 			4 (Optional): BOOL - Add equipped items to allowed list (default: true)
+			5 (Optional): ARRAY of ARRAY of String - force replace pairs (default: [])
+				// e.g. [["classname_to_replace","new_classname"],["other_classname_to_replace","other_new_classname"]]
 
 		"AmmoboxExit" - Remove virtual ammobox
 			0: OBJECT - ammobox
@@ -211,6 +215,7 @@ switch _mode do {
 			XLA_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
 			XLA_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;
 			XLA_fnc_arsenal_allowEquipped = [_this,3,true,[true]] call bis_fnc_param;
+			XLA_fnc_arsenal_forceReplace = [_this,4,[],[[]]] call bis_fnc_param;
 		};
 
 		with uinamespace do {
@@ -228,6 +233,7 @@ switch _mode do {
 		_display = _this select 0;
 		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
 		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
+		_forceReplace = missionNamespace getVariable "XLA_fnc_arsenal_forceReplace";
 		
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
@@ -297,6 +303,84 @@ switch _mode do {
 		 => The next version breaks backwards compatibility for these 
 		 (advanced) use cases and will therefore be v3.0.0. 
 		*/
+
+		/* before we go and grab the current equipment for allowEquip,
+			  we need to do force-replaces */			
+		private ["_classname"];
+		{		
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeItem _classname; _center addItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach items _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center unlinkItem _classname; _center linkItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach assignedItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removePrimaryWeaponItem _classname; _center addPrimaryWeaponItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach primaryWeaponItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeSecondaryWeaponItem _classname; _center addSecondaryWeaponItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach secondaryWeaponItems _center;
+		
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeHandgunItem _classname; _center addHandgunItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach handgunItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeMagazine _classname; _center addMagazine (_x select 1);};
+			} forEach _forceReplace;
+		} forEach magazines _center;
+
+		_classname = uniform _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeUniform _center; _center addUniform (_x select 1);};
+		} forEach _forceReplace;
+		
+		_classname = vest _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeVest _center; _center addVest (_x select 1);};
+		} forEach _forceReplace;
+
+
+		_classname = headgear _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeHeadgear _center; _center addHeadgear (_x select 1);};
+		} forEach _forceReplace;
+
+		_classname = goggles _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeGoggles _center; _center addGoggles (_x select 1);};
+		} forEach _forceReplace;
+			
+		_classname = backpack _center;
+	  {
+			if ((_x select 0)  == _classname ) then { 
+				private ["_backpackitems"];
+				_backpackitems = backpackItems _center;
+				removeBackpackGlobal _center;
+				_center addBackpackGlobal (_x select 1);
+				{ _center addItemToBackpack _x; } forEach _backpackitems;
+			};
+		} forEach _forceReplace;			
+
 
 		if (_allowEquipped) then {
 			/*
@@ -3163,17 +3247,19 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "AmmoboxInit": {
-		private ["_box","_allowAll"];
+		private ["_box","_allowAll","_condition","_string","_allowEquipped","_forceReplace"];
 		_box = [_this,0,objnull,[objnull]] call bis_fnc_param;
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
 		_string = [_this,3,(localize "STR_A3_Arsenal"),[""]] call bis_fnc_param;
 		_allowEquipped = [_this,4,true,[true]] call bis_fnc_param;
+		_forceReplace = [_this,5,[],[[]]] call bis_fnc_param;
 
 		if ({} isequalto {}) then {
 			_box setvariable ["XLA_fnc_arsenal_condition",_condition,true];
 			_box setvariable ["XLA_fnc_arsenal_string",_string,true];
 			_box setvariable ["XLA_fnc_arsenal_allowEquipped",_allowEquipped,true];
+			_box setVariable ["XLA_fnc_arsenal_forceReplace",_forceReplace,true];
 		};
 
 		if (_allowAll) then {
@@ -3214,7 +3300,7 @@ switch _mode do {
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
-						["Open",[nil,_box,_unit,(_box getVariable ["XLA_fnc_arsenal_allowEquipped",true])]] call XLA_fnc_arsenal;
+						["Open",[nil,_box,_unit,(_box getVariable ["XLA_fnc_arsenal_allowEquipped",true]),(_box getVariable ["XLA_fnc_arsenal_forceReplace",[]])]] call XLA_fnc_arsenal;
 					},
 					[],
 					6,
