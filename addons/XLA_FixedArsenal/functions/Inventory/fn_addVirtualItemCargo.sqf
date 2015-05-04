@@ -45,9 +45,15 @@ if (count _classes == 0 && _add < 0) then {
 			case 1: {configname (configfile >> "cfgweapons" >> _x);};
 			case 2: {configname (configfile >> "cfgmagazines" >> _x);};
 			case 3: {configname (configfile >> "cfgvehicles" >> _x);};
-			case 4: {str _x;};
+			case 4: {								
+								if (typename _x  == typename "") then {									
+									_x;
+								} else {									
+									str _x;
+								};
+							};
 			default {""};
-		};
+		};		
 		if (_class == "") then {_class = _x;};
 		if (_add > 0) then {
 			if (!(_class in _cargoArray) && (_class != "" || _class == "%ALL")) then {_cargoArray set [count _cargoArray,_class];};
