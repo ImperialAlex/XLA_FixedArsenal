@@ -44,7 +44,7 @@
 */
 
 
-//XLA_FNC_ARSENAL_DEBUG = false;
+//XLA_FNC_ARSENAL_DEBUG = true;
 
 private ["_DEBUG"];
 _DEBUG = if (!isNil "XLA_FNC_ARSENAL_DEBUG") then {XLA_FNC_ARSENAL_DEBUG} else {false};
