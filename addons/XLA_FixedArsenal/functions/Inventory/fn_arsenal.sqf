@@ -43,8 +43,11 @@
 	NOTHING
 */
 
+
+//XLA_FNC_ARSENAL_DEBUG = false;
+
 private ["_DEBUG"];
-_DEBUG = true;
+_DEBUG = if (!isNil "XLA_FNC_ARSENAL_DEBUG") then {XLA_FNC_ARSENAL_DEBUG} else {false};
 
 #include "\A3\ui_f\hpp\defineDIKCodes.inc"
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
@@ -230,7 +233,6 @@ switch _mode do {
 		// called indirectly as part of 'createDisplay "RscDisplayFixedArsenal"'
 		// therefore all information needs to be 'passed in' via get/setvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
-		diag_log "START XLA_FNC_ARSENAL SCREEN";
 		_display = _this select 0;
 		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
 		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
@@ -307,12 +309,10 @@ switch _mode do {
 
 		/* before we go and grab the current equipment for allowEquip,
 			  we need to do force-replaces */
-		diag_log "TESTING force-replace";			
 		private ["_classname"];
 		{		
 			_classname = _x;
 		  {	
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeItem _classname; _center addItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach items _center;
@@ -320,7 +320,6 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center unlinkItem _classname; _center linkItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach assignedItems _center;
@@ -328,7 +327,6 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removePrimaryWeaponItem _classname; _center addPrimaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach primaryWeaponItems _center;
@@ -336,7 +334,6 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeSecondaryWeaponItem _classname; _center addSecondaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach secondaryWeaponItems _center;
@@ -344,7 +341,6 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeHandgunItem _classname; _center addHandgunItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach handgunItems _center;
@@ -352,42 +348,33 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeMagazine _classname; _center addMagazine (_x select 1);};
 			} forEach _forceReplace;
 		} forEach magazines _center;
 
 		_classname = uniform _center;
 	  {
-	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeUniform _center; _center addUniform (_x select 1);};
 		} forEach _forceReplace;
 		
 		_classname = vest _center;
 	  {
-	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeVest _center; _center addVest (_x select 1);};
 		} forEach _forceReplace;
 
-
 		_classname = headgear _center;
 	  {
-	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeHeadgear _center; _center addHeadgear (_x select 1);};
 		} forEach _forceReplace;
 
 		_classname = goggles _center;
 	  {
-	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeGoggles _center; _center addGoggles (_x select 1);};
 		} forEach _forceReplace;
 
-		diag_log "BACKPACK";			
 		_classname = backpack _center;
 	  {	
-	  	diag_log ((_x select 0)  + " " + _classname);
-			if ((_x select 0)  == _classname ) then { 
-				diag_log "BACKPACKITEMS";
+			if ((_x select 0)  == _classname ) then {
 				private ["_backpackitems"];
 				_backpackitems = backpackItems _center;
 				removeBackpackGlobal _center;
@@ -396,12 +383,10 @@ switch _mode do {
 			};
 		} forEach _forceReplace;
 
-		diag_log "WEAPONS";
 		{
 			_classname = _x;			
 		  {
-		  	diag_log ((_x select 0)  + " " + _classname);
-				if ((_x select 0)  == _classname ) then { _center removeWeapon _classname; _center addWeapon (_x select 1); };
+		  	if ((_x select 0)  == _classname ) then { _center removeWeapon _classname; _center addWeapon (_x select 1); };
 			} forEach _forceReplace;
 		} foreach (weapons _center + [binocular _center]);
 
@@ -489,8 +474,10 @@ switch _mode do {
 				};
 			} foreach _currentEquipment;
 
-			diag_log "ADDED EQUIPMENT";
-			diag_log _addedEquipment;
+			if (_DEBUG) then {
+				diag_log "ADDED EQUIPMENT";
+				diag_log _addedEquipment;
+			};
 
 			// WHAT ABOUT MAGAZINES??
 			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw) 
@@ -554,7 +541,6 @@ switch _mode do {
 		};
 
 		["XLA_fnc_arsenal"] call bis_fnc_endloadingscreen;
-		diag_log "END XLA_FNC_ARSENAL SCREEN";
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -783,20 +769,12 @@ switch _mode do {
 
 		private ["_data","_dataspace"];
 		_dataspace = missionNamespace;
-		if (!isNull(_cargo)) then {
-			diag_log "_CARGO IS NOT NULL";
-			diag_log _cargo;
-			_dataspace = _cargo;
-		} else {
-			diag_log "_CARGO IS NULL";
-			diag_log _cargo;
-		};
+		if (!isNull(_cargo)) then {	_dataspace = _cargo; };
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 
 
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
-			diag_log "START XLA_FNC_ARSENAL_PRELOAD SCREEN";
 			INITTYPES
 			_data = [];
 			{
@@ -853,7 +831,6 @@ switch _mode do {
 					};
 				};
 				progressloadingscreen (_foreachindex * _progressStep);
-				//diag_log "PROGRESS LOADING SCREEN";
 			} foreach _configArray;
 
 			//--- Faces
@@ -922,7 +899,6 @@ switch _mode do {
 
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
-			diag_log "END XLA_FNC_ARSENAL_PRELOAD SCREEN";
 			true
 		} else {
 			false
@@ -933,8 +909,6 @@ switch _mode do {
 	case "Exit": {
 		/* check if there is _addedEquipment to remove */
 		if (_allowEquipped) then {
-			diag_log "ENTERING ALLOW_EQUIPPED BRANCH IN EXIT";
-
 
 			private ["_cargo"];
 			_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo", objNull];
@@ -946,14 +920,10 @@ switch _mode do {
 				_dataspace = _cargo;
 			};
 			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
-			diag_log "DATA";
-			diag_log _data;
 
 			/* grab _addedEquipment */
 			private ["_addedEquipment"];
 			_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment",[]];
-			diag_log "ADDED_EQUIPMENT";
-			diag_log _addedEquipment;
 			
 			{
 				private ["_weaponType","_index","_classname","_items"];
@@ -966,11 +936,7 @@ switch _mode do {
 
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 
-			diag_log "DATA AFTER REMOVAL";
-			diag_log _data;
-
 			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
-
 		};
 
 		/* proceed with normal exit */		
