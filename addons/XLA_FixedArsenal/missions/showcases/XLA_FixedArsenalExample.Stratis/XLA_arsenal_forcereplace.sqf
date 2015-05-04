@@ -10,6 +10,7 @@
 
 if (isServer) then {
 
+
 	// Grab the parameter that was passed in. 
 	// The box should have "this execVM <scriptname>" in it's init field.
 	_box = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
@@ -21,13 +22,12 @@ if (isServer) then {
 
 	} else {	
 
-		// In virtually all 'real' applications, you also want to add "FRIENDLY_SIDE", which contains shared items like map, compass, etc
-		[_box, [EAST_SIDE],true,false] call XLA_fnc_addVirtualSideCargo; 
- 
-		// Start the arsenal on it
-		_addActionText = "<t color='#45B6EA'>Open Armoury (SIDE == EAST)";
-		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
+		
+		[_box, [WEST_SIDE,FRIENDLY_SIDE],true,false] call XLA_fnc_addVirtualSideCargo;	
 
+		// Start the arsenal on it
+		_addActionText = "<t color='#45B6EA'>Open Armoury (force replace test)";
+		["AmmoboxInit",[_box,false,{true},_addActionText,false,[["arifle_MX_F","arifle_SDAR_F"],["arifle_MX_Hamr_pointer_F","arifle_SDAR_F"]]]] spawn XLA_fnc_arsenal;
 
 	};
 };

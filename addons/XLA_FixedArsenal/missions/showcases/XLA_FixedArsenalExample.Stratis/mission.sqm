@@ -71,6 +71,7 @@ class Mission
 					player="PLAY CDG";
 					rank="CORPORAL";
 					skill=0.44999999;
+					text="AR2";
 					syncId=0;
 					synchronizations[]={14};
 				};
@@ -84,12 +85,13 @@ class Mission
 					vehicle="B_soldier_AR_F";
 					player="PLAY CDG";
 					skill=0.40000001;
+					text="AR3";
 					syncId=1;
 					synchronizations[]={9};
 				};
 				class Item2
 				{
-					position[]={6417.7593,7.382062,5434.5522};
+					position[]={6417.564,7.3841004,5434.3979};
 					azimut=-2.7654099;
 					special="NONE";
 					id=2;
@@ -97,6 +99,7 @@ class Mission
 					vehicle="B_soldier_AAR_F";
 					player="PLAY CDG";
 					skill=0.40000001;
+					text="AR1";
 					syncId=2;
 					synchronizations[]={12};
 				};
@@ -111,6 +114,7 @@ class Mission
 					player="PLAY CDG";
 					rank="CORPORAL";
 					skill=0.44999999;
+					text="AT";
 					syncId=3;
 					synchronizations[]={8};
 				};
@@ -124,6 +128,7 @@ class Mission
 					vehicle="B_medic_F";
 					player="PLAY CDG";
 					skill=0.40000001;
+					text="CLS";
 					syncId=4;
 					synchronizations[]={13};
 				};
@@ -137,6 +142,7 @@ class Mission
 					vehicle="B_Soldier_A_F";
 					player="PLAY CDG";
 					skill=0.40000001;
+					text="AB";
 					syncId=5;
 					synchronizations[]={15};
 				};
@@ -152,6 +158,7 @@ class Mission
 					leader=1;
 					rank="SERGEANT";
 					skill=0.5;
+					text="SL";
 					syncId=6;
 					synchronizations[]={11};
 				};
@@ -166,6 +173,7 @@ class Mission
 					player="PLAY CDG";
 					rank="SERGEANT";
 					skill=0.5;
+					text="FTL";
 					syncId=7;
 					synchronizations[]={10};
 				};
@@ -185,7 +193,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="AT";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -233,7 +241,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="AR3";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -281,7 +289,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="FTL";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -377,7 +385,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="AR1";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -425,7 +433,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="CLS";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -473,7 +481,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="AR2";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -521,7 +529,7 @@ class Mission
 						items=4;
 						class Item0
 						{
-							value="";
+							value="AB";
 							parentCls="ModuleCurator_F";
 							typeName="Owner";
 						};
@@ -558,7 +566,7 @@ class Mission
 	};
 	class Vehicles
 	{
-		items=22;
+		items=27;
 		class Item0
 		{
 			position[]={6338.8599,8.7544689,5310.3198};
@@ -677,25 +685,25 @@ class Mission
 		};
 		class Item12
 		{
-			position[]={6425.2783,7.1538687,5451.0581};
+			position[]={6424.583,7.1544495,5451.2124};
 			azimut=222;
 			id=28;
 			side="EMPTY";
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_blu";
-			init="null = this execVM ""XLA_arsenal_sampleBLU.sqf""";
+			init="null = this execVM ""XLA_arsenal_blu.sqf""";
 		};
 		class Item13
 		{
-			position[]={6423.5967,7.1940842,5445.1831};
+			position[]={6423.9487,7.1958423,5444.8315};
 			azimut=222;
 			id=29;
 			side="EMPTY";
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_opf_shared";
-			init="null = this execVM ""XLA_arsenal_sampleOPF_SHARED.sqf""";
+			init="null = this execVM ""XLA_arsenal_opf_shared.sqf""";
 		};
 		class Item14
 		{
@@ -706,7 +714,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_ind";
-			init="null = this execVM ""XLA_arsenal_sampleIND.sqf""";
+			init="null = this execVM ""XLA_arsenal_ind.sqf""";
 		};
 		class Item15
 		{
@@ -718,7 +726,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_civ";
-			init="null = this execVM ""XLA_arsenal_sampleCIV.sqf""";
+			init="null = this execVM ""XLA_arsenal_civ.sqf""";
 		};
 		class Item16
 		{
@@ -729,7 +737,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_shared";
-			init="null = this execVM ""XLA_arsenal_sampleSHARED.sqf""";
+			init="null = this execVM ""XLA_arsenal_shared.sqf""";
 		};
 		class Item17
 		{
@@ -740,7 +748,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_blu_shared";
-			init="null = this execVM ""XLA_arsenal_sampleBLU_SHARED.sqf""";
+			init="null = this execVM ""XLA_arsenal_blu_shared.sqf""";
 		};
 		class Item18
 		{
@@ -751,7 +759,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_opf";
-			init="null = this execVM ""XLA_arsenal_sampleOPF.sqf""";
+			init="null = this execVM ""XLA_arsenal_opf.sqf""";
 		};
 		class Item19
 		{
@@ -762,7 +770,7 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_ind_shared";
-			init="null = this execVM ""XLA_arsenal_sampleIND_SHARED.sqf""";
+			init="null = this execVM ""XLA_arsenal_ind_shared.sqf""";
 		};
 		class Item20
 		{
@@ -773,18 +781,73 @@ class Mission
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
 			text="box_none";
-			init="null = this execVM ""XLA_arsenal_sampleNONE.sqf""";
+			init="null = this execVM ""XLA_arsenal_none.sqf""";
 		};
 		class Item21
 		{
-			position[]={6403.876,7.6128416,5415.1646};
+			position[]={6402.9326,7.6005111,5416.2876};
 			azimut=222;
 			id=37;
 			side="EMPTY";
 			vehicle="Land_CargoBox_V1_F";
 			skill=0.60000002;
-			text="box_sample";
-			init="null = this execVM ""XLA_arsenal_sampleCUSTOM.sqf""";
+			text="box_3CB";
+			init="null = this execVM ""XLA_arsenal_3CB.sqf""";
+		};
+		class Item22
+		{
+			position[]={6428.8252,7.2438002,5440.6899};
+			azimut=222;
+			id=38;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_allowEquipped";
+			init="null = this execVM ""XLA_arsenal_allowEquipped.sqf""";
+		};
+		class Item23
+		{
+			position[]={6405.9458,7.6337051,5413.4287};
+			azimut=222;
+			id=39;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_core";
+			init="null = this execVM ""XLA_arsenal_core.sqf""";
+		};
+		class Item24
+		{
+			position[]={6430.7383,7.2522445,5439.2085};
+			azimut=222;
+			id=40;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_all";
+			init="null = this execVM ""XLA_arsenal_all.sqf""";
+		};
+		class Item25
+		{
+			position[]={6433.2241,7.2474899,5437.3691};
+			azimut=222;
+			id=41;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_preload";
+			init="null = this execVM ""XLA_arsenal_preload.sqf""";
+		};
+		class Item26
+		{
+			position[]={6435.5977,7.23771,5435.6313};
+			azimut=222;
+			id=42;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_forcereplace";
+			init="null = this execVM ""XLA_arsenal_forcereplace.sqf""";
 		};
 	};
 	class Markers

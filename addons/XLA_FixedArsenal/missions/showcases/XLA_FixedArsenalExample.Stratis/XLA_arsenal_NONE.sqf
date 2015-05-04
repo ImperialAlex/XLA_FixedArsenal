@@ -10,7 +10,6 @@
 
 if (isServer) then {
 
-
 	// Grab the parameter that was passed in. 
 	// The box should have "this execVM <scriptname>" in it's init field.
 	_box = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
@@ -22,11 +21,11 @@ if (isServer) then {
 
 	} else {	
 
-
-
-		[_box, [WEST_SIDE,FRIENDLY_SIDE],true,false] call XLA_fnc_addVirtualSideCargo; 
-			// Start the arsenal on it
-		_addActionText = "<t color='#45B6EA'>Open Armoury (SIDE == WEST || SIDE == FRIENDLY)";
+		// This will add all things that lack a side parameter. Useful for debugging definesides.hpp
+		[_box, [NO_SIDE],true,false] call XLA_fnc_addVirtualSideCargo; 
+ 
+		// Start the arsenal on it
+		_addActionText = "<t color='#45B6EA'>Open Armoury (SIDE == NONE)";
 		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
 
 

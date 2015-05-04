@@ -1,5 +1,6 @@
 /*
 	Author: Karel Moricky
+	edits by Alexander (ImperialAlex)
 
 	Description:
 	Splendid arsenal viewer
@@ -12,17 +13,27 @@
 	Modes:
 		"Open" - Open the Arsenal
 			0 (Optional): BOOL - true to open full Arsenal, with all categories and items available (default: false)
+			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
+			2 (Optional): Object - unit to use as "_center" (default: player)
+			3 (Optional): BOOL - Add equipped items to allowed list (default: true)
+			4 (Optional): ARRAY of ARRAY of String - force replace pairs (default: [])
+				// e.g. [["classname_to_replace","new_classname"],["other_classname_to_replace","other_new_classname"]]
 
 		"Preload" - Preload item configs for Arsenal (without preloading, configs are parsed the first time Arsenal is opened)
-			No params
+			0 (Optional): BOOL - _fullVersion (load all _config entries) Defaults to true, for backwards compatiblility (default: true)
+			1 (Optional): Object - ammobox to use as "_cargo" (default: objnull)
+			2 (Optional): Object - unit to use as "_center" (default: player)
+			3 (Optional): Array - Array of classnames to force-add to _data. (default: [])
 
 		"AmmoboxInit" - Add virtual ammobox. Action to access the Arsenal will be added automatically on all clients.
 			0: OBJECT - ammobox
 			1 (Optional): BOOL - true to make all weapons and items in the game available in the box (default: false)
 			2 (Optional): Condition for showing the Arsenal action (default: {true})
 				      Passed arguments are the same as in addAction condition, i.e., _target - the box, _this - caller
-			3 (Optional, XLA): String - Message to show for the Arsenal action (default: "Arsenal")
-			4 (Optional, XLA): BOOL - Add equipped items to allowed list (default: true)
+			3 (Optional): String - Message to show for the Arsenal action (default: "Arsenal")
+			4 (Optional): BOOL - Add equipped items to allowed list (default: true)
+			5 (Optional): ARRAY of ARRAY of String - force replace pairs (default: [])
+				// e.g. [["classname_to_replace","new_classname"],["other_classname_to_replace","other_new_classname"]]
 
 		"AmmoboxExit" - Remove virtual ammobox
 			0: OBJECT - ammobox
@@ -32,10 +43,15 @@
 	NOTHING
 */
 
+
+//XLA_FNC_ARSENAL_DEBUG = true;
+
+private ["_DEBUG"];
+_DEBUG = if (!isNil "XLA_FNC_ARSENAL_DEBUG") then {XLA_FNC_ARSENAL_DEBUG} else {false};
+
 #include "\A3\ui_f\hpp\defineDIKCodes.inc"
 #include "\A3\Ui_f\hpp\defineResinclDesign.inc"
 #include "defineResincDesign_Arsenal.hpp"
-#include "condition.sqf"
 
 #define FADE_DELAY	0.15
 
@@ -43,7 +59,20 @@ disableserialization;
 
 _mode = [_this,0,"Open",[displaynull,""]] call bis_fnc_param;
 _this = [_this,1,[]] call bis_fnc_param;
+
 _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false];
+_allowEquipped = missionNamespace getVariable ["XLA_fnc_arsenal_allowEquipped",true];
+if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then {
+	private ["_cargo","_center","_addedEquipment"];
+	_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo", "undef"];
+	_center = missionNamespace getvariable ["XLA_fnc_arsenal_center","undef"];
+	_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment","undef"];
+	diag_log format ["_fullVersion = %1", _fullVersion];
+	diag_log format ["_allowEquipped = %1",_allowEquipped];
+	diag_log format ["_cargo = %1",_cargo];
+	diag_log format ["_center = %1", _center];
+	diag_log format ["_addedEquipment = %1", _addedEquipment]
+};
 
 #define IDCS_LEFT\
 	IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON,\
@@ -106,6 +135,35 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[/*"Mine","MineBounding","MineDirectional"*/]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
 
+#define LISTINDICES\
+		_listindices = [];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_UNIFORM,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_VEST,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_BACKPACK,[3]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_HEADGEAR,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_GOGGLES,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_NVGS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS,[0,1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_SECONDARYWEAPON,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_HANDGUN,[1]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_MAP,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_GPS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_FACE,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_VOICE,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_INSIGNIA,[]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMBIPOD,[0]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[2]];\
+		_listindices set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,[0,1]];
+
 #define STATS_WEAPONS\
 	["reloadtime","dispersion","maxrange","hit","mass","initSpeed"],\
 	[true,true,true,true,false,false]
@@ -124,6 +182,7 @@ _fullVersion = missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false
 
 // Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc 
 // TODO: Actually calculate the maximum weight possible with the currently available relevant items
+// See https://github.com/ImperialAlex/XLA_FixedArsenal/issues/21 for more information
 // (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
 
 #define MAXINVENTORYMASS 1220
@@ -142,17 +201,22 @@ if (profileNamespace getVariable ["AGM_useImperial", false]) then {
   	_massunit = "kg";
 };
 
+// trace the execution to the *.rpt file
+if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then { diag_log (_mode + ": " + (str _this)); };
 switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Open": {
 		if !(isnull (uinamespace getvariable ["XLA_fnc_arsenal_cam",objnull])) exitwith {"Arsenal Viewer is already running" call bis_fnc_logFormat;};
-		missionnamespace setvariable ["XLA_fnc_arsenal_fullArsenal",[_this,0,false,[false]] call bis_fnc_param];
 
 		with missionnamespace do {
+			XLA_fnc_arsenal_fullArsenal = [_this,0,false,[false]] call bis_fnc_param;
 			XLA_fnc_arsenal_cargo = [_this,1,objnull,[objnull]] call bis_fnc_param;
 			XLA_fnc_arsenal_center = [_this,2,player,[player]] call bis_fnc_param;
+			XLA_fnc_arsenal_allowEquipped = [_this,3,true,[true]] call bis_fnc_param;
+			XLA_fnc_arsenal_forceReplace = [_this,4,[],[[]]] call bis_fnc_param;
 		};
+
 		with uinamespace do {
 			_displayMission = [] call (uinamespace getvariable "bis_fnc_displayMission");
 			if !(isnull finddisplay 312) then {_displayMission = finddisplay 312;};
@@ -162,8 +226,14 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Init": {
+		// called indirectly as part of 'createDisplay "RscDisplayFixedArsenal"'
+		// therefore all information needs to be 'passed in' via get/setvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
+		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
+		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
+		_forceReplace = missionNamespace getVariable "XLA_fnc_arsenal_forceReplace";
+		
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
 		XLA_fnc_arsenal_toggleSpace = nil;
@@ -202,7 +272,222 @@ switch _mode do {
 
 		INITTYPES
 		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
-		["Preload"] call XLA_fnc_arsenal;
+		["Preload",[_fullVersion,_cargo,_center]] call XLA_fnc_arsenal;
+		/* 
+			We need to pass in "_fullVersion" since preload will ignore 
+			the missionNamespace variable "XLA_fnc_fullArsenal" and
+			override the "_fullVersion" variable defined at the top 
+			of this file/function with its input (or the default, "true").
+
+			To see why this is necessary, think about this potential issue:
+			What happens if we ["Open",true] spawn xla_fnc_arsenal,
+		 causing the mission namepsace to contain XLA_fnc_arsenal_fullArsenal
+		 set to true and then call "preload" for a restricted ammobox?
+		 => preload must always make sure to override the _fullVersion
+		 that has been defined at the top with its own input, otherwise
+		 it would no longer be possible to correctly call preload manually. 
+
+		 Due to this, any missions that call preload in the 'old'
+		 or 'vanilla' style, where preload has no parameters and defaults to
+		 _fullVersion = true, will create a fully allowed arsenal.
+		 => The next version breaks backwards compatibility for these 
+		 (advanced) use cases and will therefore be v3.0.0. 
+		*/
+
+		/* before we go and grab the current equipment for allowEquip,
+			  we need to do force-replaces */
+		private ["_classname"];
+		{		
+			_classname = _x;
+		  {	
+				if ((_x select 0)  == _classname) then { _center removeItem _classname; _center addItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach items _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center unlinkItem _classname; _center linkItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach assignedItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removePrimaryWeaponItem _classname; _center addPrimaryWeaponItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach primaryWeaponItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeSecondaryWeaponItem _classname; _center addSecondaryWeaponItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach secondaryWeaponItems _center;
+		
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeHandgunItem _classname; _center addHandgunItem (_x select 1);};
+			} forEach _forceReplace;
+		} forEach handgunItems _center;
+
+		{			
+			_classname = _x;
+		  {
+				if ((_x select 0)  == _classname) then { _center removeMagazine _classname; _center addMagazine (_x select 1);};
+			} forEach _forceReplace;
+		} forEach magazines _center;
+
+		_classname = uniform _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeUniform _center; _center addUniform (_x select 1);};
+		} forEach _forceReplace;
+		
+		_classname = vest _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeVest _center; _center addVest (_x select 1);};
+		} forEach _forceReplace;
+
+		_classname = headgear _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeHeadgear _center; _center addHeadgear (_x select 1);};
+		} forEach _forceReplace;
+
+		_classname = goggles _center;
+	  {
+			if ((_x select 0)  == _classname ) then { removeGoggles _center; _center addGoggles (_x select 1);};
+		} forEach _forceReplace;
+
+		_classname = backpack _center;
+	  {	
+			if ((_x select 0)  == _classname ) then {
+				private ["_backpackitems"];
+				_backpackitems = backpackItems _center;
+				removeBackpackGlobal _center;
+				_center addBackpackGlobal (_x select 1);
+				{ _center addItemToBackpack _x; } forEach _backpackitems;
+			};
+		} forEach _forceReplace;
+
+		{
+			_classname = _x;			
+		  {
+		  	if ((_x select 0)  == _classname ) then { _center removeWeapon _classname; _center addWeapon (_x select 1); };
+			} forEach _forceReplace;
+		} foreach (weapons _center + [binocular _center]);
+
+
+		if (_allowEquipped) then {
+			/*
+				Because _data generated by "preload" only contains the items
+				whitelisted through virtualCargo/Blacklist, we need to add 
+				the currently equipped items/weapons/etc to _data.
+
+				We also need a way to remove them later, 
+				but only remove those that weren't in "preload" anyway.
+				We could simply always re-calculate preload _data for
+				allowEquipped arsenal's but that's a bit of a cheap way out.
+
+				To this end, we're keeping a list of things that we need to subtract.
+				We need to then subtract them upon "exit"
+
+				The whitelist/blacklist command already takes care of 
+				_allowedEquipped internally and since that is recalculated on
+				every "init", we don't need to subtract/etc anything later.
+			*/
+
+			private ["_data","_dataspace"];
+			_dataspace = missionNamespace;
+			if (!isNull(_cargo)) then {		
+				_dataspace = _cargo;
+			};
+			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+			/* get current equipment */
+			private["_currentEquipment"];
+			_currentEquipment = 
+				items _center +
+				assigneditems _center +
+				primaryweaponitems _center + 
+				secondaryweaponitems _center +
+				handgunitems _center +
+				magazines _center + 
+				[uniform _center,vest _center,headgear _center,goggles _center,backpack _center];
+			{
+				_currentEquipment set [count _currentEquipment,_x];
+				{
+					private ["_item"];
+					_item = gettext (_x >> "item");
+					if !(_item in _currentEquipment) then {_currentEquipment set [count _currentEquipment,_item];};
+				} foreach ((configfile >> "cfgweapons" >> _x >> "linkeditems") call bis_fnc_returnchildren);
+			} foreach (weapons _center + [binocular _center]);
+
+			/* add equipment to _data */
+			private ["_addedEquipment"]; 
+			// equipment we actually added that wasn't already allowed anway
+			_addedEquipment = [];
+			{
+				_className = _x;
+				_class = configFile;
+				{
+					if (isClass(configFile / _x / _className)) then	{
+						_class = configFile / _x / _className;
+					};
+				}	foreach ["CfgWeapons","CfgVehicles","CfgMagazines","CfgGlasses"];
+				_scope = if (isnumber (_class >> "scopeArsenal")) then {getnumber (_class >> "scopeArsenal")} else {getnumber (_class >> "scope")};
+				_isBase = if (isarray (_class >> "muzzles")) then {(_className call bis_fnc_baseWeapon == _className)} else {true}; //-- Check if base weapon (true for all entity types)
+				if (_scope == 2 && {gettext (_class >> "model") != ""} && _isBase) then {
+					private ["_weaponType","_weaponTypeCategory"];
+					_weaponType = (_className call bis_fnc_itemType);
+					_weaponTypeCategory = _weaponType select 0;
+					if (_weaponTypeCategory != "VehicleWeapon") then {
+						private ["_weaponTypeSpecific","_weaponTypeID"];
+						_weaponTypeSpecific = _weaponType select 1;
+						_weaponTypeID = -1;
+						{
+							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
+						} foreach _types;
+					
+						if (_weaponTypeID >= 0) then {
+							private ["_items","_setArray"];
+							_items = _data select _weaponTypeID;
+							if ( !((configName _class) in _items) ) then {								
+								_items set [count _items,configname _class];
+								_addedEquipment pushBack [_weaponTypeID,(count _items)-1,configname _class];
+							};
+						};
+					};
+				};
+			} foreach _currentEquipment;
+
+			if (_DEBUG) then {
+				diag_log "ADDED EQUIPMENT";
+				diag_log _addedEquipment;
+			};
+
+			// WHAT ABOUT MAGAZINES??
+			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw) 
+			// and grabbing all compatible (and whitelisted!) magazines from their "mags"
+
+		
+			// needed in "Exit" to remove any added equipment
+			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",_addedEquipment];
+
+			// save the new _data we just contstructed
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
+
+		} else {
+			// reset the addedEquipment to empty
+			//missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+		};
+
+		/*store the current white/blacklist */
+		// always saved into the missionNamespace, since only relevant for current arsenal (might change everytime you open it, since allowEquipped!)
+		private ["_list"];
+		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
+		missionNamespace setVariable ["XLA_fnc_arsenal_list",_list];
+
 		["ListAdd",[_display]] call XLA_fnc_arsenal;
 		["ListSelectCurrent",[_display]] call XLA_fnc_arsenal;
 
@@ -241,6 +526,7 @@ switch _mode do {
 		with missionnamespace do {
 			[missionnamespace,"arsenalOpened",[_display,_toggleSpace]] call bis_fnc_callscriptedeventhandler;
 		};
+
 		["XLA_fnc_arsenal"] call bis_fnc_endloadingscreen;
 	};
 
@@ -456,8 +742,18 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Preload": {
-		private ["_data"];
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		private ["_fullVersion","_cargo","_center","_additional"];
+		_fullVersion = [_this,0,true,[true]] call bis_fnc_param;
+		_cargo = [_this,1,objNull,[objNull]] call bis_fnc_param;
+		_center  = [_this,2,player,[player]] call bis_fnc_param;
+		_additional = [_this,3,[],[[]]] call bis_fnc_param;
+
+		private ["_data","_dataspace"];
+		_dataspace = missionNamespace;
+		if (!isNull(_cargo)) then {	_dataspace = _cargo; };
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+
 		if (isnil "_data") then {
 			["XLA_fnc_arsenal_preload"] call bis_fnc_startloadingscreen;
 			INITTYPES
@@ -465,6 +761,13 @@ switch _mode do {
 			{
 				_data set [_x,[]];
 			} foreach IDCS;
+
+			// Get the whitelist of the object/mission
+			_list = [_cargo,false,_center] call xla_fnc_constructWhiteBlacklist;
+			//We always ignore allowEquipped since that is handled seperately, in Init/Exit.
+			// This is done to save us another trip to the loadscreen whenever you come back to the box.
+			_wlist = (_list select 0);
+			_blist = (_list select 1);
 
 			_configArray = (
 				("isclass _x" configclasses (configfile >> "cfgweapons")) +
@@ -476,6 +779,9 @@ switch _mode do {
 				_class = _x;
 				_className = configname _x;
 				_scope = if (isnumber (_class >> "scopeArsenal")) then {getnumber (_class >> "scopeArsenal")} else {getnumber (_class >> "scope")};
+				if (_scope != 2 ) then {
+					if (_className in _additional) then {_scope = 2};
+				};
 				_isBase = if (isarray (_x >> "muzzles")) then {(_className call bis_fnc_baseWeapon == _className)} else {true}; //-- Check if base weapon (true for all entity types)
 				if (_scope == 2 && {gettext (_class >> "model") != ""} && _isBase) then {
 					private ["_weaponType","_weaponTypeCategory"];
@@ -488,7 +794,17 @@ switch _mode do {
 						{
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
 						} foreach _types;
+						
+						// grab the indices of the white/blacklists (i.e. what core classes/Cfg...'s to check)
+						LISTINDICES
+						_lx = [];
 						if (_weaponTypeID >= 0) then {
+							_lx = _listindices select _weaponTypeID;
+						};						
+						
+						//get the condition
+						_XLA_condition = [(configName _class),_wlist,_blist,_lx,_fullVersion] call xla_fnc_arsenalCondition;
+						if (_weaponTypeID >= 0 && _XLA_condition) then {
 							private ["_items"];
 							_items = _data select _weaponTypeID;
 							_items set [count _items,configname _class];
@@ -547,7 +863,9 @@ switch _mode do {
 							private ["_cfgMag"];
 							_magazines set [count _magazines,_mag];
 							_cfgMag = configfile >> "cfgmagazines" >> _mag;
-							if (getnumber (_cfgMag >> "scope") == 2 || getnumber (_cfgMag >> "scopeArsenal") == 2) then {
+							// 2 is the index in _wlist/_blist that contains the Magazine whitelist/blacklist
+							_XLA_condition = [(configName _cfgMag),_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
+							if ((getnumber (_cfgMag >> "scope") == 2 || getnumber (_cfgMag >> "scopeArsenal") == 2) && _XLA_condition ) then {
 								private ["_items"];
 								_items = _data select _tab;
 								_items set [count _items,configname _cfgMag];
@@ -560,7 +878,7 @@ switch _mode do {
 				["put",IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT]
 			];
 
-			missionnamespace setvariable ["XLA_fnc_arsenal_data",_data];
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
 			["XLA_fnc_arsenal_preload"] call bis_fnc_endloadingscreen;
 			true
 		} else {
@@ -570,6 +888,39 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "Exit": {
+		/* check if there is _addedEquipment to remove */
+		if (_allowEquipped) then {
+
+			private ["_cargo"];
+			_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo", objNull];
+
+			/* grab _data */
+			private ["_data","_dataspace"];
+			_dataspace = missionNamespace;
+			if (!isNull(_cargo)) then {		
+				_dataspace = _cargo;
+			};
+			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
+
+			/* grab _addedEquipment */
+			private ["_addedEquipment"];
+			_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+			
+			{
+				private ["_weaponType","_index","_classname","_items"];
+				_weaponTypeID = (_x select 0);
+				_index = (_x select 1);
+				//_className = (_x select 2); //not needed. Only here for debugging.
+				_items = _data select _weaponTypeID;
+				_items deleteAt _index;				
+			} foreach _addedEquipment;
+
+			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
+
+			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
+		};
+
+		/* proceed with normal exit */		
 		removemissioneventhandler ["draw3D",XLA_fnc_arsenal_draw3D];
 
 		_target = (missionnamespace getvariable ["XLA_fnc_arsenal_target",player]);
@@ -595,6 +946,7 @@ switch _mode do {
 			XLA_fnc_arsenal_target = nil;
 			XLA_fnc_arsenal_center = nil;
 			XLA_fnc_arsenal_cargo = nil;
+			XLA_fnc_arsenal_addedEquipment = nil;
 		};
 
 		setacctime 1;
@@ -812,16 +1164,19 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListAdd": {
 		_display = _this select 0;
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+		_dataspace = missionNamespace;
+		if (!isNull(_cargo)) then {
+			_dataspace = _cargo;
+		};
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 		_lbAdd = -1;
 		_xCfg = configfile;
 		_fnc_addModIcon = {
 				_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (_this >> "dlc")) >> "logo")];
 		};
-
-		GETVIRTUALCARGO
 
 		{	
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _foreachindex);
@@ -830,14 +1185,11 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_SECONDARYWEAPON;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_HANDGUN: {
 					{
-						GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_UNIFORM;
@@ -849,53 +1201,40 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH: {
-					_virtualCargo = _virtualItemCargo;
-					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+					{						
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BINOCULARS: {
 					{
-						GETCONDITION3((_virtualWeaponCargo + _virtualItemCargo),(_virtualWeaponBlacklist + _virtualItemBlacklist),_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_GOGGLES: {
 					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgglasses" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgglasses" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_BACKPACK: {
 					{
-						GETCONDITION3(_virtualBackpackCargo,_virtualBackpackBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgvehicles" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
-							_ctrlList lbsetdata [_lbAdd,_x];
-							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
-							_xCfg call _fnc_addModIcon;
-						};
+						_xCfg = configfile >> "cfgvehicles" >> _x;
+						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_ctrlList lbsetdata [_lbAdd,_x];
+						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_FACE: {
@@ -927,26 +1266,20 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT: {
 					{
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgmagazines" >> _x;
-							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
-							_ctrlList lnbsetdata [[_lbAdd,0],_x];
-							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
-							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "mass")];
-						};
+						_xCfg = configfile >> "cfgmagazines" >> _x;
+						_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
+						_ctrlList lnbsetdata [[_lbAdd,0],_x];
+						_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
+						_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "mass")];
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC: {
 					{
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_x)
-						if (_XLA_condition) then {
-							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
-							_ctrlList lnbsetdata [[_lbAdd,0],_x];
-							_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
-							_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "itemInfo" >> "mass")];
-						};
+						_xCfg = configfile >> "cfgweapons" >> _x;
+						_lbAdd = _ctrlList lnbaddrow ["",gettext (_xCfg >> "displayName"),str 0];
+						_ctrlList lnbsetdata [[_lbAdd,0],_x];
+						_ctrlList lnbsetpicture [[_lbAdd,0],gettext (_xCfg >> "picture")];
+						_ctrlList lnbsetvalue [[_lbAdd,0],getnumber (_xCfg >> "itemInfo" >> "mass")];
 					} foreach _x;
 				};
 			};
@@ -970,7 +1303,12 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListSelectCurrent": {
 		_display = _this select 0;
-		_data = missionnamespace getvariable "XLA_fnc_arsenal_data";
+		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
+		_dataspace = missionNamespace;
+		if (!isNull(_cargo)) then {
+			_dataspace = _cargo;
+		};
+		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 		_defaultItems = uinamespace getvariable ["XLA_fnc_arsenal_defaultItems",[]];
 		_defaultShow = uinamespace getvariable ["XLA_fnc_arsenal_defaultShow",-1];
 		{
@@ -1287,7 +1625,7 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "SelectItem": {
-		private ["_ctrlList","_index","_cursel"];
+		private ["_ctrlList","_index","_cursel"];		
 		_display = _this select 0;
 		_ctrlList = _this select 1;
 		_index = _this select 2;
@@ -1564,7 +1902,6 @@ switch _mode do {
 			ctrlenabled (_display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _index))
 		) then {
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
-			GETVIRTUALCARGO
 			private ["_ctrlList"];
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG);
 			lbclear _ctrlList;
@@ -1598,7 +1935,14 @@ switch _mode do {
 					{
 						private ["_item"];
 						_item = _x;
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
+
+						// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
+						_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
+						_wlist = _list select 0;
+						_blist = _list select 1;
+
+						// 2 is for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							_mag = tolower _item;
 							if !(_mag in _magazines) then {
@@ -1658,7 +2002,10 @@ switch _mode do {
 			private ["_ctrlList"];
 
 			_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
-			GETVIRTUALCARGO
+			// Since the magazines aren't from _data, but instead from the weapons Cfg, we still need to filter them
+			_list = missionNamespace getVariable "XLA_fnc_arsenal_list";
+			_wlist = _list select 0;
+			_blist = _list select 1;
 
 			{
 				_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _x);
@@ -1678,7 +2025,8 @@ switch _mode do {
 				_item = _x;
 				_itemCfg = configfile >> "cfgweapons" >> _item;
 				_scope = if (isnumber (_itemCfg >> "scopeArsenal")) then {getnumber (_itemCfg >> "scopeArsenal")} else {getnumber (_itemCfg >> "scope")};
-				GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+				// 0 is for virtualItemCargo/Blacklist
+				_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_scope == 2 && _XLA_condition) then {
 					_type = _item call bis_fnc_itemType;
 					_idcList = switch (_type select 1) do {
@@ -2083,7 +2431,9 @@ switch _mode do {
 					_ctrlMouseBlock = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_MOUSEBLOCK;
 					_ctrlMouseBlock ctrlenable false;
 				} else {
-					if (_fullVersion) then {["buttonClose",[_display]] spawn XLA_fnc_arsenal;} else {_display closedisplay 2;};
+					//if (_fullVersion) then {["buttonClose",[_display]] spawn XLA_fnc_arsenal;} else {_display closedisplay 2;};
+					// We don't care about the "arsenal" handling bits so let's just close it directly:
+					_display closeDisplay 2;
 				};
 				_return = true;
 			};
@@ -2388,8 +2738,6 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
-		GETVIRTUALCARGO
-		
 		for "_i" from 0 to (count _data - 1) step 2 do {
 			_name = _data select _i;
 			_inventory = _data select (_i + 1);
@@ -2429,18 +2777,6 @@ switch _mode do {
 			_ctrlTemplateValue lnbsetpicture [[_lbAdd,7],gettext (configfile >> "cfgweapons" >> (_inventory select 3) >> "picture")];
 			_ctrlTemplateValue lnbsetpicture [[_lbAdd,8],gettext (configfile >> "cfgglasses" >> (_inventory select 4) >> "picture")];
 
-			if (
-				{_item = _x; GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_item) !_XLA_condition || !isclass(configfile >> "cfgweapons" >> _item)} count _inventoryWeapons > 0
-				||
-				{_item = _x; GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist + _virtualWeaponBlacklist),_item) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryMagazines > 0
-				||
-				{_item = _x; GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo + _virtualWeaponCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist + _virtualWeaponBlacklist),_item) !_XLA_condition || {isclass(configfile >> _x >> _item)} count ["cfgweapons","cfgglasses","cfgmagazines"] == 0} count _inventoryItems > 0
-				||
-				{_item = _x; GETCONDITION3(_virtualBackpackCargo,_virtualBackpackBlacklist,_item) !_XLA_condition || !isclass(configfile >> "cfgvehicles" >> _item)} count _inventoryBackpacks > 0
-			) then {
-				_ctrlTemplateValue lnbsetcolor [[_lbAdd,0],[1,1,1,0.25]];
-				//_ctrlTemplateValue lbsetvalue [_lbAdd,-1];
-			};
 		};
 
 		["templateSelChanged",[_display]] call XLA_fnc_arsenal;
@@ -2454,7 +2790,10 @@ switch _mode do {
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 
-		GETVIRTUALCARGO
+		// Get the whitelist of the object/mission
+		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
+		_wlist = (_list select 0);
+		_blist = (_list select 1);
 		
 		_disabledItems = [];
 
@@ -2484,42 +2823,50 @@ switch _mode do {
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
 					case "adduniform": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center forceadduniform _item;} else {ERROR};
 					};
 					case "addvest": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addvest _item;} else {ERROR};
 					};
 					case "addbackpack": {
-						GETCONDITION3(_virtualBackpackCargo,_virtualItemBlacklist,_item)
+						// 3 for virtualBackpackmCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[3],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addbackpack _item;} else {ERROR};
 					};
 					case "addheadgear": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addheadgear _item;} else {ERROR};
 					};
 					case "addgoggles": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addgoggles _item;} else {ERROR};
 					};
 
 					case "additemtouniform": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtouniform _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtovest": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtovest _item;};
 						} else {ERROR};
 						_to = 1;
 					};
 					case "additemtobackpack": {
-						GETCONDITION3((_virtualItemCargo + _virtualMagazineCargo),(_virtualItemBlacklist + _virtualMagazineBlacklist),_item)
+						// 0 for virtualItemCargo/Blacklist, 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0,2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
 							for "_n" from 1 to _to do {_center additemtobackpack _item;};
 						} else {ERROR};
@@ -2527,36 +2874,44 @@ switch _mode do {
 					};
 
 					case "addweapon": {
-						GETCONDITION3(_virtualWeaponCargo,_virtualWeaponBlacklist,_item)
+						// 1 for virtualWeaponCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[1],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addweapon _item;} else {ERROR};
 					};
 					case "addprimaryweaponitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addprimaryweaponitem _item;} else {ERROR};
 					};
 					case "addsecondaryweaponitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addsecondaryweaponitem _item;} else {ERROR};
 					};
 					case "addhandgunitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addhandgunitem _item;} else {ERROR};
 					};
 
 					case "addmagazine": {
-						GETCONDITION3(_virtualMagazineCargo,_virtualMagazineBlacklist,_item)
+						// 2 for virtualMagazineCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center addmagazine _item;} else {ERROR};
 					};
 					case "additem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center additem _item;} else {ERROR};
 					};
 					case "assignitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center assignitem _item;} else {ERROR};
 					};
 					case "linkitem": {
-						GETCONDITION3(_virtualItemCargo,_virtualItemBlacklist,_item)
+						// 0 for virtualItemCargo/Blacklist
+						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center linkitem _item;} else {ERROR};
 					};
 
@@ -2818,17 +3173,19 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "AmmoboxInit": {
-		private ["_box","_allowAll"];
+		private ["_box","_allowAll","_condition","_string","_allowEquipped","_forceReplace"];
 		_box = [_this,0,objnull,[objnull]] call bis_fnc_param;
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
 		_string = [_this,3,(localize "STR_A3_Arsenal"),[""]] call bis_fnc_param;
 		_allowEquipped = [_this,4,true,[true]] call bis_fnc_param;
+		_forceReplace = [_this,5,[],[[]]] call bis_fnc_param;
 
 		if ({} isequalto {}) then {
 			_box setvariable ["XLA_fnc_arsenal_condition",_condition,true];
 			_box setvariable ["XLA_fnc_arsenal_string",_string,true];
 			_box setvariable ["XLA_fnc_arsenal_allowEquipped",_allowEquipped,true];
+			_box setVariable ["XLA_fnc_arsenal_forceReplace",_forceReplace,true];
 		};
 
 		if (_allowAll) then {
@@ -2869,7 +3226,7 @@ switch _mode do {
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
-						["Open",[nil,_box]] call XLA_fnc_arsenal;
+						["Open",[nil,_box,nil,(_box getVariable ["XLA_fnc_arsenal_allowEquipped",true]),(_box getVariable ["XLA_fnc_arsenal_forceReplace",[]])]] call XLA_fnc_arsenal;
 					},
 					[],
 					6,

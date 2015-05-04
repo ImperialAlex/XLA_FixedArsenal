@@ -22,13 +22,14 @@ if (isServer) then {
 
 	} else {	
 
+		["Preload",[false, _box, nil, ["arifle_Katiba_BASE_F" ]]] spawn XLA_fnc_arsenal;
 
+		[_box, [WEST_SIDE,FRIENDLY_SIDE],true,false] call XLA_fnc_addVirtualSideCargo;
+		[_box, ["arifle_Katiba_BASE_F"],true,false] call XLA_fnc_addVirtualWeaponCargo;
 
-		[_box, [WEST_SIDE,FRIENDLY_SIDE],true,false] call XLA_fnc_addVirtualSideCargo; 
-			// Start the arsenal on it
-		_addActionText = "<t color='#45B6EA'>Open Armoury (SIDE == WEST || SIDE == FRIENDLY)";
+		// Start the arsenal on it
+		_addActionText = "<t color='#45B6EA'>Open Armoury (preload test)";
 		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
-
 
 	};
 };

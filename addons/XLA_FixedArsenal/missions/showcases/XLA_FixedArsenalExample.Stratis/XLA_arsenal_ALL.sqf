@@ -16,17 +16,19 @@ if (isServer) then {
 
 	// Check if @XLA_FixedArsenal is loaded
 	 if (isnil "XLA_fnc_addVirtualItemCargo") then {
-
+	 	
 	 	hint "@XLA_FixedArsenal not found.";
 
 	} else {	
 
-		// In virtually all 'real' applications, you also want to add "FRIENDLY_SIDE", which contains shared items like map, compass, etc
-		[_box, ["%ALL"],true,false] call XLA_fnc_addVirtualSideCargo; 
+		// This creates a "whitelisted" arsenal that still allows everything.
+		// Differences to "fullVersion" arsenal include lack of Face/Voice/Insignia display
+		[_box, ["%ALL"],true,false] call XLA_fnc_addVirtualSideCargo;
  
 		// Start the arsenal on it
 		_addActionText = "<t color='#45B6EA'>Open Armoury (%ALL)";
 		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
+	//["AmmoboxInit",[<box>,<allowAll>,<condition>,<text>,<allowEquipped>]] spawn xla_fnc_arsenal;
 
 
 	};

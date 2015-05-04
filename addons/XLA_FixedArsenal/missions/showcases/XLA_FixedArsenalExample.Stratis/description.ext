@@ -23,9 +23,9 @@ aikills = 1;
 
 enableDebugConsole = 1;
 allowFunctionsRecompile = 1;
-
 saving = 0;
 briefing = 0;
+debriefing = 0;
 
 
 author = Alexander (ImperialAlex);

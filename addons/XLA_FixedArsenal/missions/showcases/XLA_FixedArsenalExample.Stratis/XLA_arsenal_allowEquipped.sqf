@@ -21,12 +21,15 @@ if (isServer) then {
 
 	} else {	
 
-		// In virtually all 'real' applications, you also want to add "FRIENDLY_SIDE", which contains shared items like map, compass, etc
-		[_box, ["%ALL"],true,false] call XLA_fnc_addVirtualSideCargo; 
- 
-		// Start the arsenal on it
-		_addActionText = "<t color='#45B6EA'>Open Armoury (%ALL)";
-		["AmmoboxInit",[_box,false,{true},_addActionText,false]] spawn XLA_fnc_arsenal;
+
+	// We need to whitelist at least *something* to get the arsenal action to show up!
+	[_box, ["G_B_Diving"],true,false] call XLA_fnc_addVirtualItemCargo;
+
+		 
+	// Start the arsenal on it
+		_addActionText = "<t color='#45B6EA'>Open Armoury (allowEquipped)";
+		["AmmoboxInit",[_box,false,{true},_addActionText,true]] spawn XLA_fnc_arsenal;
+	//["AmmoboxInit",[<box>,<allowAll>,<condition>,<text>,<allowEquipped>]] spawn xla_fnc_arsenal;
 
 
 	};
