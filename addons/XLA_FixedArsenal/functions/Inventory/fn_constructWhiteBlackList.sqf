@@ -22,7 +22,7 @@
 	_center = [_this,2,objNull,[objNull]] call bis_fnc_param;
 
 	private ["_DEBUG"];
-	_DEBUG = true;
+	_DEBUG = if (!isNil "XLA_FNC_ARSENAL_DEBUG") then {XLA_FNC_ARSENAL_DEBUG} else {false};
 	
 	if (_DEBUG) then { 
 		diag_log format ["CONSTRUCT_WHITELIST: _cargo: %1",_cargo];
