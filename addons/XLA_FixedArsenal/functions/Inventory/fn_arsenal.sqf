@@ -293,11 +293,13 @@ switch _mode do {
 		*/
 
 		/* before we go and grab the current equipment for allowEquip,
-			  we need to do force-replaces */			
+			  we need to do force-replaces */
+		diag_log "TESTING force-replace";			
 		private ["_classname"];
 		{		
 			_classname = _x;
-		  {
+		  {	
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeItem _classname; _center addItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach items _center;
@@ -305,6 +307,7 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center unlinkItem _classname; _center linkItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach assignedItems _center;
@@ -312,6 +315,7 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removePrimaryWeaponItem _classname; _center addPrimaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach primaryWeaponItems _center;
@@ -319,6 +323,7 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeSecondaryWeaponItem _classname; _center addSecondaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach secondaryWeaponItems _center;
@@ -326,6 +331,7 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeHandgunItem _classname; _center addHandgunItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach handgunItems _center;
@@ -333,41 +339,58 @@ switch _mode do {
 		{			
 			_classname = _x;
 		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
 				if ((_x select 0)  == _classname) then { _center removeMagazine _classname; _center addMagazine (_x select 1);};
 			} forEach _forceReplace;
 		} forEach magazines _center;
 
 		_classname = uniform _center;
 	  {
+	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeUniform _center; _center addUniform (_x select 1);};
 		} forEach _forceReplace;
 		
 		_classname = vest _center;
 	  {
+	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeVest _center; _center addVest (_x select 1);};
 		} forEach _forceReplace;
 
 
 		_classname = headgear _center;
 	  {
+	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeHeadgear _center; _center addHeadgear (_x select 1);};
 		} forEach _forceReplace;
 
 		_classname = goggles _center;
 	  {
+	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { removeGoggles _center; _center addGoggles (_x select 1);};
 		} forEach _forceReplace;
-			
+
+		diag_log "BACKPACK";			
 		_classname = backpack _center;
-	  {
+	  {	
+	  	diag_log ((_x select 0)  + " " + _classname);
 			if ((_x select 0)  == _classname ) then { 
+				diag_log "BACKPACKITEMS";
 				private ["_backpackitems"];
 				_backpackitems = backpackItems _center;
 				removeBackpackGlobal _center;
 				_center addBackpackGlobal (_x select 1);
 				{ _center addItemToBackpack _x; } forEach _backpackitems;
 			};
-		} forEach _forceReplace;			
+		} forEach _forceReplace;
+
+		diag_log "WEAPONS";
+		{
+			_classname = _x;			
+		  {
+		  	diag_log ((_x select 0)  + " " + _classname);
+				if ((_x select 0)  == _classname ) then { _center removeWeapon _classname; _center addWeapon (_x select 1); };
+			} forEach _forceReplace;
+		} foreach (weapons _center + [binocular _center]);
 
 
 		if (_allowEquipped) then {
@@ -742,7 +765,12 @@ switch _mode do {
 		private ["_data","_dataspace"];
 		_dataspace = missionNamespace;
 		if (!isNull(_cargo)) then {
+			diag_log "_CARGO IS NOT NULL";
+			diag_log _cargo;
 			_dataspace = _cargo;
+		} else {
+			diag_log "_CARGO IS NULL";
+			diag_log _cargo;
 		};
 		_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 
