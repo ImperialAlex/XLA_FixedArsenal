@@ -230,9 +230,9 @@ switch _mode do {
 		// therefore all information needs to be 'passed in' via get/setvariable
 		["XLA_fnc_arsenal"] call bis_fnc_startloadingscreen;
 		_display = _this select 0;
-		_cargo = missionNamespace getvariable "XLA_fnc_arsenal_cargo";
-		_center = missionNamespace getvariable "XLA_fnc_arsenal_center";
-		_forceReplace = missionNamespace getVariable "XLA_fnc_arsenal_forceReplace";
+		_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo",objNull];
+		_center = missionNamespace getvariable ["XLA_fnc_arsenal_center",objNull];
+		_forceReplace = missionNamespace getVariable ["XLA_fnc_arsenal_forceReplace",[]];
 		
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
