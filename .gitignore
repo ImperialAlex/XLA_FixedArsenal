@@ -3,4 +3,5 @@
 *.biprivatekey
 *.pbo
 *.bin
-DEV_ressources/
+addons/temp/
+addons/a3/
