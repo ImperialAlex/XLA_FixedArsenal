@@ -12,13 +12,12 @@
 
 class CfgWeapons {
 
-	// -------------------------------------------------------------------	
-	//		Vanilla Arma 3 equipment
-	// -------------------------------------------------------------------
+	class Default;
 
-	class Default { FRIENDLY_SIDE };
+	/* PRIMARY WEAPONS */
+	class RifleCore: Default {NO_SIDE};
+
 	class Rifle_Base_F;
-
 	class arifle_Katiba_Base_F: Rifle_Base_F { EAST_SIDE };
 	class arifle_MX_Base_F: Rifle_Base_F { WEST_SIDE };	
 	class SDAR_base_F: Rifle_Base_F { FRIENDLY_SIDE };
@@ -29,13 +28,22 @@ class CfgWeapons {
 	class pdw2000_base_F: Rifle_Base_F {INDEP_SIDE};
 
 	class Rifle_Long_Base_F;
-
 	class EBR_base_F: Rifle_Long_Base_F {FRIENDLY_SIDE};
 	class GM6_base_F: Rifle_Long_Base_F {EAST_SIDE};
 	class LRR_base_F: Rifle_Long_Base_F {WEST_SIDE};
 	class LMG_Mk200_F: Rifle_Long_Base_F {INDEP_SIDE};
 	class LMG_Zafir_F: Rifle_Long_Base_F {EAST_SIDE};
 	class DMR_01_base_F: Rifle_Long_Base_F {EAST_SIDE};
+	class DMR_02_base_F: Rifle_Long_Base_F {WEST_SIDE};
+	class DMR_03_base_F: Rifle_Long_Base_F {WEST_SIDE};
+	class DMR_04_base_F: Rifle_Long_Base_F {EAST_SIDE};
+	class DMR_05_base_F: Rifle_Long_Base_F {EAST_SIDE};
+	class DMR_06_base_F: Rifle_Long_Base_F {INDEP_SIDE};
+	class MMG_01_base_F: Rifle_Long_Base_F {EAST_SIDE};
+	class MMG_02_base_F: Rifle_Long_Base_F {WEST_SIDE};
+
+	/* HANDGUNS */
+	class PistolCore: Default {NO_SIDE};
 
 	class Pistol_Base_F;
 	class hgun_P07_F : Pistol_Base_F {WEST_SIDE};
@@ -44,351 +52,303 @@ class CfgWeapons {
 	class hgun_Pistol_heavy_01_F: Pistol_Base_F {WEST_SIDE};
 	class hgun_Pistol_heavy_02_F: Pistol_Base_F {EAST_SIDE};
 
+
+	/* SECONDARY WEAPONS */
+	class LauncherCore: Default {NO_SIDE};
+
 	class Launcher_Base_F;
 	class launch_NLAW_F: Launcher_Base_F {FRIENDLY_SIDE};
 	class launch_RPG32_F: Launcher_Base_F {EAST_SIDE};
-	class launch_B_Titan_F: Launcher_Base_F {WEST_SIDE};
-	class launch_I_Titan_F: Launcher_Base_F {INDEP_SIDE};
-	class launch_O_Titan_F: Launcher_Base_F {EAST_SIDE};
+
+	class launch_Titan_base;
+	class launch_B_Titan_F: launch_Titan_base {WEST_SIDE};
+	class launch_I_Titan_F: launch_Titan_base {INDEP_SIDE};
+	class launch_O_Titan_F: launch_Titan_base {EAST_SIDE};
 
 	class launch_Titan_short_base;
 	class launch_B_Titan_short_F: launch_Titan_short_base {WEST_SIDE};
 	class launch_I_Titan_short_F: launch_Titan_short_base {INDEP_SIDE};
 	class launch_O_Titan_short_F: launch_Titan_short_base {EAST_SIDE};
 
-	class DetectorCore;
-	class MineDetector: DetectorCore {FRIENDLY_SIDE};
-
-	class Binocular: Default {FRIENDLY_SIDE};
-	class Rangefinder: Binocular {FRIENDLY_SIDE};
-	class LaserDesignator: Binocular {FRIENDLY_SIDE};
-	class NVGoggles:Binocular {WEST_SIDE};
-	class NVGoggles_OPFOR:NVGoggles {EAST_SIDE};
-	class NVGoggles_INDEP:NVGoggles {INDEP_SIDE};
-
-	class ItemCore;
-	class ItemCompass: ItemCore {FRIENDLY_SIDE};
-	class ItemGPS: ItemCore {FRIENDLY_SIDE};
-	class ItemRadio: ItemCore {FRIENDLY_SIDE};
-	class ItemMap: ItemCore {FRIENDLY_SIDE};
-	class ItemWatch: ItemCore {FRIENDLY_SIDE};
-	class FirstAidKit: ItemCore {FRIENDLY_SIDE};
-	class MediKit: ItemCore {FRIENDLY_SIDE};
-	class ToolKit: ItemCore {FRIENDLY_SIDE};	
-
-	class muzzle_snds_H {FRIENDLY_SIDE};
-	//Same as ammo/mags: because of gun-specific arsenal, give everything to everybody.
-
+	/* ITEMS */
+	class ItemCore: Default {FRIENDLY_SIDE};
+	class Binocular: Default {FRIENDLY_SIDE};	
+	class NVGoggles: Binocular {WEST_SIDE};
+	class NVGoggles_OPFOR: NVGoggles {EAST_SIDE};
+	class NVGoggles_INDEP: NVGoggles {INDEP_SIDE};
+	class Laserdesignator: Binocular {WEST_SIDE};
+	class Laserdesignator_02: Laserdesignator {INDEP_SIDE};
+	class Laserdesignator_03: Laserdesignator {EAST_SIDE};
 	class UavTerminal_base;
 	class B_UavTerminal : UavTerminal_base {WEST_SIDE};
 	class I_UavTerminal : UavTerminal_base {INDEP_SIDE};
 	class O_UavTerminal : UavTerminal_base {EAST_SIDE};
 
-	//OPTICS:
-	 class optic_Arco: ItemCore { FRIENDLY_SIDE };
-	 class optic_Hamr: ItemCore { FRIENDLY_SIDE };
-	 class optic_Aco: ItemCore { FRIENDLY_SIDE };
-	 class optic_ACO_grn: ItemCore { FRIENDLY_SIDE };
-	 class optic_Aco_smg: ItemCore { FRIENDLY_SIDE };
-	 class optic_ACO_grn_smg: ItemCore { FRIENDLY_SIDE };
-	 class optic_Holosight: ItemCore { FRIENDLY_SIDE };
-	 class optic_Holosight_smg: ItemCore { FRIENDLY_SIDE };
-	 class optic_SOS: ItemCore { FRIENDLY_SIDE };
-	 class optic_MRCO: ItemCore { FRIENDLY_SIDE };
-	 class optic_DMS: ItemCore { FRIENDLY_SIDE };
-	 class optic_Yorris: ItemCore { FRIENDLY_SIDE };
-	 class optic_MRD: ItemCore { FRIENDLY_SIDE };
-	 class optic_LRPS: ItemCore { FRIENDLY_SIDE };
-	 class optic_NVS: ItemCore { FRIENDLY_SIDE };
-	 class optic_Nightstalker: ItemCore { FRIENDLY_SIDE };
-	 class optic_tws: ItemCore { FRIENDLY_SIDE };
-	 class optic_tws_mg: ItemCore { FRIENDLY_SIDE };
+	/* VESTS */
+	class Vest_NoCamo_Base: ItemCore {NO_SIDE};
+	class Vest_Camo_Base: ItemCore {NO_SIDE};
 
-	 // Attachments
-	 class acc_flashlight: ItemCore { FRIENDLY_SIDE };
-	 class acc_pointer_IR: ItemCore { FRIENDLY_SIDE };
-
-
-	 //Vests
-	class Vest_NoCamo_Base;
-	class V_Rangemaster_belt: Vest_NoCamo_Base {FRIENDLY_SIDE};
+	class V_BandollierB_khk: Vest_Camo_Base {EAST_SIDE};
+	class V_Chestrig_khk: Vest_Camo_Base {EAST_SIDE};
+	class V_Chestrig_oli: Vest_Camo_Base {INDEP_SIDE};
+	class V_HarnessO_brn: Vest_NoCamo_Base {EAST_SIDE};
+	class V_HarnessOGL_brn: Vest_NoCamo_Base {EAST_SIDE};
+	class V_PlateCarrier1_blk: Vest_Camo_Base {WEST_SIDE};
 	class V_PlateCarrier1_rgr: Vest_NoCamo_Base {WEST_SIDE};
 	class V_PlateCarrier3_rgr: Vest_NoCamo_Base {WEST_SIDE};
 	class V_PlateCarrierGL_rgr: Vest_NoCamo_Base {WEST_SIDE};
+	class V_PlateCarrierIA1_dgtl: Vest_NoCamo_Base {INDEP_SIDE};
 	class V_PlateCarrierSpec_rgr: Vest_NoCamo_Base {WEST_SIDE};
-
+	class V_Press_F: Vest_Camo_Base { CIV_SIDE };
+	class V_Rangemaster_belt: Vest_NoCamo_Base {FRIENDLY_SIDE};
+	class V_RebreatherB: Vest_Camo_Base { WEST_SIDE };
+	class V_RebreatherIA: V_RebreatherB {INDEP_SIDE};
+	class V_RebreatherIR: V_RebreatherB {EAST_SIDE};
+	class V_TacVest_blk_POLICE: Vest_Camo_Base {CIV_SIDE};
+	class V_TacVest_camo: Vest_Camo_Base {FRIENDLY_SIDE};
+	class V_TacVest_khk: Vest_Camo_Base {FRIENDLY_SIDE};
+	class V_TacVestCamo_khk: Vest_Camo_Base {FRIENDLY_SIDE};
 	class V_TacVestIR_blk: Vest_NoCamo_Base {FRIENDLY_SIDE};
 
-	class V_PlateCarrierIA1_dgtl: Vest_NoCamo_Base {INDEP_SIDE};
-
-	class V_HarnessO_brn: Vest_NoCamo_Base {EAST_SIDE};
-	class V_HarnessOGL_brn: Vest_NoCamo_Base {EAST_SIDE};
-
-	class Vest_Camo_Base;
-	class V_BandollierB_khk: Vest_Camo_Base {EAST_SIDE};
-	class V_Chestrig_khk: Vest_Camo_Base {EAST_SIDE};
-	class V_Press_F: Vest_Camo_Base { CIV_SIDE };
-
-	class V_TacVest_khk: Vest_Camo_Base {FRIENDLY_SIDE};
-
-	class V_Rebreather: Vest_Camo_Base { NO_SIDE };
-	class V_RebreatherB: V_Rebreather { WEST_SIDE };
-	class V_RebreatherIR: V_Rebreather {EAST_SIDE};
-	class V_RebreatherIA: V_Rebreather {INDEP_SIDE};
-
-	class V_PlateCarrier1_blk: Vest_Camo_Base {WEST_SIDE};
-
-	class V_Chestrig_oli: Vest_Camo_Base {INDEP_SIDE};
-
-	class V_TacVest_camo: Vest_Camo_Base {FRIENDLY_SIDE};
-
-	class V_TacVest_blk_POLICE: Vest_Camo_Base {CIV_SIDE};
-
-	class V_TacVestCamo_khk: Vest_Camo_Base {FRIENDLY_SIDE};
-
 	// Uniforms
-	class U_B_CombatUniform_mcam { WEST_SIDE };
-	class U_B_CombatUniform_mcam_tshirt { WEST_SIDE };
-	class U_B_CombatUniform_mcam_vest { WEST_SIDE };
-	class U_B_GhillieSuit { WEST_SIDE };
-	class U_B_HeliPilotCoveralls { WEST_SIDE };
-	class U_B_Wetsuit { WEST_SIDE };
+	class Uniform_Base: ItemCore {NO_SIDE};
+	class U_AntigonaBody: Uniform_Base { CIV_SIDE };
+	class U_AttisBody: Uniform_Base { CIV_SIDE };
+	class U_B_CombatUniform_mcam: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_mcam_tshirt: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_mcam_vest: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_mcam_worn: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_sgg: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_sgg_tshirt: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_sgg_vest: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_wdl: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_wdl_tshirt: Uniform_Base { WEST_SIDE };
+	class U_B_CombatUniform_wdl_vest: Uniform_Base { WEST_SIDE };
+	class U_B_CTRG_1: Uniform_Base { WEST_SIDE };
+	class U_B_CTRG_2: Uniform_Base { WEST_SIDE };
+	class U_B_CTRG_3: Uniform_Base { WEST_SIDE };
+	class U_B_FullGhillie_ard : Uniform_Base { WEST_SIDE };
+	class U_B_FullGhillie_lsh : Uniform_Base { WEST_SIDE };
+	class U_B_FullGhillie_sard : Uniform_Base { WEST_SIDE };
+	class U_B_GhillieSuit: Uniform_Base { WEST_SIDE };
+	class U_B_HeliPilotCoveralls: Uniform_Base { WEST_SIDE };
+	class U_B_PilotCoveralls: Uniform_Base { WEST_SIDE };
+	class U_B_Protagonist_VR : Uniform_Base {NO_SIDE};
+	class U_B_Soldier_VR : Uniform_Base {NO_SIDE};
+	class U_B_SpecopsUniform_sgg: Uniform_Base { WEST_SIDE };
+	class U_B_survival_uniform: Uniform_Base { WEST_SIDE };
+	class U_B_Wetsuit: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla1_1: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla2_1: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla2_2: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla2_3: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla3_1: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerilla3_2: Uniform_Base { WEST_SIDE };
+	class U_BG_Guerrilla_6_1: Uniform_Base { WEST_SIDE };
+	class U_BG_leader: Uniform_Base { WEST_SIDE };
+	class U_C_Commoner1_1: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner1_2: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner1_3: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner2_1: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner2_2: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner2_3: Uniform_Base { CIV_SIDE };
+	class U_C_Commoner_shorts: Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1 : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_black : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_blue : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_green : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_orange : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_red : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_white : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_1_yellow : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_2 : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_3 : Uniform_Base { CIV_SIDE };
+	class U_C_Driver_4 : Uniform_Base { CIV_SIDE };
+	class U_C_Farmer: Uniform_Base { CIV_SIDE };
+	class U_C_Fisherman: Uniform_Base { CIV_SIDE };
+	class U_C_FishermanOveralls: Uniform_Base { CIV_SIDE };
+	class U_C_HunterBody_brn: Uniform_Base { CIV_SIDE };
+	class U_C_HunterBody_grn: Uniform_Base { CIV_SIDE };
+	class U_C_Journalist: Uniform_Base { CIV_SIDE };
+	class U_C_Novak: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_blue: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_burgundy: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_redwhite: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_salmon: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_stripped: Uniform_Base { CIV_SIDE };
+	class U_C_Poloshirt_tricolour: Uniform_Base { CIV_SIDE };
+	class U_C_Poor_1: Uniform_Base { CIV_SIDE };
+	class U_C_Poor_2: Uniform_Base { CIV_SIDE };
+	class U_C_Poor_shorts_1: Uniform_Base { CIV_SIDE };
+	class U_C_Poor_shorts_2: Uniform_Base { CIV_SIDE };
+	class U_C_PriestBody: Uniform_Base { CIV_SIDE };
+	class U_C_Scavenger_1: Uniform_Base { CIV_SIDE };
+	class U_C_Scavenger_2: Uniform_Base { CIV_SIDE };
+	class U_C_Scientist: Uniform_Base { CIV_SIDE };
+	class U_C_ShirtSurfer_shorts: Uniform_Base { CIV_SIDE };
+	class U_C_Soldier_VR : Uniform_Base { NO_SIDE };
+	class U_C_TeeSurfer_shorts_1: Uniform_Base { CIV_SIDE };
+	class U_C_TeeSurfer_shorts_2: Uniform_Base { CIV_SIDE };
+	class U_C_WorkerCoveralls: Uniform_Base { CIV_SIDE };
+	class U_C_WorkerOveralls: Uniform_Base { CIV_SIDE };
+	class U_Competitor: Uniform_Base { CIV_SIDE };
+	class U_I_CombatUniform: Uniform_Base { INDEP_SIDE };
+	class U_I_CombatUniform_shortsleeve: Uniform_Base { INDEP_SIDE };
+	class U_I_CombatUniform_tshirt: Uniform_Base { INDEP_SIDE };
+	class U_I_FullGhillie_ard : Uniform_Base { INDEP_SIDE };
+	class U_I_FullGhillie_lsh : Uniform_Base { INDEP_SIDE };
+	class U_I_FullGhillie_sard : Uniform_Base { INDEP_SIDE };
+	class U_I_G_resistanceLeader_F: Uniform_Base { INDEP_SIDE };
+	class U_I_G_Story_Protagonist_F: Uniform_Base { INDEP_SIDE };
+	class U_I_GhillieSuit: Uniform_Base { INDEP_SIDE };
+	class U_I_HeliPilotCoveralls: Uniform_Base { INDEP_SIDE };
+	class U_I_OfficerUniform: Uniform_Base { INDEP_SIDE };
+	class U_I_pilotCoveralls: Uniform_Base { INDEP_SIDE };
+	class U_I_Protagonist_VR : Uniform_Base { INDEP_SIDE };
+	class U_I_Soldier_VR : Uniform_Base { INDEP_SIDE };
+	class U_I_Wetsuit: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla1_1: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla2_1: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla2_2: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla2_3: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla3_1: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerilla3_2: Uniform_Base { INDEP_SIDE };
+	class U_IG_Guerrilla_6_1: Uniform_Base { INDEP_SIDE};
+	class U_IG_leader: Uniform_Base { INDEP_SIDE };
+	class U_IG_Menelaos: Uniform_Base { CIV_SIDE };
+	class U_KerryBody: Uniform_Base { CIV_SIDE };
+	class U_Marshal: Uniform_Base { CIV_SIDE };
+	class U_MillerBody: Uniform_Base { CIV_SIDE };
+	class U_NikosAgedBody : Uniform_Base { CIV_SIDE };
+	class U_NikosBody: Uniform_Base { CIV_SIDE };
+	class U_O_CombatUniform_ocamo: Uniform_Base { EAST_SIDE };
+	class U_O_CombatUniform_oucamo: Uniform_Base { EAST_SIDE };
+	class U_O_FullGhillie_ard : Uniform_Base { EAST_SIDE };
+	class U_O_FullGhillie_lsh : Uniform_Base { EAST_SIDE };
+	class U_O_FullGhillie_sard : Uniform_Base { EAST_SIDE };
+	class U_O_GhillieSuit: Uniform_Base { EAST_SIDE };
+	class U_O_OfficerUniform_ocamo: Uniform_Base { EAST_SIDE };
+	class U_O_PilotCoveralls: Uniform_Base { EAST_SIDE };
+	class U_O_Protagonist_VR : Uniform_Base { NO_SIDE };
+	class U_O_Soldier_VR : Uniform_Base { NO_SIDE };
+	class U_O_SpecopsUniform_blk: Uniform_Base { EAST_SIDE };
+	class U_O_SpecopsUniform_ocamo: Uniform_Base { EAST_SIDE };
+	class U_O_Wetsuit: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla1_1: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla2_1: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla2_2: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla2_3: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla3_1: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerilla3_2: Uniform_Base { EAST_SIDE };
+	class U_OG_Guerrilla_6_1: Uniform_Base { EAST_SIDE };
+	class U_OG_leader: Uniform_Base { EAST_SIDE };
+	class U_OI_Scientist: Uniform_Base { CIV_SIDE };
+	class U_OrestesBody: Uniform_Base { CIV_SIDE };
+	class U_Rangemaster: Uniform_Base { CIV_SIDE };
 
-	class U_B_CombatUniform_mcam_worn { WEST_SIDE };
-	class U_B_CombatUniform_wdl { WEST_SIDE };
-	class U_B_CombatUniform_wdl_tshirt { WEST_SIDE };
-	class U_B_CombatUniform_wdl_vest { WEST_SIDE };
-	class U_B_CombatUniform_sgg { WEST_SIDE };
-	class U_B_CombatUniform_sgg_tshirt { WEST_SIDE };
-	class U_B_CombatUniform_sgg_vest { WEST_SIDE };
-	class U_B_SpecopsUniform_sgg { WEST_SIDE };
-	class U_B_PilotCoveralls { WEST_SIDE };
-	class U_B_survival_uniform { WEST_SIDE };
-	class U_B_CTRG_1 { WEST_SIDE };
-	class U_B_CTRG_2 { WEST_SIDE };
-	class U_B_CTRG_3 { WEST_SIDE };
+	/* HATS & HELMETS */
 
-	class U_O_CombatUniform_ocamo { EAST_SIDE };
-	class U_O_GhillieSuit { EAST_SIDE };
-	class U_O_PilotCoveralls { EAST_SIDE };
-	class U_O_Wetsuit { EAST_SIDE };
+	// This is the base class of all helmets. Sadly it's also a real helmet
+	// There is extra handling for this class in the side-check of the condition
+	class H_HelmetB: ItemCore { NO_SIDE	};
 
-	class U_O_CombatUniform_oucamo { EAST_SIDE };
-	class U_O_SpecopsUniform_ocamo { EAST_SIDE };
-	class U_O_SpecopsUniform_blk { EAST_SIDE };
-	class U_O_OfficerUniform_ocamo { EAST_SIDE };
+	class H_Bandanna_surfer: H_HelmetB {CIV_SIDE };
+	class H_Bandanna_camo: H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_Bandanna_cbr: H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_Bandanna_gry: H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_Bandanna_khk: H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_Bandanna_mcamo: H_Bandanna_surfer { WEST_SIDE };
+	class H_Bandanna_sand: H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_Bandanna_sgg: H_Bandanna_surfer { FRIENDLY_SIDE };
 
-	class U_I_CombatUniform { INDEP_SIDE };
-	class U_I_CombatUniform_tshirt { INDEP_SIDE };
-	class U_I_CombatUniform_shortsleeve { INDEP_SIDE };
-	class U_I_pilotCoveralls { INDEP_SIDE };
-	class U_I_HeliPilotCoveralls { INDEP_SIDE };
-	class U_I_GhillieSuit { INDEP_SIDE };
-	class U_I_OfficerUniform { INDEP_SIDE };
-	class U_I_Wetsuit { INDEP_SIDE };
+	class H_BandMask_blk: H_HelmetB { FRIENDLY_SIDE };
+	
+	class H_Beret_blk: H_HelmetB { FRIENDLY_SIDE };
+	class H_Beret_02: H_Beret_blk { WEST_SIDE };	
+	class H_Beret_blk_POLICE: H_Beret_blk { CIV_SIDE};
+	class H_Beret_ocamo: H_Beret_blk { EAST_SIDE };
 
-	class U_IG_Guerilla1_1 { INDEP_SIDE };
-	class U_IG_Guerilla2_1 { INDEP_SIDE };
-	class U_IG_Guerilla2_2 { INDEP_SIDE };
-	class U_IG_Guerilla2_3 { INDEP_SIDE };
-	class U_IG_Guerilla3_1 { INDEP_SIDE };
-	class U_IG_Guerilla3_2 { INDEP_SIDE };
-	class U_IG_Guerrilla_6_1 { INDEP_SIDE};
-	class U_IG_leader { INDEP_SIDE };
-	class U_I_G_Story_Protagonist_F { INDEP_SIDE };
-	class U_I_G_resistanceLeader_F { INDEP_SIDE };
-
-	/*
-	class U_BG_Guerilla1_1 { WEST_SIDE };
-	class U_BG_Guerilla2_1 { WEST_SIDE };
-	class U_BG_Guerilla2_2 { WEST_SIDE };
-	class U_BG_Guerilla2_3 { WEST_SIDE };
-	class U_BG_Guerilla3_1 { WEST_SIDE };
-	class U_BG_Guerilla3_2 { WEST_SIDE };
-	class U_BG_Guerrilla_6_1 { WEST_SIDE };
-	class U_BG_leader { WEST_SIDE };
-
-
-	class U_OG_Guerilla1_1 { EAST_SIDE };
-	class U_OG_Guerilla2_1 { EAST_SIDE };
-	class U_OG_Guerilla2_2 { EAST_SIDE };
-	class U_OG_Guerilla2_3 { EAST_SIDE };
-	class U_OG_Guerilla3_1 { EAST_SIDE };
-	class U_OG_Guerilla3_2 { EAST_SIDE };
-	class U_OG_Guerrilla_6_1 { EAST_SIDE };
-	class U_OG_leader { EAST_SIDE };
-	*/
-
-
-	class U_C_Poloshirt_blue { CIV_SIDE };
-	class U_C_Poloshirt_burgundy { CIV_SIDE };
-	class U_C_Poloshirt_stripped { CIV_SIDE };
-	class U_C_Poloshirt_tricolour { CIV_SIDE };
-
-	class U_C_Poloshirt_salmon { CIV_SIDE };
-	class U_C_Poloshirt_redwhite { CIV_SIDE };
-	class U_C_Commoner1_1 { CIV_SIDE };
-	class U_C_Commoner1_2 { CIV_SIDE };
-	class U_C_Commoner1_3 { CIV_SIDE };
-	class U_Rangemaster { CIV_SIDE };
-	class U_Competitor { CIV_SIDE };
-	class U_NikosBody { CIV_SIDE };
-	class U_MillerBody { CIV_SIDE };
-	class U_KerryBody { CIV_SIDE };
-	class U_OrestesBody { CIV_SIDE };
-	class U_AttisBody { CIV_SIDE };
-	class U_AntigonaBody { CIV_SIDE };
-	class U_IG_Menelaos { CIV_SIDE };
-	class U_C_Novak { CIV_SIDE };
-	class U_OI_Scientist { CIV_SIDE };
-	class U_C_Poor_1 { CIV_SIDE };
-	class U_C_Poor_2 { CIV_SIDE };
-	class U_C_Scavenger_1 { CIV_SIDE };
-	class U_C_Scavenger_2 { CIV_SIDE };
-	class U_C_Farmer { CIV_SIDE };
-	class U_C_Fisherman { CIV_SIDE };
-	class U_C_WorkerOveralls { CIV_SIDE };
-	class U_C_FishermanOveralls { CIV_SIDE };
-	class U_C_WorkerCoveralls { CIV_SIDE };
-	class U_C_HunterBody_grn { CIV_SIDE };
-	class U_C_HunterBody_brn { CIV_SIDE };
-	class U_C_Commoner2_1 { CIV_SIDE };
-	class U_C_Commoner2_2 { CIV_SIDE };
-	class U_C_Commoner2_3 { CIV_SIDE };
-	class U_C_PriestBody { CIV_SIDE };
-	class U_C_Poor_shorts_1 { CIV_SIDE };
-	class U_C_Poor_shorts_2 { CIV_SIDE };
-	class U_C_Commoner_shorts { CIV_SIDE };
-	class U_C_ShirtSurfer_shorts { CIV_SIDE };
-	class U_C_TeeSurfer_shorts_1 { CIV_SIDE };
-	class U_C_TeeSurfer_shorts_2 { CIV_SIDE };
-	class U_C_Journalist { CIV_SIDE };
-	class U_C_Scientist { CIV_SIDE };
-	class U_Marshal { CIV_SIDE };
-
-	class H_HelmetB { 
-		scope = 0;
-		arsenalScope = 0;
-		NO_SIDE
-	}; //This is the base class of all helmets. Sadly it's also a real helmet
-
-	class XLA_HelmetB : H_HelmetB {
-		author = "Bohemia Interactive";
-		dlc = "XLA_FixedArsenal";
-		scope = 2;
-		arsenalScope = 2;
-		WEST_SIDE
-	};
-
-	class H_Booniehat_khk { FRIENDLY_SIDE };
-	class H_Booniehat_dgtl : H_Booniehat_khk { INDEP_SIDE };
-	class H_Booniehat_indp : H_Booniehat_khk { INDEP_SIDE };
-	class H_Booniehat_mcamo : H_Booniehat_khk { WEST_SIDE };
+	class H_Booniehat_khk: H_HelmetB { FRIENDLY_SIDE };
+	class H_Booniehat_dgtl: H_Booniehat_khk { INDEP_SIDE };
+	class H_Booniehat_indp: H_Booniehat_khk { INDEP_SIDE };	
+	class H_Booniehat_mcamo: H_Booniehat_khk { WEST_SIDE };
 
 	class H_Cap_red: H_HelmetB { CIV_SIDE };
-	class H_Cap_oli : H_Cap_red { FRIENDLY_SIDE };
-	class H_Cap_tan : H_Cap_red { FRIENDLY_SIDE };
-	class H_Cap_blk : H_Cap_red { FRIENDLY_SIDE };
-	// H_Cap_blk_CMMG - leave that one CIV
-	class H_Cap_brn_SPECOPS : H_Cap_red { EAST_SIDE };	
-	class H_Cap_tan_specops_US : H_Cap_red { WEST_SIDE };
+	class H_Cap_blk: H_Cap_red { FRIENDLY_SIDE };
+	class H_Cap_blk_Raven: H_Cap_red { INDEP_SIDE };
+	class H_Cap_brn_SPECOPS: H_Cap_red { EAST_SIDE };	
+	class H_Cap_grn: H_Cap_red { FRIENDLY_SIDE };
 	class H_Cap_khaki_specops_UK: H_Cap_red { WEST_SIDE};
-	class H_Cap_grn : H_Cap_red { FRIENDLY_SIDE };
-	// H_Cap_grn_BI - leave that one CIV
-	class H_Cap_blk_Raven : H_Cap_red { INDEP_SIDE };
-	// H_Cap_blk_ION - leave that one CIV
-	class H_Cap_headphones : H_HelmetB { FRIENDLY_SIDE };
-	class H_Cap_usblack : H_Cap_red { WEST_SIDE };
+	class H_Cap_oli: H_Cap_red { FRIENDLY_SIDE };	
+	class H_Cap_tan: H_Cap_red { FRIENDLY_SIDE };
+	class H_Cap_tan_specops_US: H_Cap_red { WEST_SIDE };
+	class H_Cap_usblack: H_Cap_red { WEST_SIDE };
 
+	class H_Cap_headphones: H_HelmetB { FRIENDLY_SIDE };
 
-	class H_Bandanna_surfer : H_HelmetB {CIV_SIDE };
-	class H_Bandanna_khk : H_Bandanna_surfer { FRIENDLY_SIDE };
-	class H_Bandanna_cbr : H_Bandanna_surfer { FRIENDLY_SIDE };
-	class H_Bandanna_sgg : H_Bandanna_surfer { FRIENDLY_SIDE };
-	class H_Bandanna_gry: H_Bandanna_surfer { FRIENDLY_SIDE };
-	class H_Bandanna_camo : H_Bandanna_surfer { FRIENDLY_SIDE };
-	class H_Bandanna_mcamo : H_Bandanna_surfer { WEST_SIDE };
-	class H_Bandanna_sand : H_Bandanna_surfer { FRIENDLY_SIDE };
+	class H_CrewHelmetHeli_B: H_HelmetB { WEST_SIDE };
+	class H_CrewHelmetHeli_I: H_CrewHelmetHeli_B { INDEP_SIDE };
+	class H_CrewHelmetHeli_O: H_CrewHelmetHeli_B { EAST_SIDE };
 
-	class H_Shemag_khk : H_HelmetB { FRIENDLY_SIDE };
-	class H_ShemagOpen_khk : H_HelmetB { FRIENDLY_SIDE };
+	class H_Hat_blue: H_HelmetB { CIV_SIDE };
 
-	class H_Beret_blk { FRIENDLY_SIDE };
-	class H_Beret_blk_POLICE { CIV_SIDE};
-	class H_Beret_grn_SF : H_Beret_blk { FRIENDLY_SIDE };
-	class H_Beret_ocamo : H_Beret_blk { EAST_SIDE };
-	class H_Beret_02 : H_Beret_blk { WEST_SIDE };
+	class H_Helmet_Kerry: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_black: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_camo: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_desert: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_grass: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_light: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_paint: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_plain_mcamo: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_sand: H_HelmetB { WEST_SIDE };
+	class H_HelmetB_snakeskin: H_HelmetB { WEST_SIDE };
 
-	class H_Watchcap_blk { FRIENDLY_SIDE };
+	class H_HelmetCrew_B: H_HelmetB { WEST_SIDE };
+	class H_HelmetCrew_I: H_HelmetCrew_B { INDEP_SIDE };
+	class H_HelmetCrew_O: H_HelmetCrew_B { EAST_SIDE };
 
-	class H_Hat_blue { CIV_SIDE };
-	class H_StrawHat : H_HelmetB { CIV_SIDE };
-	class H_HelmetB_camo : H_HelmetB { WEST_SIDE };
+	class H_HelmetIA: H_HelmetB { INDEP_SIDE };
 
-	class H_CrewHelmetHeli_B : H_HelmetB { WEST_SIDE };
-	class H_CrewHelmetHeli_I : H_CrewHelmetHeli_B { INDEP_SIDE };
-	class H_CrewHelmetHeli_O : H_CrewHelmetHeli_B { EAST_SIDE };
-	class H_Helmet_Kerry : H_HelmetB { WEST_SIDE };
-	class H_HelmetCrew_B : H_HelmetB { WEST_SIDE };
-	class H_HelmetCrew_I : H_HelmetCrew_B { INDEP_SIDE };
-	class H_HelmetCrew_O : H_HelmetCrew_B { EAST_SIDE };
-	class H_HelmetIA : H_HelmetB { INDEP_SIDE };
-	class H_HelmetO_ocamo : H_HelmetB { EAST_SIDE };
-	class H_MilCap_oucamo { EAST_SIDE };
+	class H_HelmetO_ocamo: H_HelmetB { EAST_SIDE };
+
 	class H_MilCap_ocamo : H_HelmetB { EAST_SIDE };
-	class H_MilCap_dgtl : H_MilCap_oucamo { INDEP_SIDE };
-	class H_MilCap_mcamo : H_MilCap_ocamo { WEST_SIDE };
-	class H_MilCap_blue: H_MilCap_ocamo { FRIENDLY_SIDE };
+	class H_MilCap_oucamo : H_MilCap_ocamo { EAST_SIDE };
+	class H_MilCap_blue: H_MilCap_ocamo { CIV_SIDE };
+	class H_MilCap_dgtl: H_MilCap_oucamo { INDEP_SIDE };
 	class H_MilCap_gry: H_MilCap_ocamo { FRIENDLY_SIDE };
+	class H_MilCap_mcamo: H_MilCap_ocamo { WEST_SIDE };
 
-	class H_PilotHelmetFighter_B : H_HelmetB { WEST_SIDE };
-	class H_PilotHelmetFighter_I : H_PilotHelmetFighter_B { INDEP_SIDE };
-	class H_PilotHelmetFighter_O : H_PilotHelmetFighter_B { EAST_SIDE };
-	class H_PilotHelmetHeli_B : H_HelmetB { WEST_SIDE };
-	class H_PilotHelmetHeli_I : H_PilotHelmetHeli_B { INDEP_SIDE };
-	class H_PilotHelmetHeli_O : H_PilotHelmetHeli_B { EAST_SIDE };
-	class H_RacingHelmet_1_F : H_HelmetB_camo { CIV_SIDE };
+	class H_PilotHelmetFighter_B: H_HelmetB { WEST_SIDE };
+	class H_PilotHelmetFighter_I: H_PilotHelmetFighter_B { INDEP_SIDE };
+	class H_PilotHelmetFighter_O: H_PilotHelmetFighter_B { EAST_SIDE };
 
+	class H_PilotHelmetHeli_B: H_HelmetB { WEST_SIDE };
+	class H_PilotHelmetHeli_I: H_PilotHelmetHeli_B { INDEP_SIDE };
+	class H_PilotHelmetHeli_O: H_PilotHelmetHeli_B { EAST_SIDE };
 
-	// -------------------------------------------------------------------	
-	//	TFAR Radios (ITEM)
-	// 	Sadly these cannot be included since they inherit from things with
-	// 	scope = 2 (ItemWatch, ItemRadio)
-	//--------------------------------------------------------------------
-	/*
-	class tf_microdagr: ItemWatch { FRIENDLY_SIDE };
-	class tf_anprc152 : ItemRadio { WEST_SIDE };
-	class tf_rf7800str : ItemRadio { WEST_SIDE };
-	class tf_anprc148jem : ItemRadio { INDEP_SIDE };
-	class tf_anprc154 : ItemRadio { INDEP_SIDE };
-	class tf_fadak : ItemRadio { EAST_SIDE };
-	class tf_pnr1000a : ItemRadio { EAST_SIDE };
-	*/
+	class H_RacingHelmet_1_F: H_HelmetB_camo { CIV_SIDE };
+
+	class H_Shemag_khk: H_HelmetB { FRIENDLY_SIDE };
+	class H_ShemagOpen_khk: H_HelmetB { FRIENDLY_SIDE };
+	class H_StrawHat: H_HelmetB { CIV_SIDE };
+	class H_TurbanO_blk: H_HelmetB { FRIENDLY_SIDE };
+	class H_Watchcap_blk: H_HelmetB { FRIENDLY_SIDE };
 
 };
 
 class CfgMagazines {
- 	class Default { FRIENDLY_SIDE };
- 	class CA_Magazine;
+	// All magazines are available to all sides since the arsenal only offers gun-specific ammo
+ 	// Exceptions: Grenades that are obviously faction specific.
+	class Default;
+ 	class CA_Magazine: Default { FRIENDLY_SIDE};
  	class B_IR_Grenade: CA_Magazine { WEST_SIDE };
  	class I_IR_Grenade: B_IR_Grenade { INDEP_SIDE };
- 	class O_IR_Grenade: B_IR_Grenade { EAST_SIDE };
-
- 	// All magazines are available to all sides since the arsenal only offers gun-specific ammo
- 	// Exceptions: Grenades that are obviously faction specific.
+ 	class O_IR_Grenade: B_IR_Grenade { EAST_SIDE }; 
 };
 
-class CfgAmmos {
-	class Default { FRIENDLY_SIDE };
- 	// All magazines are available to all sides since the arsenal only offers gun-specific ammo
-};
 
 class CfgGlasses {
-
-	// -------------------------------------------------------------------	
-	//		Vanilla Arma 3 equipment
-	// -------------------------------------------------------------------
-	class None { FRIENDLY_SIDE };
+	class None;
 	class G_Spectacles: None { CIV_SIDE };
 	class G_Spectacles_Tinted: None { CIV_SIDE };
 	class G_Combat: None { FRIENDLY_SIDE };
@@ -434,57 +394,64 @@ class CfgGlasses {
 
 
 class CfgVehicles {
-
-	// -------------------------------------------------------------------	
-	//	Vanilla A3 Backpacks. 
-	//	!! Most mods seem to inherit from one of these
-	// -------------------------------------------------------------------
-
 	// static-weapon related backpacks have factions set,
 	// so we only need to set the 'cargo' backpacks.
-
 	class ReammoBox;
-	class Bag_Base: ReammoBox { FRIENDLY_SIDE };
-	class B_AssaultPack_Base;
-	class B_AssaultPack_dgtl : B_AssaultPack_Base { INDEP_SIDE };
-	class B_AssaultPack_mcamo : B_AssaultPack_Base { WEST_SIDE };
-	class B_Kitbag_Base;
-	class B_Kitbag_mcamo : B_Kitbag_Base { WEST_SIDE };
-	class B_Bergen_Base;
-	class B_Bergen_mcamo : B_Bergen_Base { WEST_SIDE };
+	class Bag_Base: ReammoBox { NO_SIDE };
+
+	class B_AssaultPack_Base: Bag_Base { FRIENDLY_SIDE };
+	class B_AssaultPack_dgtl: B_AssaultPack_Base { INDEP_SIDE };
+	class B_AssaultPack_mcamo: B_AssaultPack_Base { WEST_SIDE };
+
+	class B_Bergen_Base: Bag_Base { FRIENDLY_SIDE };
+	class B_Bergen_mcamo: B_Bergen_Base { WEST_SIDE };
+
+	class B_Carryall_Base: Bag_Base { FRIENDLY_SIDE };
+	class B_Carryall_mcamo: B_Carryall_Base { WEST_SIDE };
+	class B_Carryall_ocamo: B_Carryall_Base { EAST_SIDE };
+	class B_Carryall_oucamo: B_Carryall_Base { EAST_SIDE };
+
 	class B_FieldPack_Base: Bag_Base { EAST_SIDE };
-	class B_Carryall_Base;
-	class B_Carryall_ocamo : B_Carryall_Base { EAST_SIDE };
-	class B_Carryall_oucamo : B_Carryall_Base { EAST_SIDE };
-	class B_Carryall_mcamo : B_Carryall_Base { WEST_SIDE };
-	class B_TacticalPack_Base;
+
+	class B_HuntingBackpack : Bag_Base { CIV_SIDE };
+
+	class B_Kitbag_Base: Bag_Base { FRIENDLY_SIDE };
+	class B_Kitbag_mcamo: B_Kitbag_Base { WEST_SIDE };
+
+	class B_OutdoorPack_Base: Bag_Base { CIV_SIDE };
+
+	class B_Parachute: Bag_Base { FRIENDLY_SIDE };
+
+	class B_TacticalPack_Base: Bag_Base { FRIENDLY_SIDE };
 	class B_TacticalPack_mcamo : B_TacticalPack_Base { WEST_SIDE };
 	class B_TacticalPack_ocamo : B_AssaultPack_Base { EAST_SIDE };
-	class O_UAV_01_backpack_F { EAST_SIDE };
-	class B_UAV_01_backpack_F { WEST_SIDE };
-	class I_UAV_01_backpack_F { INDEP_SIDE };
+
+	class Weapon_Bag_Base;
+	class B_UAV_01_backpack_F: Weapon_Bag_Base { WEST_SIDE };
+	class I_UAV_01_backpack_F: B_UAV_01_backpack_F { INDEP_SIDE };
+	class O_UAV_01_backpack_F: B_UAV_01_backpack_F { EAST_SIDE };
 
 	// -------------------------------------------------------------------	
 	//	TFAR Radios (Backpacks)
 	//	These are safe to include since they inherit from Bag_Base (scope=1)
 	// -------------------------------------------------------------------
 
-	class TFAR_Bag_Base : Bag_Base {};
-	class tf_rt1523g : TFAR_Bag_Base { WEST_SIDE };
-	class tf_rt1523g_big : tf_rt1523g { WEST_SIDE };
-	class tf_rt1523g_black : tf_rt1523g { WEST_SIDE };
-	class tf_rt1523g_fabric : tf_rt1523g { WEST_SIDE };
-	class tf_rt1523g_green : tf_rt1523g { WEST_SIDE };
-	class tf_rt1523g_rhs : tf_rt1523g{ WEST_SIDE };
-	class tf_rt1523g_sage : tf_rt1523g { WEST_SIDE };
-	class tf_anarc210 : TFAR_Bag_Base { WEST_SIDE };
+	class TFAR_Bag_Base: Bag_Base { NO_SIDE };
+	class tf_rt1523g: TFAR_Bag_Base { WEST_SIDE };
+	class tf_rt1523g_big: tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_black: tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_fabric: tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_green: tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_rhs: tf_rt1523g { WEST_SIDE };
+	class tf_rt1523g_sage: tf_rt1523g { WEST_SIDE };
+	class tf_anarc210: TFAR_Bag_Base { WEST_SIDE };
 
-	class tf_anprc155 : TFAR_Bag_Base { INDEP_SIDE };
-	class tf_anprc155_coyote : tf_anprc155 { INDEP_SIDE	};
+	class tf_anprc155: TFAR_Bag_Base { INDEP_SIDE };
+	class tf_anprc155_coyote: tf_anprc155 { INDEP_SIDE	};
 	class tf_anarc164: TFAR_Bag_Base { INDEP_SIDE };
 
-	class tf_mr3000 : TFAR_Bag_Base { EAST_SIDE };
-	class tf_mr3000_multicam : tf_mr3000 { EAST_SIDE };
+	class tf_mr3000: TFAR_Bag_Base { EAST_SIDE };
+	class tf_mr3000_multicam: tf_mr3000 { EAST_SIDE };
 	class tf_mr3000_rhs : tf_mr3000 { EAST_SIDE };
 	class tf_mr6000l: TFAR_Bag_Base { EAST_SIDE };
 };
