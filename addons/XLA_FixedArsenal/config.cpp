@@ -1,17 +1,18 @@
 // XLA FixedArsenal by Alexander (ImperialAlex)
 
-#include "uiconfig.h"
-#include "definesides.h"
-
 class CfgPatches
 {
 	class XLA_FixedArsenal
 	{
 		units[] = {};
 		requiredVersion = 1;
-		requiredAddons[] = {"A3_Functions_F_Bootcamp","A3_UI_F"};
+		requiredAddons[] = {
+			"A3_Functions_F_Bootcamp","A3_Functions_F","A3_UI_F","A3_Weapons_F","A3_Weapons_F_Ammoboxes","A3_Characters_F"};
 	};
 };
+
+#include "uiconfig.h"
+#include "definesides.h"
 
 class CfgMissions
 {

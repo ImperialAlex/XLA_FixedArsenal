@@ -79,6 +79,11 @@
 				_xla_side = getNumber (_xla_config >> "XLA_arsenal_side");
 			};
 
+			/* Extra handling for H_HelmetB */
+			if (_item == "H_HelmetB" && _xla_side == NO_SIDE) then {
+				_xla_side = WEST_SIDE;
+			};
+
 			/* Now calculate the actual condition variable */ 
 			private ["_xla_sideallowed","_xla_ALL_in_blist","_xla_ALL_in_wlist"];
 			_xla_sideallowed = ( ((str _xla_side) in _virtualSideCargo ) || ((_virtualSideCargo find "%ALL") >= 0) ) && !( ((str _xla_side) in _virtualSideBlacklist )  || ((_virtualSideBlacklist find "%ALL") >= 0) );
