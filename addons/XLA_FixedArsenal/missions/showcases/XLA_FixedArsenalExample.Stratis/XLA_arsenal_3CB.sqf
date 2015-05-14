@@ -1,5 +1,5 @@
 // Author: Alexander [3CB]
-// Version Date: 9/5/15
+// Version Date: 14/5/15
 
 // The box should have "this execVM <scriptname>" in it's init field.
 _box = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
@@ -32,7 +32,6 @@ if (isServer) then {
         "CUP_200Rnd_TE4_Yellow_Tracer_556x45_L110A1",
         "CUP_30Rnd_556x45_Stanag",
         "CUP_20Rnd_556x45_Stanag",
-        "CUP_17Rnd_9x19_glock17",
         "CUP_1Rnd_HE_M203",
         "CUP_1Rnd_HEDP_M203",
         "CUP_FlareWhite_M203",
@@ -817,8 +816,6 @@ if (isServer) then {
         _forceReplace set [_i,["tf_anprc152_" + (str (_i+1)), "tf_anprc152"]]; 
         _forceReplace set [_i+999,["tf_rf7800str_" + (str (_i+1)), "tf_rf7800str"]];            
     };
-    _forceReplace pushBack ["UK3CB_BAF_30Rnd_T","30Rnd_556x45_Stanag_Tracer_Red"];
-    _forceReplace pushBack ["UK3CB_BAF_30Rnd","30Rnd_556x45_Stanag"];
 
     // Check if @XLA_FixedArsenal is loaded
      if !(isnil "XLA_fnc_addVirtualItemCargo") then {
