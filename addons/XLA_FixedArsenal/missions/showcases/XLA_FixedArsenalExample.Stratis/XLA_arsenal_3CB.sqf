@@ -4,6 +4,8 @@
 // The box should have "this execVM <scriptname>" in it's init field.
 _box = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
 
+
+//TODO: add H_mas_afr_beret_
 if (isServer) then {
 
     _magazinesBlacklist = [
