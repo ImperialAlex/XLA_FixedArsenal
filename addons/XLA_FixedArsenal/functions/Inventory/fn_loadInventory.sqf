@@ -59,8 +59,6 @@ _list = _cargo call xla_fnc_constructWhiteBlacklist;
 _wlist = (_list select 0);
 _blist = (_list select 1);
 
-diag_log "FORCE REPLACE";
-diag_log _forceReplace;
 
 _inventory = [];
 switch (typename _cfg) do {
@@ -667,9 +665,6 @@ if !("transportItems" in _blacklist) then {
 		} foreach _transportItems;
 	};
 };
-
-
-hint str _failures;
 
 // XLA: Find unique entries in failures:
 _uniqueFailures = [];
