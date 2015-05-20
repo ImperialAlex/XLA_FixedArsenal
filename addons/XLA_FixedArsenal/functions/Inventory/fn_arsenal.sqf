@@ -2703,7 +2703,15 @@ switch _mode do {
 	case "buttonTemplateOK": {
 		_display = _this select 0;
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
+		_cargo = (missionNamespace getVariable ["XLA_fnc_arsenal_cargo",objNull]);
 		_hideTemplate = true;
+
+		private ["_forceReplace","_dataspace"];
+		_dataspace = missionNamespace;
+		if (!isNull(_cargo)) then {		
+			_dataspace = _cargo;
+		};
+		_forceReplace = _dataspace getvariable ["XLA_fnc_arsenal_forceReplace",[]];
 
 		_ctrlTemplateName = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_TEMPLATE_EDITNAME;
 		if (ctrlenabled _ctrlTemplateName) then {
@@ -2722,7 +2730,7 @@ switch _mode do {
 			_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_TEMPLATE_VALUENAME;
 			if ((_ctrlTemplateValue lbvalue lnbcurselrow _ctrlTemplateValue) >= 0) then {
 				_inventory = _ctrlTemplateValue lnbtext [lnbcurselrow _ctrlTemplateValue,0];
-				[_center,[profilenamespace,_inventory]] call XLA_fnc_loadInventory;
+				[_center,[profilenamespace,_inventory],[],_forceReplace] call XLA_fnc_loadInventory;
 
 				//--- Load custom data
 				_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_TEMPLATE_VALUENAME;
@@ -2870,6 +2878,13 @@ switch _mode do {
 		_wlist = (_list select 0);
 		_blist = (_list select 1);
 		
+		private ["_forceReplace","_dataspace"];
+		_dataspace = missionNamespace;
+		if (!isNull(_cargo)) then {		
+			_dataspace = _cargo;
+		};
+		_forceReplace = _dataspace getvariable ["XLA_fnc_arsenal_forceReplace",[]];
+
 		_disabledItems = [];
 
 		_import = copyfromclipboard;
@@ -2878,7 +2893,7 @@ switch _mode do {
 		if (count _importArray == 1) then {
 			//--- Import vehicle class
 			_class = _importArray select 0;
-			if (isclass (configfile >> "cfgvehicles" >> _class)) then {[_center,_class] call XLA_fnc_loadInventory;};
+			if (isclass (configfile >> "cfgvehicles" >> _class)) then {[_center,_class,[],_forceReplace] call XLA_fnc_loadInventory;};
 		} else {
 			//--- Import specific items
 			_importArray = _importArray + [""];

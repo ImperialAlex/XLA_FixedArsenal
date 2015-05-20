@@ -11,6 +11,7 @@
 			CONFIG - link to CfgVehicles soldier or to CfgRespawnInventory
 			ARRAY in format [NAMESPACE or GROUP or OBJECT,STRING] - inventory saved using BIS_fnc_saveInventory
 		2: ARRAY of STRINGs - config entries to be ignored (e.g. "weapons", "uniform", ...)
+		3: ARRAY of ARRAY of STRINGs - forceReplace tuples
 
 	Returns:
 	BOOL
@@ -50,13 +51,16 @@ _center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 
 _fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false]);
 
-_forceReplace = [_this,2,[],[[]]] call bis_fnc_param;
+_forceReplace = [_this,3,[],[[]]] call bis_fnc_param;
 
 // XLA: Grab the cargo and blacklist
 // Get the whitelist of the object/mission
 _list = _cargo call xla_fnc_constructWhiteBlacklist;
 _wlist = (_list select 0);
 _blist = (_list select 1);
+
+diag_log "FORCE REPLACE";
+diag_log _forceReplace;
 
 _inventory = [];
 switch (typename _cfg) do {
@@ -208,12 +212,16 @@ if !("uniform" in _blacklist) then {
 		_uniform = _inventory select 0 select 0;
 	};
 	if (_uniform != "") then {
-		if (isclass (configfile >> "cfgWeapons" >> _uniform)) then {
 
-			// force-replace			
-			{	
-				if ((_x select 0)  == _uniform) then { _uniform = (_x select 1);};
-			} forEach _forceReplace;;
+		// force-replace			
+		{	
+			if ((_x select 0)  == _uniform) then {
+				_uniform = (_x select 1);
+				_failures = _failures + [format ["Uniform %1 replaced with %2\n",(_x select 0),_uniform]];
+			};
+		} forEach _forceReplace;
+
+		if (isclass (configfile >> "cfgWeapons" >> _uniform)) then {		
 
 			// 0 for virtualItemCargo/Blacklist, 1 for virtualWeaponCargo/Blacklist
 			_XLA_condition = [_uniform,_wlist,_blist,[0,1],_fullVersion] call xla_fnc_arsenalCondition;
@@ -229,15 +237,20 @@ if !("uniform" in _blacklist) then {
 		};
 	};
 };
+
 if !("vest" in _blacklist) then {
 	if (_vest != "") then {
+
+		// force-replace			
+		{	
+			if ((_x select 0)  == _vest) then { 
+				_vest = (_x select 1);
+				_failures = _failures +  [format ["Vest %1 replaced with %2\n",(_x select 0),_vest]];
+			};
+		} forEach _forceReplace;
+
 		if (isclass (configfile >> "cfgWeapons" >> _vest)) then {
-
-			// force-replace			
-			{	
-				if ((_x select 0)  == _vest) then { _vest = (_x select 1);};
-			} forEach _forceReplace;;
-
+		
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_vest,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -252,14 +265,19 @@ if !("vest" in _blacklist) then {
 		};
 	};
 };
+
 if !("headgear" in _blacklist) then {
 	if (_headgear != "") then {
-		if (isclass (configfile >> "cfgWeapons" >> _headgear)) then {
 
-			// force-replace			
-			{	
-				if ((_x select 0)  == _headgear) then { _headgear = (_x select 1);};
-			} forEach _forceReplace;;
+		// force-replace			
+		{	
+			if ((_x select 0)  == _headgear) then {
+				_headgear = (_x select 1);
+				_failures = _failures + [format ["Headgear %1 replaced with %2\n",(_x select 0),_headgear]];
+			};
+		} forEach _forceReplace;;
+
+		if (isclass (configfile >> "cfgWeapons" >> _headgear)) then {		
 
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_headgear,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;		
@@ -273,14 +291,19 @@ if !("headgear" in _blacklist) then {
 		};
 	};
 };
+
 if !("goggles" in _blacklist) then {
 	if (_goggles != "") then {
-		if (isclass (configfile >> "cfgGlasses" >> _goggles)) then {
 
-			// force-replace			
-			{	
-				if ((_x select 0)  == _goggles) then { _goggles = (_x select 1);};
-			} forEach _forceReplace;
+		// force-replace			
+		{	
+			if ((_x select 0)  == _goggles) then { 
+				_goggles = (_x select 1);
+				_failures = _failures + [format ["Goggles %1 replaced with %2\n",(_x select 0),_goggles]];
+			};
+		} forEach _forceReplace;
+
+		if (isclass (configfile >> "cfgGlasses" >> _goggles)) then {
 
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_goggles,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
@@ -294,6 +317,7 @@ if !("goggles" in _blacklist) then {
 		};
 	};
 };
+
 if !("backpack" in _blacklist) then {
 	private ["_backpack"];
 	_backpack = "";
@@ -304,12 +328,15 @@ if !("backpack" in _blacklist) then {
 		_backpack = _inventory select 2 select 0;
 	};
 	if (_backpack != "") then {
-		if (isclass (configfile >> "cfgVehicles" >> _backpack)) then {
+		// force-replace			
+		{	
+			if ((_x select 0)  == _backpack) then { 
+				_backpack = (_x select 1);
+				_failures = _failures + [format ["Backpack %1 replaced with %2\n",(_x select 0),_backpack]];
+			};
+		} forEach _forceReplace;
 
-			// force-replace			
-			{	
-				if ((_x select 0)  == _backpack) then { _backpack = (_x select 1);};
-			} forEach _forceReplace;
+		if (isclass (configfile >> "cfgVehicles" >> _backpack)) then {
 
 			// 0 for virtualItemCargo/Blacklist, 3 for virtualBackpackCargo/Blacklist
 			_XLA_condition = [_backpack,_wlist,_blist,[0,3],_fullVersion] call xla_fnc_arsenalCondition;
@@ -325,6 +352,7 @@ if !("backpack" in _blacklist) then {
 		};
 	};
 };
+
 if !("magazines" in _blacklist) then {
 	if (_isCfg) then {
 		private ["_magazines"];
@@ -336,7 +364,10 @@ if !("magazines" in _blacklist) then {
 
 				// force-replace			
 				{	
-					if ((_x select 0)  == _magazine) then { _magazine = (_x select 1);};
+					if ((_x select 0)  == _magazine) then { 
+						_magazine = (_x select 1);
+						_failures = _failures + [format ["Magazine %1 replaced with %2\n",(_x select 0),_magazine]];
+					};
 				} forEach _forceReplace;
 
 				// 2 for virtualMagazineCargo/Blacklist,
@@ -344,7 +375,7 @@ if !("magazines" in _blacklist) then {
 				if (_XLA_condition) then {
 					_object addmagazine _magazine;
 				} else {
-					_failures = _failures + [format ["Magazine %1 is not whitelisted\n",_magazine]];
+					_failures = _failures + [format ["Magazine %1 is not available\n",_magazine]];
 				};
 			};
 		} foreach _magazines;
@@ -353,14 +384,18 @@ if !("magazines" in _blacklist) then {
 		if ({!isnil "_x"} count (_inventory select 6) > 2) then {
 			{
 				if (_x != "") then {
-					if (isClass (configFile >> "CfgMagazines" >> _x)) then {
 
-						// force-replace
-						_thing = _x;		
-						{	
-							if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
-						} forEach _forceReplace;
-						_x = _thing;
+					// force-replace
+					_thing = _x;		
+					{	
+						if ((_x select 0)  == _thing) then {
+							_thing = (_x select 1);
+							_failures = _failures + [format ["Magazine %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+						};
+					} forEach _forceReplace;
+					_x = _thing;
+
+					if (isClass (configFile >> "CfgMagazines" >> _x)) then {						
 
 						// 2 for virtualMagazineCargo/Blacklist,
 						_XLA_condition = [_x,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
@@ -379,19 +414,24 @@ if !("magazines" in _blacklist) then {
 		};
 	};
 };
+
 if !("weapons" in _blacklist) then {
 	private ["_weapons"];
 	_weapons = if (_isCfg) then {getarray (_cfg >> "weapons")} else {[_inventory select 5,_inventory select 6 select 0,_inventory select 7 select 0,_inventory select 8 select 0]};
 	{
 		if (_x != "") then {
 			_weapon = _x;
+
+			// force-replace	
+			{	
+				if ((_x select 0)  == _weapon) then { 
+					_weapon = (_x select 1);
+					_failures = _failures + [format ["Weapon %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+				};
+			} forEach _forceReplace;
+
 			if (isClass (configFile >> "CfgWeapons" >> _weapon)) then {
 				if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
-
-				// force-replace	
-				{	
-					if ((_x select 0)  == _weapon) then { _weapon = (_x select 1);};
-				} forEach _forceReplace;
 
 				// 1 for virtualWeaponCargo/Blacklist,
 				_XLA_condition = [_weapon,_wlist,_blist,[1],_fullVersion] call xla_fnc_arsenalCondition;
@@ -406,6 +446,7 @@ if !("weapons" in _blacklist) then {
 		};
 	} foreach _weapons;
 };
+
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
 	if !("uniform" in _blacklist) then {{
@@ -413,7 +454,10 @@ if !(_isCfg) then {
 			// force-replace
 			_thing = _x;		
 			{	
-				if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+				if ((_x select 0)  == _thing) then { 
+					_thing = (_x select 1);
+					_failures = _failures + [format ["Item %1 in uniform replaced with %2\n",(_x select 0),(_x select 1)]];
+				};
 			} forEach _forceReplace;
 			_x = _thing;
 
@@ -422,7 +466,7 @@ if !(_isCfg) then {
 			if (_XLA_condition) then {
 				_object additemtouniform _x;
 			} else {
-				_failures = _failures + [format ["Item %1 in uniform is not whitelisted\n",_x]];
+				_failures = _failures + [format ["Item %1 in uniform is not available\n",_x]];
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
@@ -430,7 +474,10 @@ if !(_isCfg) then {
 		// force-replace
 		_thing = _x;		
 		{	
-			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+			if ((_x select 0)  == _thing) then { 
+				_thing = (_x select 1);
+				_failures = _failures + [format ["Item %1 in vest replaced with %2\n",(_x select 0),(_x select 1)]];
+			};
 		} forEach _forceReplace;
 		_x = _thing;
 
@@ -439,7 +486,7 @@ if !(_isCfg) then {
 		if (_XLA_condition) then {
 			_object additemtovest _x;
 		} else {
-			_failures = _failures + [format ["Item %1 in vest is not whitelisted\n",_x]];
+			_failures = _failures + [format ["Item %1 in vest is not available\n",_x]];
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
@@ -447,7 +494,10 @@ if !(_isCfg) then {
 		// force-replace
 		_thing = _x;		
 		{	
-			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+			if ((_x select 0)  == _thing) then {
+				_thing = (_x select 1);
+				_failures = _failures + [format ["Item %1 in backpack replaced with %2\n",(_x select 0),(_x select 1)]];
+			};
 		} forEach _forceReplace;
 		_x = _thing;
 
@@ -456,11 +506,12 @@ if !(_isCfg) then {
 		if (_XLA_condition) then {
 			_object additemtobackpack _x;
 		} else {
-			_failures = _failures + [format ["Item %1 in backpack is not whitelisted\n",_x]];
+			_failures = _failures + [format ["Item %1 in backpack is not available\n",_x]];
 		};
 
 	} foreach (_inventory select 2 select 1);};
 };
+
 if !("transportMagazines" in _blacklist) then {
 	if (_isCfg) then {
 		private ["_transportMagazines"];
@@ -474,7 +525,10 @@ if !("transportMagazines" in _blacklist) then {
 				// force-replace
 				_thing = _x;		
 				{	
-					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+					if ((_x select 0)  == _thing) then {
+						_thing = (_x select 1);
+						_failures = _failures + [format ["Transport Magazine %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+					};
 				} forEach _forceReplace;
 				_x = _thing;
 
@@ -483,22 +537,26 @@ if !("transportMagazines" in _blacklist) then {
 				if (_XLA_condition) then {
 					_object addmagazinecargoglobal _x;
 				} else {
-					_failures = _failures + [format ["Transport Magazine %1 is not whitelisted\n",_x]];
+					_failures = _failures + [format ["Transport Magazine %1 is not available\n",_x]];
 				};
 			};
 		} foreach _transportMagazines;
 	};
 };
+
 if !("items" in _blacklist) then {
 	{
-		if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-
 		// force-replace
 		_thing = _x;		
 		{	
-			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+			if ((_x select 0)  == _thing) then {
+				_thing = (_x select 1);
+				_failures = _failures + [format ["Item %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+			};
 		} forEach _forceReplace;
 		_x = _thing;
+
+		if (isClass (configFile >> "CfgWeapons" >> _x)) then {		
 
 		// 0 for Items
 		_XLA_condition = [_x,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
@@ -512,17 +570,22 @@ if !("items" in _blacklist) then {
 		};
 	} foreach _items;
 };
+
 if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
-			if (isClass (configFile >> "CfgWeapons" >> _x)) then {
 
 			// force-replace
 			_thing = _x;		
 			{	
-				if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+				if ((_x select 0)  == _thing) then { 
+					_thing = (_x select 1);
+					_failures = _failures + [format ["LinkedItem %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+				};
 			} forEach _forceReplace;
 			_x = _thing;
+
+			if (isClass (configFile >> "CfgWeapons" >> _x)) then {			
 
 			// 1 for Weapons, 0 for Items
 			_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
@@ -540,6 +603,7 @@ if !("linkeditems" in _blacklist) then {
 		};
 	} foreach _linkedItemsMisc;
 };
+
 if !("transportWeapons" in _blacklist) then {
 	if (_isCfg) then {
 		private ["_transportWeapons"];
@@ -553,7 +617,10 @@ if !("transportWeapons" in _blacklist) then {
 				// force-replace
 				_thing = _x;		
 				{	
-					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+					if ((_x select 0)  == _thing) then {
+						_thing = (_x select 1);
+						_failures = _failures + [format ["Transport Weapon %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+					};
 				} forEach _forceReplace;
 				_x = _thing;
 
@@ -562,12 +629,13 @@ if !("transportWeapons" in _blacklist) then {
 				if (_XLA_condition) then {
 					_object addweaponcargoglobal _x;
 				} else {
-					_failures = _failures + [format ["Transport weapon %1 is not whitelisted\n",_x]];
+					_failures = _failures + [format ["Transport Weapon %1 is not available\n",_x]];
 				};		
 			};
 		} foreach _transportWeapons;
 	};
 };
+
 if !("transportItems" in _blacklist) then {
 	if (_isCfg) then {
 		private ["_transportItems"];
@@ -581,7 +649,10 @@ if !("transportItems" in _blacklist) then {
 				// force-replace
 				_thing = _x;		
 				{	
-					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+					if ((_x select 0)  == _thing) then {
+						_thing = (_x select 1);
+						_failures = _failures + [format ["Transport Item %1 replaced with %2\n",(_x select 0),(_x select 1)]];
+					};
 				} forEach _forceReplace;
 				_x = _thing;
 
@@ -590,12 +661,15 @@ if !("transportItems" in _blacklist) then {
 				if (_XLA_condition) then {
 					_object additemcargoglobal _x;
 				} else {
-					_failures = _failures + [format ["Transport item %1 is not whitelisted\n",_x]];
+					_failures = _failures + [format ["Transport Item %1 is not available\n",_x]];
 				};
 			};
 		} foreach _transportItems;
 	};
 };
+
+
+hint str _failures;
 
 // XLA: Find unique entries in failures:
 _uniqueFailures = [];
@@ -609,8 +683,8 @@ _uniqueFailures = [];
 _failString = "";
 {
 	_y = _x;
-  	_n =  {_x == _y} count _failures;
-  	_failString = _failString + (format ["%1x %2" , _n,_x]);
+	_n =  {_x == _y} count _failures;
+	_failString = _failString + (format ["%1x %2" , _n,_x]);
 } forEach _uniqueFailures;
 
 // XLA: Display failures
