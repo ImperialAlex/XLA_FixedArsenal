@@ -2900,6 +2900,13 @@ switch _mode do {
 			_to = 1;
 			{
 				_item = _importArray select _foreachindex + 1;
+				// force-replace						
+				{
+					if ((_x select 0)  == _item) then { 
+						_item = (_x select 1);
+					};
+				} forEach _forceReplace;
+
 				switch tolower _x do {
 					case "to": {_to = parsenumber _item;};
 
@@ -2912,7 +2919,7 @@ switch _mode do {
 					case "removeheadgear": {removeheadgear _center;};
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
-					case "adduniform": {
+					case "adduniform": {					
 						// 0 for virtualItemCargo/Blacklist
 						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center forceadduniform _item;} else {ERROR};
