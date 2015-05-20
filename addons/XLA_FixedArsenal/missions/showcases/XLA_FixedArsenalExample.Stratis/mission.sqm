@@ -566,7 +566,7 @@ class Mission
 	};
 	class Vehicles
 	{
-		items=27;
+		items=28;
 		class Item0
 		{
 			position[]={6338.8599,8.7544689,5310.3198};
@@ -848,6 +848,17 @@ class Mission
 			skill=0.60000002;
 			text="box_forcereplace";
 			init="null = this execVM ""XLA_arsenal_forcereplace.sqf""";
+		};
+		class Item27
+		{
+			position[]={6442.5977,7.163981,5437.0425};
+			azimut=222;
+			id=43;
+			side="EMPTY";
+			vehicle="Land_CargoBox_V1_F";
+			skill=0.60000002;
+			text="box_fallback";
+			init="null = this execVM ""XLA_arsenal_fallback.sqf""";
 		};
 	};
 	class Markers
