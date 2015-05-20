@@ -39,7 +39,7 @@
 #define BACKPACK_SLOT  901
 
 scopename _fnc_scriptName;
-private ["_cfg","_inventory","_isCfg","_blacklist"];
+private ["_cfg","_inventory","_isCfg","_blacklist","_forceReplace"];
 _object = [_this,0,objnull,[objnull]] call bis_fnc_param;
 
 _cfg = [_this,1,configfile,[configfile,"",[]]] call bis_fnc_param;
@@ -49,6 +49,8 @@ _cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 _center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 
 _fullVersion = (missionnamespace getvariable ["XLA_fnc_arsenal_fullArsenal",false]);
+
+_forceReplace = [_this,2,[],[[]]] call bis_fnc_param;
 
 // XLA: Grab the cargo and blacklist
 // Get the whitelist of the object/mission
@@ -207,6 +209,12 @@ if !("uniform" in _blacklist) then {
 	};
 	if (_uniform != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _uniform)) then {
+
+			// force-replace			
+			{	
+				if ((_x select 0)  == _uniform) then { _uniform = (_x select 1);};
+			} forEach _forceReplace;;
+
 			// 0 for virtualItemCargo/Blacklist, 1 for virtualWeaponCargo/Blacklist
 			_XLA_condition = [_uniform,_wlist,_blist,[0,1],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -224,6 +232,12 @@ if !("uniform" in _blacklist) then {
 if !("vest" in _blacklist) then {
 	if (_vest != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _vest)) then {
+
+			// force-replace			
+			{	
+				if ((_x select 0)  == _vest) then { _vest = (_x select 1);};
+			} forEach _forceReplace;;
+
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_vest,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -241,6 +255,12 @@ if !("vest" in _blacklist) then {
 if !("headgear" in _blacklist) then {
 	if (_headgear != "") then {
 		if (isclass (configfile >> "cfgWeapons" >> _headgear)) then {
+
+			// force-replace			
+			{	
+				if ((_x select 0)  == _headgear) then { _headgear = (_x select 1);};
+			} forEach _forceReplace;;
+
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_headgear,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;		
 			if (_XLA_condition) then {
@@ -256,6 +276,12 @@ if !("headgear" in _blacklist) then {
 if !("goggles" in _blacklist) then {
 	if (_goggles != "") then {
 		if (isclass (configfile >> "cfgGlasses" >> _goggles)) then {
+
+			// force-replace			
+			{	
+				if ((_x select 0)  == _goggles) then { _goggles = (_x select 1);};
+			} forEach _forceReplace;
+
 			// 0 for virtualItemCargo/Blacklist,
 			_XLA_condition = [_goggles,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -279,6 +305,12 @@ if !("backpack" in _blacklist) then {
 	};
 	if (_backpack != "") then {
 		if (isclass (configfile >> "cfgVehicles" >> _backpack)) then {
+
+			// force-replace			
+			{	
+				if ((_x select 0)  == _backpack) then { _backpack = (_x select 1);};
+			} forEach _forceReplace;
+
 			// 0 for virtualItemCargo/Blacklist, 3 for virtualBackpackCargo/Blacklist
 			_XLA_condition = [_backpack,_wlist,_blist,[0,3],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -301,6 +333,12 @@ if !("magazines" in _blacklist) then {
 			if (_x != "") then {
 				_magazine = _x;
 				if (typename _magazine == typename []) then {_magazine = _magazine call bis_fnc_selectrandom;};
+
+				// force-replace			
+				{	
+					if ((_x select 0)  == _magazine) then { _magazine = (_x select 1);};
+				} forEach _forceReplace;
+
 				// 2 for virtualMagazineCargo/Blacklist,
 				_XLA_condition = [_magazine,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
@@ -316,6 +354,14 @@ if !("magazines" in _blacklist) then {
 			{
 				if (_x != "") then {
 					if (isClass (configFile >> "CfgMagazines" >> _x)) then {
+
+						// force-replace
+						_thing = _x;		
+						{	
+							if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+						} forEach _forceReplace;
+						_x = _thing;
+
 						// 2 for virtualMagazineCargo/Blacklist,
 						_XLA_condition = [_x,_wlist,_blist,[2],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {
@@ -341,6 +387,12 @@ if !("weapons" in _blacklist) then {
 			_weapon = _x;
 			if (isClass (configFile >> "CfgWeapons" >> _weapon)) then {
 				if (typename _weapon == typename []) then {_weapon = _weapon call bis_fnc_selectrandom;};
+
+				// force-replace	
+				{	
+					if ((_x select 0)  == _weapon) then { _weapon = (_x select 1);};
+				} forEach _forceReplace;
+
 				// 1 for virtualWeaponCargo/Blacklist,
 				_XLA_condition = [_weapon,_wlist,_blist,[1],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
@@ -357,6 +409,14 @@ if !("weapons" in _blacklist) then {
 if !(_isCfg) then {
 	//--- Add container items (only after weapons were added together with their default magazines)
 	if !("uniform" in _blacklist) then {{
+
+			// force-replace
+			_thing = _x;		
+			{	
+				if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+			} forEach _forceReplace;
+			_x = _thing;
+
 			// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
 			_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -366,6 +426,14 @@ if !(_isCfg) then {
 			};
 	} foreach (_inventory select 0 select 1);};
 	if !("vest" in _blacklist) then {{
+
+		// force-replace
+		_thing = _x;		
+		{	
+			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+		} forEach _forceReplace;
+		_x = _thing;
+
 		// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
 		_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 		if (_XLA_condition) then {
@@ -375,6 +443,14 @@ if !(_isCfg) then {
 		};
 	} foreach (_inventory select 1 select 1);};
 	if !("backpack" in _blacklist) then {{
+
+		// force-replace
+		_thing = _x;		
+		{	
+			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+		} forEach _forceReplace;
+		_x = _thing;
+
 		// 2 for virtualMagazineCargo/Blacklist, 1 for Weapons, 0 for Items
 		_XLA_condition = [_x,_wlist,_blist,[2,1,0],_fullVersion] call xla_fnc_arsenalCondition;
 		if (_XLA_condition) then {
@@ -394,6 +470,14 @@ if !("transportMagazines" in _blacklist) then {
 		} foreach ([_cfg >> "transportMagazines"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
+
+				// force-replace
+				_thing = _x;		
+				{	
+					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+				} forEach _forceReplace;
+				_x = _thing;
+
 				// 2 for virtualMagazineCargo/Blacklist, 0 for Items
 				_XLA_condition = [_x,_wlist,_blist,[2,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
@@ -408,6 +492,14 @@ if !("transportMagazines" in _blacklist) then {
 if !("items" in _blacklist) then {
 	{
 		if (isClass (configFile >> "CfgWeapons" >> _x)) then {
+
+		// force-replace
+		_thing = _x;		
+		{	
+			if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+		} forEach _forceReplace;
+		_x = _thing;
+
 		// 0 for Items
 		_XLA_condition = [_x,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 			if (_XLA_condition) then {
@@ -424,7 +516,15 @@ if !("linkeditems" in _blacklist) then {
 	{
 		if (_x != "") then {
 			if (isClass (configFile >> "CfgWeapons" >> _x)) then {
-				// 1 for Weapons, 0 for Items
+
+			// force-replace
+			_thing = _x;		
+			{	
+				if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+			} forEach _forceReplace;
+			_x = _thing;
+
+			// 1 for Weapons, 0 for Items
 			_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition)  then {
 					_object linkitem _x;
@@ -449,6 +549,14 @@ if !("transportWeapons" in _blacklist) then {
 		} foreach ([_cfg >> "transportWeapons"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
+
+				// force-replace
+				_thing = _x;		
+				{	
+					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+				} forEach _forceReplace;
+				_x = _thing;
+
 				// 1 for Weapons, 0 for Items
 				_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
@@ -469,6 +577,14 @@ if !("transportItems" in _blacklist) then {
 		} foreach ([_cfg >> "transportItems"] call bis_fnc_subclasses);
 		{
 			if ((_x select 0) != "") then {
+
+				// force-replace
+				_thing = _x;		
+				{	
+					if ((_x select 0)  == _thing) then { _thing = (_x select 1);};
+				} forEach _forceReplace;
+				_x = _thing;
+
 				// 1 for Weapons, 0 for Items
 				_XLA_condition = [_x,_wlist,_blist,[1,0],_fullVersion] call xla_fnc_arsenalCondition;
 				if (_XLA_condition) then {
