@@ -69,8 +69,14 @@ if (_save) then {
 	if (typename _object == typename missionnamespace) then {
 		_object setvariable ["XLA_addVirtualWeaponCargo_cargo",_cargo];
 		publicvariable "XLA_addVirtualWeaponCargo_cargo";
+
+		// Reset the _data of the dataspace
+		_object setVariable ["XLA_fnc_arsenal_data",nil];
+		publicVariable "XLA_fnc_arsenal_data";
 	} else {
 		_object setvariable ["XLA_addVirtualWeaponCargo_cargo",_cargo,_isGlobal];
+		// Reset the _data of the dataspace
+		_object setVariable ["XLA_fnc_arsenal_data",nil,_isGlobal];
 	};
 };
 

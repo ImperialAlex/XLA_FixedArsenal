@@ -64,8 +64,14 @@ if (_save) then {
 	if (typename _object == typename missionnamespace) then {
 		_object setvariable ["XLA_fnc_addVirtualItemBlacklist_list",_blist];
 		publicvariable "XLA_fnc_addVirtualItemBlacklist_list";
+
+		// Reset the _data of the dataspace
+		_object setVariable ["XLA_fnc_arsenal_data",nil];
+		publicVariable "XLA_fnc_arsenal_data";
 	} else {
 		_object setvariable ["XLA_fnc_addVirtualItemBlacklist_list",_blist,_isGlobal];
+		// Reset the _data of the dataspace
+		_object setVariable ["XLA_fnc_arsenal_data",nil,_isGlobal];
 	};
 };
 
