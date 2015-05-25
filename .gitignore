@@ -3,5 +3,9 @@
 *.biprivatekey
 *.pbo
 *.bin
+*.cache
+release/
 addons/temp/
 addons/a3/
+addons/cup/
+**/.idea/
