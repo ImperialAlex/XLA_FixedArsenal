@@ -1,11 +1,9 @@
 // Author: Alexander [3CB]
-// Version Date: 14/5/15
+// Version Date: 21/5/15
 
 // The box should have "this execVM <scriptname>" in it's init field.
 _box = [_this, 0, objNull, [objNull]] call BIS_fnc_param;
 
-
-//TODO: add H_mas_afr_beret_
 if (isServer) then {
 
     _magazinesBlacklist = [
@@ -78,7 +76,15 @@ if (isServer) then {
         "IEDUrbanSmall_Remote_Mag",
         "IEDLandSmall_Remote_Mag",
         "rhs_mine_pmn2_mag",
-        "rhs_mine_tm62m_mag"
+        "rhs_mine_tm62m_mag",
+        
+        // @leights_opfor
+        "100Rnd_LOP_762x54_mag",
+        "100Rnd_LOP_762x54_T_mag",
+        "30Rnd_LOP_762x39_mag",
+        "30Rnd_LOP_762x39_T_mag",
+        "10Rnd_LOP_762x54_mag",
+        "10Rnd_LOP_762x54_T_mag"
     ];
 
     _weaponsBlacklist = [
@@ -107,8 +113,6 @@ if (isServer) then {
         "CUP_hgun_SA61",
         "hgun_mas_mp7_F",
         "hgun_mas_m9_F",
-
-            // REMOVE STKR uniforms
 
         // LAUNCHERS
         "launch_SUD_METIS",
@@ -314,10 +318,20 @@ if (isServer) then {
         "hgun_mas_mp7p_F",
         "nsw_er7s",
         "nsw_er7a",
-       
-
+     
         // MISC
-        "SUD_Binocular" //broken!
+        "SUD_Binocular", //broken!
+        
+        // @leights_opfor Rifles
+        "LOP_Rifle_SVD",
+        "LOP_Rifle_SVD_PSO",
+        "LOP_Rifle_AKM",
+        "LOP_Rifle_AKMS",
+        "LOP_Rifle_AKMS_GL",
+        "LOP_Rifle_AKM_GL",
+        "LOP_Rifle_PKM",
+        "LOP_optic_pso",
+        "LOP_optic_pso_nv"
     ];
 
     _itemsBlacklist = [
@@ -328,10 +342,10 @@ if (isServer) then {
         "STKR_UBACS_ROLL",
         "optic_Nightstalker",
         "optic_tws",
-		"optic_tws_mg",
-		"CUP_optic_CWS",
-		"CUP_optic_AN_PAS_13c1",
-		"CUP_optic_AN_PAS_13c2",
+        "optic_tws_mg",
+        "CUP_optic_CWS",
+        "CUP_optic_AN_PAS_13c1",
+        "CUP_optic_AN_PAS_13c2",
         "crew_uniform",
         "H_Bandanna_blu",
         "H_Bandanna_surfer",
@@ -707,7 +721,85 @@ if (isServer) then {
         "V_sud_ussr_vest02",
         "V_sud_ussr_vest03",
         "V_sud_ussr_vest04",
-        "V_sud_ussr_vest05" 
+        "V_sud_ussr_vest05",
+
+        // @leights_opfor Helmets
+        "LOP_H_SSh68Helmet_OLV",
+        "LOP_H_SSh68Helmet_BLK",
+        "LOP_H_PASGTHelmet_OLV",
+        "LOP_H_PASGTHelmet_BLU",
+        "LOP_H_PASGTHelmet_TAN",
+        "LOP_H_Shemag_ISIS",
+        // @leights_opfor Uniforms
+        "LOP_U_IT_Fatigue_01",
+        "LOP_U_IT_Fatigue_02",
+        "LOP_U_IT_Fatigue_03",
+        "LOP_U_IT_Fatigue_04",
+        "LOP_U_IT_Fatigue_05",
+        "LOP_U_ChDKZ_Fatigue_01",
+        "LOP_U_ChDKZ_Fatigue_02",
+        "LOP_U_ChDKZ_Fatigue_03",
+        "LOP_U_ChDKZ_Fatigue_04",
+        "LOP_U_ChDKZ_Lopotev",
+        "LOP_U_ChDKZ_Bardak",
+        "LOP_U_ChDKZ_Lopotev",
+        "LOP_U_ChDKZ_Lopotev",
+        "LOP_U_ChDKZ_Lopotev",
+        "LOP_U_ChDKZ_Lopotev",
+        "LOP_U_Afg_civ_01",
+        "LOP_U_Afg_civ_02",
+        "LOP_U_Afg_civ_03",
+        "LOP_U_Afg_civ_04",
+        "LOP_U_Mil_01",
+        "LOP_U_Mil_02",
+        "LOP_U_Mil_03",
+        "LOP_U_Mil_04",
+        "LOP_U_AFR_Fatigue_01",
+        "LOP_U_AFR_Fatigue_02",
+        "LOP_U_AFR_Fatigue_03",
+        "LOP_U_AFR_Fatigue_04",
+        "LOP_U_AFR_Fatigue_04_slv",
+        "LOP_U_UA_Fatigue_01",
+        "LOP_U_UA_Fatigue_02",
+        "LOP_U_UA_Fatigue_03",
+        "LOP_U_UA_Fatigue_04",
+        "LOP_U_Civ_01",
+        "LOP_U_Civ_02",
+        "LOP_U_Civ_03",
+        "LOP_U_Civ_04",
+        "LOP_U_Civ_05",
+        "LOP_U_Civ_06",
+        "LOP_U_Civ_01S",
+        "LOP_U_Civ_02S",
+        "LOP_U_Civ_03S",
+        "LOP_U_Civ_04S",
+        "LOP_U_Civ_05S",
+        "LOP_U_Civ_06S",
+        "LOP_U_AA_Fatigue_01",
+        "LOP_U_AA_Fatigue_01_slv",
+        "LOP_U_IA_Fatigue_01",
+        "LOP_U_IA_Fatigue_01_slv",
+        "LOP_U_IA_Fatigue_02",
+        "LOP_U_IA_Fatigue_02_slv",
+        "LOP_U_AP_Fatigue_01",
+        "LOP_U_AP_Fatigue_01_slv",
+        "LOP_U_CDF_Fatigue_01",
+        "LOP_U_CDF_Fatigue_01_slv",
+        "LOP_U_US_Fatigue_01",
+        "LOP_U_US_Fatigue_01_slv",
+        "LOP_U_US_Fatigue_02",
+        "LOP_U_US_Fatigue_02_slv",
+        "LOP_U_US_Fatigue_03",
+        "LOP_U_US_Fatigue_03_slv",
+        "LOP_U_RACS_Fatigue_01",
+        "LOP_U_RACS_Fatigue_01_slv",
+        "LOP_U_SLA_Fatigue_01",
+        "LOP_U_SLA_Fatigue_01_slv",
+        // @leights_opfor Vests 
+        "LOP_V_Carrier_OLV",
+        "LOP_V_Carrier_TAN",
+        "LOP_V_Carrier_BLU",
+        "LOP_V_Carrier_BLK" 
     ];
 
     _backpackWhitelist = [
@@ -787,7 +879,14 @@ if (isServer) then {
         "STKR_PackCom",
         "STKR_Predator",
         "STKR_PredatorBow",
-        "STKR_MLode"
+        "STKR_MLode",
+        
+        // @rhs_usf3
+        "rhsusf_assault_eagleaiii_coy",
+        "rhsusf_assault_eagleaiii_ocp",
+        //"B_rhsusf_B_BACKPACK",   // removed because when the Raven UAV is flying, all camera's get the sound eg. arsenal, zeus
+        "rhsusf_assault_eagleaiii_ucp",
+        "rhsusf_falconii"
     ];
 
     // TFAR UNIQUE TO GENERIC
@@ -808,7 +907,7 @@ if (isServer) then {
         [_box, _backpackWhitelist,true,false] call XLA_fnc_addVirtualBackpackCargo; 
         [_box, ["%ALL"],true,false] call XLA_fnc_addVirtualMagazineCargo;
         [_box,_magazinesBlacklist,true,false] call XLA_fnc_addVirtualMagazineBlacklist;        
-        _addActionText = "<t color='#45B6EA'>Open Armoury (3CB)";
+        _addActionText = "<t color='#45B6EA'>Open Armoury [3CB]";
         ["AmmoboxInit",[_box,false,{true},_addActionText,false,_forceReplace]] spawn XLA_fnc_arsenal;
     };
 };
