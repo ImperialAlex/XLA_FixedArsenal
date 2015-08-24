@@ -217,7 +217,7 @@ if (isServer) then {
         "srifle_DMR_03_F",
         "srifle_DMR_03_khaki_F",
         "srifle_DMR_03_multicam_F",
-        "srifle_DMR_03_spotter_F"
+        "srifle_DMR_03_spotter_F",
         "srifle_DMR_03_tan_F",
         "srifle_DMR_03_woodland_F",
         "srifle_DMR_05_blk_F",
@@ -346,7 +346,7 @@ if (isServer) then {
         "LOP_U_PMC_Fatigue_01",
         "LOP_U_PMC_Fatigue_02",
         "LOP_U_PMC_Fatigue_03",
-        "LOP_U_PMC_Fatigue_04"
+        "LOP_U_PMC_Fatigue_04",
         "rhs_uniform_cu_ocp",
         "rhs_uniform_cu_ocp_101st",
         "rhs_uniform_cu_ocp_10th",
@@ -734,7 +734,7 @@ if (isServer) then {
         "rhs_googles_orange",
         "rhs_googles_yellow",
         "rhs_scarf",
-        "UK3CB_BAF_G_Tactical_Black"
+        "UK3CB_BAF_G_Tactical_Black",
         "UK3CB_BAF_G_Tactical_Clear",
         "UK3CB_BAF_G_Tactical_Grey",
         "UK3CB_BAF_G_Tactical_Orange",
@@ -744,7 +744,7 @@ if (isServer) then {
         "ACE_NVG_Gen1",
         "ACE_NVG_Gen2",
         "ACE_NVG_Gen4",
-        "ACE_NVG_Wide"
+        "ACE_NVG_Wide",
         "NVGoggles",
         "NVGoggles_INDEP",
         "NVGoggles_OPFOR",
@@ -832,7 +832,7 @@ if (isServer) then {
         "ACE_wirecutter",
         "MineDetector",
         "ToolKit",
-        
+
         // end of list
         "dummy_end"
     ];
