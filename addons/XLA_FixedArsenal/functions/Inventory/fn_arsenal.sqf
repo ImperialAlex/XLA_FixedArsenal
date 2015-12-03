@@ -184,12 +184,8 @@ if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then {
 // This is based on the way AGM calulcates overall inventory weight:
 // Compatible with AGM's Imperial/Metric switch:
 
-// Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc
-// TODO: Actually calculate the maximum weight possible with the currently available relevant items
-// See https://github.com/ImperialAlex/XLA_FixedArsenal/issues/21 for more information
-// (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
-
-#define MAXINVENTORYMASS 1220
+// TODO: derive this from new config "maxSoldierLoad" in "CfgInventoryGlobalVariable"
+#define MAXINVENTORYMASS 1000
 
 #define MASSCONVERT(MASS)\
 	if (profileNamespace getVariable ["AGM_useImperial", false]) then {\
@@ -3197,7 +3193,7 @@ switch _mode do {
 		_function = ["XLA_fnc_arsenal","bis_fnc_garage"] select _buttonID;
 		XLA_fnc_arsenal_toggleSpace = true;
 		_display closedisplay 2;
-		//missionnamespace setvariable ["XLA_fnc_arsenal_target",player];
+		missionnamespace setvariable ["XLA_fnc_arsenal_target",player];
 		_function spawn {
 			["Open",true] call (uinamespace getvariable _this);
 		};
