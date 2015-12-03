@@ -133,6 +133,10 @@ _fullVersion = missionnamespace getvariable ["BIS_fnc_arsenal_fullArsenal",false
 	["armor","maximumLoad","mass"],\
 	[true,false,false]
 
+#define ADDBINOCULARSMAG\
+	_magazines = getarray (configfile >> "cfgweapons" >> _item >> "magazines");\
+	if (count _magazines > 0) then {_center addmagazine (_magazines select 0);[_center,_magazines] call bis_fnc_log;};
+
 #define CONDITION(LIST)	(_fullVersion || {"%ALL" in LIST} || {{_item == _x} count LIST > 0})
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
@@ -195,6 +199,15 @@ switch _mode do {
 			};
 		};
 
+		//--- Save default weapon type
+		_center = (missionnamespace getvariable ["BIS_fnc_arsenal_center",player]);
+		BIS_fnc_arsenal_selectedWeaponType = switch true do {
+			case (currentweapon _center == primaryweapon _center): {0};
+			case (currentweapon _center == secondaryweapon _center): {1};
+			case (currentweapon _center == handgunweapon _center): {2};
+			default {-1};
+		};
+
 		INITTYPES
 		["InitGUI",[_display,"bis_fnc_arsenal"]] call bis_fnc_arsenal;
 		["Preload"] call bis_fnc_arsenal;
@@ -252,6 +265,10 @@ switch _mode do {
 		cuttext ["","plain"];
 		showcommandingmenu "";
 		//["#(argb,8,8,3)color(0,0,0,1)",false,nil,0.1,[0,0.5]] spawn bis_fnc_textTiles;
+
+		//--- Force internal view to enable consistent screen blurring. Restore the original view after closing Arsenal.
+		BIS_fnc_arsenal_cameraview = cameraview;
+		player switchcamera "internal";
 
 		_display displayaddeventhandler ["mousebuttondown","with uinamespace do {['MouseButtonDown',_this] call bis_fnc_arsenal;};"];
 		_display displayaddeventhandler ["mousebuttonup","with uinamespace do {['MouseButtonUp',_this] call bis_fnc_arsenal;};"];
@@ -357,12 +374,14 @@ switch _mode do {
 			_ctrlList ctrlsetfade 1;
 			_ctrlList ctrlsetfontheight (_gridH * 0.8);
 			_ctrlList ctrlcommit 0;
+
 			_ctrlList ctrladdeventhandler ["lbselchanged",format ["with uinamespace do {['SelectItem',[ctrlparent (_this select 0),(_this select 0),%1]] call %2;};",_idc,_function]];
 			_ctrlList ctrladdeventhandler ["lbdblclick",format ["with uinamespace do {['ShowItem',[ctrlparent (_this select 0),(_this select 0),%1]] spawn bis_fnc_arsenal;};",_idc]];
 
 			_ctrlListDisabled = _display displayctrl (IDC_RSCDISPLAYARSENAL_LISTDISABLED + _idc);
 			_ctrlListDisabled ctrlenable false;
 		} foreach IDCS;
+
 		['TabDeselect',[_display,-1]] call bis_fnc_arsenal;
 		['SelectItem',[_display,controlnull,-1]] call (uinamespace getvariable _function);
 
@@ -591,6 +610,18 @@ switch _mode do {
 		_cam cameraeffect ["terminate","back"];
 		camdestroy _cam;
 
+		//--- Select correct weapon based on animation
+		_center = (missionnamespace getvariable ["BIS_fnc_arsenal_center",player]);
+		_selectedWeaponType = uinamespace getvariable ["BIS_fnc_arsenal_selectedWeaponType",-1];
+		switch _selectedWeaponType do {
+			case 0: {_center selectweapon primaryweapon _center;};
+			case 1: {_center selectweapon secondaryweapon _center;};
+			case 2: {_center selectweapon handgunweapon _center;};
+		};
+
+		//--- Restore original camera view
+		player switchcamera BIS_fnc_arsenal_cameraview;
+
 		uinamespace setvariable [format ["BIS_fnc_arsenal_campos_%1",BIS_fnc_arsenal_type],+BIS_fnc_arsenal_campos];
 
 		BIS_fnc_arsenal_cam = nil;
@@ -600,6 +631,8 @@ switch _mode do {
 		BIS_fnc_arsenal_buttons = nil;
 		BIS_fnc_arsenal_action = nil;
 		BIS_fnc_arsenal_campos = nil;
+		BIS_fnc_arsenal_selectedWeaponType = nil;
+		BIS_fnc_arsenal_cameraview = nil;
 
 		deletevehicle (missionnamespace getvariable ["BIS_fnc_arsenal_target",objnull]);
 
@@ -679,13 +712,16 @@ switch _mode do {
 					_uiPos = worldtoscreen _pos;
 					if (count _uiPos > 0) then {
 						_fade = _fade min (_uiPos distance BIS_fnc_arsenal_mouse);
-
-						_ctrl = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICON + _foreachindex);
-						_ctrlPos = ctrlposition _ctrl;
-						_ctrlPos set [0,(_uiPos select 0) - (_ctrlPos select 2) * 0.5];
-						_ctrlPos set [1,(_uiPos select 1) - (_ctrlPos select 3) * 0.5];
-						_ctrl ctrlsetposition _ctrlPos;
-						_ctrl ctrlcommit 0;
+						_index = _foreachindex;
+						_ctrlPos = [];
+						{
+							_ctrl = _display displayctrl (_x + _index);
+							_ctrlPos = ctrlposition _ctrl;
+							_ctrlPos set [0,(_uiPos select 0) - (_ctrlPos select 2) * 0.5];
+							_ctrlPos set [1,(_uiPos select 1) - (_ctrlPos select 3) * 0.5];
+							_ctrl ctrlsetposition _ctrlPos;
+							_ctrl ctrlcommit 0;
+						} foreach [IDC_RSCDISPLAYARSENAL_ICON,IDC_RSCDISPLAYARSENAL_ICONBACKGROUND];
 
 						_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _foreachindex);
 						_ctrlLineIcon = _display displayctrl IDC_RSCDISPLAYARSENAL_LINEICON;
@@ -713,13 +749,14 @@ switch _mode do {
 
 			_fade = ((_fade - safezoneW * 0.1) * safezoneW) max 0;
 			{
-				_ctrl = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICON + _foreachindex);
-				if !(ctrlenabled _ctrl) then {
-					_ctrl ctrlsetfade 0;
-				} else {
-					_ctrl ctrlsetfade _fade;
-				};
-				_ctrl ctrlcommit 0;
+				_index = _foreachindex;
+				_ctrl = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICON + _index);
+				_ctrlFade = if !(ctrlenabled _ctrl) then {0} else {_fade};
+				{
+					_ctrl = _display displayctrl (_x + _index);
+					_ctrl ctrlsetfade _ctrlFade;
+					_ctrl ctrlcommit 0;
+				} foreach [IDC_RSCDISPLAYARSENAL_ICON,IDC_RSCDISPLAYARSENAL_ICONBACKGROUND];
 			} foreach _selections;
 		};
 	};
@@ -849,9 +886,11 @@ switch _mode do {
 					{
 						if (_virtualAll || {_x in _virtualCargo}) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+							_displayName = gettext (_xCfg >> "displayName");
+							_lbAdd = _ctrlList lbadd _displayName;
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_displayName];
 							_xCfg call _fnc_addModIcon;
 						};
 					} foreach _x;
@@ -870,9 +909,11 @@ switch _mode do {
 					{
 						if (_virtualAll || {_x in _virtualCargo}) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+							_displayName = gettext (_xCfg >> "displayName");
+							_lbAdd = _ctrlList lbadd _displayName;;
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_displayName];
 							_xCfg call _fnc_addModIcon;
 						};
 					} foreach _x;
@@ -883,9 +924,11 @@ switch _mode do {
 					{
 						if (_virtualAll || {_x in _virtualCargo}) then {
 							_xCfg = configfile >> "cfgweapons" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+							_displayName = gettext (_xCfg >> "displayName");
+							_lbAdd = _ctrlList lbadd _displayName;
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_displayName];
 							_xCfg call _fnc_addModIcon;
 						};
 					} foreach _x;
@@ -897,9 +940,11 @@ switch _mode do {
 					{
 						if (_virtualAll || {_x in _virtualCargo}) then {
 							_xCfg = configfile >> "cfgglasses" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+							_displayName = gettext (_xCfg >> "displayName");
+							_lbAdd = _ctrlList lbadd _displayName;
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_displayName];
 							_xCfg call _fnc_addModIcon;
 						};
 					} foreach _x;
@@ -910,36 +955,44 @@ switch _mode do {
 					{
 						if (_virtualAll || {_x in _virtualCargo}) then {
 							_xCfg = configfile >> "cfgvehicles" >> _x;
-							_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+							_displayName = gettext (_xCfg >> "displayName");
+							_lbAdd = _ctrlList lbadd _displayName;
 							_ctrlList lbsetdata [_lbAdd,_x];
 							_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "picture")];
+							_ctrlList lbsettooltip [_lbAdd,_displayName];
 							_xCfg call _fnc_addModIcon;
 						};
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_FACE: {
 					{
-						_lbAdd = _ctrlList lbadd gettext ((_x select 0) >> "displayName");//gettext (configfile >> "cfgvoice" >> _x >> "displayName");
+						_displayName = gettext ((_x select 0) >> "displayName");
+						_lbAdd = _ctrlList lbadd _displayName;
 						_ctrlList lbsetdata [_lbAdd,configname (_x select 0)];
 						_ctrlList lbsetvalue [_lbAdd,_x select 1];
+						_ctrlList lbsettooltip [_lbAdd,_displayName];
 						(_x select 0) call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_VOICE: {
 					{
 						_xCfg = configfile >> "cfgvoice" >> _x;
-						_lbAdd = _ctrlList lbadd ([configfile >> "cfgvoice" >> _x] call bis_fnc_displayName);
+						_displayName = ([configfile >> "cfgvoice" >> _x] call bis_fnc_displayName);
+						_lbAdd = _ctrlList lbadd _displayName;
 						_ctrlList lbsetdata [_lbAdd,_x];
 						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "icon")];
+						_ctrlList lbsettooltip [_lbAdd,_displayName];
 						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
 				case IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA: {
 					{
 						_xCfg = configfile >> "cfgunitinsignia" >> _x;
-						_lbAdd = _ctrlList lbadd gettext (_xCfg >> "displayName");
+						_displayName = gettext (_xCfg >> "displayName");
+						_lbAdd = _ctrlList lbadd _displayName;
 						_ctrlList lbsetdata [_lbAdd,_x];
 						_ctrlList lbsetpicture [_lbAdd,gettext (_xCfg >> "texture")];
+						_ctrlList lbsettooltip [_lbAdd,_displayName];
 						_xCfg call _fnc_addModIcon;
 					} foreach _x;
 				};
@@ -990,7 +1043,7 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListSelectCurrent": {
-		_display = _this select 0;
+		_display = [_this,0,uinamespace getvariable ["bis_fnc_arsenal_display",displaynull],[displaynull]] call bis_fnc_paramin;
 		_data = missionnamespace getvariable "bis_fnc_arsenal_data";
 		_defaultItems = uinamespace getvariable ["bis_fnc_arsenal_defaultItems",[]];
 		_defaultShow = uinamespace getvariable ["bis_fnc_arsenal_defaultShow",-1];
@@ -1091,6 +1144,9 @@ switch _mode do {
 				_ctrlIcon ctrlenable true;
 				_ctrlIcon ctrlshow true;
 
+				_ctrlIconBackground = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICONBACKGROUND + _idc);
+				_ctrlIconBackground ctrlshow true;
+
 				if (_idc in [IDCS_RIGHT]) then {
 					_ctrlList = _display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _idc);
 					{
@@ -1172,6 +1228,9 @@ switch _mode do {
 			//_ctrlIcon ctrlsetfade ([1,0] select _active);
 			_ctrlIcon ctrlshow _active;
 			_ctrlIcon ctrlenable !_active;
+
+			_ctrlIconBackground = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICONBACKGROUND + _idc);
+			_ctrlIconBackground ctrlshow _active;
 		} foreach [IDCS_LEFT];
 
 		{
@@ -1303,6 +1362,9 @@ switch _mode do {
 			//_ctrlIcon ctrlenable false;
 			_ctrlIcon ctrlshow _active;
 			_ctrlIcon ctrlenable (!_active && ctrlfade _ctrlTab == 0);
+
+			_ctrlIconBackground = _display displayctrl (IDC_RSCDISPLAYARSENAL_ICONBACKGROUND + _idc);
+			_ctrlIconBackground ctrlshow _active;
 		} foreach [IDCS_RIGHT];
 	};
 
@@ -1328,7 +1390,7 @@ switch _mode do {
 				} else {
 					_items = uniformitems _center;
 					_center forceadduniform _item;
-					{_center additemtouniform _x} foreach _items;
+					{_center additemtouniform _x;} foreach _items;
 				};
 
 				//--- Refresh insignia (gets removed when uniform changes)
@@ -1340,7 +1402,7 @@ switch _mode do {
 				} else {
 					_items = vestitems _center;
 					_center addvest _item;
-					{_center additemtovest _x} foreach _items;
+					{_center additemtovest _x;} foreach _items;
 				};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_BACKPACK: {
@@ -1348,7 +1410,7 @@ switch _mode do {
 				removebackpack _center;
 				if !(_item == "") then {
 					_center addbackpack _item;
-					{_center additemtobackpack _x} foreach _items;
+					{_center additemtobackpack _x;} foreach _items;
 				};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_HEADGEAR: {
@@ -1365,7 +1427,10 @@ switch _mode do {
 					{
 						if (tolower _x in _weapons) then {_center removeweapon _x;};
 					} foreach (assigneditems _center);
-				} else {_center addweapon _item;};
+				} else {
+					_center addweapon _item;
+					ADDBINOCULARSMAG
+				};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON: {
 				_isDifferentWeapon = (primaryweapon _center call bis_fnc_baseWeapon) != _item;
@@ -1443,7 +1508,13 @@ switch _mode do {
 				_center setspeaker _item; //--- Instant preview
 				[[_center,nil,_item],"bis_fnc_setidentity"] call bis_fnc_mp; //--- Broadcasted, and therefore delayed setting
 				if (ctrlenabled (_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + IDC_RSCDISPLAYARSENAL_TAB_VOICE))) then {
-					_center directsay "CuratorObjectPlaced";
+					if !(isnil "BIS_fnc_arsenal_voicePreview") then {terminate BIS_fnc_arsenal_voicePreview;};
+					BIS_fnc_arsenal_voicePreview = [] spawn {
+						scriptname "BIS_fnc_arsenal_voicePreview";
+						sleep 0.6;
+						_center = (missionnamespace getvariable ["BIS_fnc_arsenal_center",player]);
+						_center directsay "CuratorObjectPlaced";
+					};
 				};
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_INSIGNIA: {
@@ -1472,8 +1543,8 @@ switch _mode do {
 						if (_item != "") then {
 							_center addsecondaryweaponitem _item;
 						} else {
-							//_weaponAccessories = _center weaponaccessories secondaryweapon _center;
-							//if (count _weaponAccessories > 0) then {_center removesecondaryweaponitem (_weaponAccessories select _accIndex);};
+							_weaponAccessories = _center weaponaccessories secondaryweapon _center;
+							if (count _weaponAccessories > 0) then {_center removesecondaryweaponitem (_weaponAccessories select _accIndex);};
 						};
 					};
 					case (ctrlenabled _ctrlListHandgun): {
@@ -1949,14 +2020,17 @@ switch _mode do {
 			case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON: {
 				_center selectweapon primaryweapon _center;
 				_action = if (_item == "") then {"Civil"} else {"PrimaryWeapon"};
+				BIS_fnc_arsenal_selectedWeaponType = 0;
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON: {
 				_center selectweapon secondaryweapon _center;
 				_action = if (_item == "") then {"Civil"} else {"SecondaryWeapon"};
+				BIS_fnc_arsenal_selectedWeaponType = 1;
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN: {
 				_center selectweapon handgunweapon _center;
 				_action = if (_item == "") then {"Civil"} else {"HandGunOn"};
+				BIS_fnc_arsenal_selectedWeaponType = 2;
 			};
 			case IDC_RSCDISPLAYARSENAL_TAB_MAP;
 			case IDC_RSCDISPLAYARSENAL_TAB_GPS;
@@ -2012,7 +2086,11 @@ switch _mode do {
 			case (_key in [DIK_RETURN,DIK_NUMPADENTER]): {
 				_ctrlTemplate = _display displayctrl IDC_RSCDISPLAYARSENAL_TEMPLATE_TEMPLATE;
 				if (ctrlfade _ctrlTemplate == 0) then {
-					["buttonTemplateOK",[_display]] spawn bis_fnc_arsenal;
+					if (BIS_fnc_arsenal_type == 0) then {
+						["buttonTemplateOK",[_display]] spawn bis_fnc_arsenal;
+					} else {
+						["buttonTemplateOK",[_display]] spawn bis_fnc_garage;
+					};
 					_return = true;
 				};
 			};
@@ -2038,9 +2116,13 @@ switch _mode do {
 					_ctrlTab = _display displayctrl (IDC_RSCDISPLAYARSENAL_TAB + _x);
 					if !(ctrlenabled _ctrlTab) exitwith {_idc = _x;};
 				} foreach [IDCS_LEFT];
-				_idcCount = count [IDCS_LEFT];
+				_idcCount = {!isnull (_display displayctrl (IDC_RSCDISPLAYARSENAL_TAB + _x))} count [IDCS_LEFT];
 				_idc = if (_ctrl) then {(_idc - 1 + _idcCount) % _idcCount} else {(_idc + 1) % _idcCount};
-				["TabSelectLeft",[_display,_idc]] call bis_fnc_arsenal;
+				if (BIS_fnc_arsenal_type == 0) then {
+					["TabSelectLeft",[_display,_idc]] call bis_fnc_arsenal;
+				} else {
+					["TabSelectLeft",[_display,_idc]] call bis_fnc_garage;
+				};
 				_return = true;
 			};
 
@@ -2439,7 +2521,12 @@ switch _mode do {
 					};
 
 					case "addweapon": {
-						if (CONDITION(_virtualWeaponCargo)) then {_center addweapon _item;} else {ERROR};
+						if (CONDITION(_virtualWeaponCargo)) then {
+							_center addweapon _item;
+							if (((_item call bis_fnc_itemType) select 0) == "LaserDesignator") then {ADDBINOCULARSMAG};
+						} else {
+							ERROR
+						};
 					};
 					case "addprimaryweaponitem": {
 						if (CONDITION(_virtualItemCargo)) then {_center addprimaryweaponitem _item;} else {ERROR};
@@ -2634,6 +2721,7 @@ switch _mode do {
 			IDC_RSCDISPLAYARSENAL_LINETABLEFTSELECTED,
 			IDC_RSCDISPLAYARSENAL_LINETABRIGHT,
 			IDC_RSCDISPLAYARSENAL_ICON,
+			IDC_RSCDISPLAYARSENAL_ICONBACKGROUND,
 			IDC_RSCDISPLAYARSENAL_TAB,
 			IDC_RSCDISPLAYARSENAL_LIST,
 			IDC_RSCDISPLAYARSENAL_LOAD,
@@ -2769,7 +2857,7 @@ switch _mode do {
 					{
 						_box = _this select 0;
 						_unit = _this select 1;
-						["Open",[nil,_box]] call bis_fnc_arsenal;
+						["Open",[nil,_box,_unit]] call bis_fnc_arsenal;
 					},
 					[],
 					6,

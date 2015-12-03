@@ -35,10 +35,12 @@ _handgunMagazine = "";
 		private ["_weapon","_magazine"];
 		_weapon = _x select 0;
 		_magazine = _x select 4 select 0;
-		switch _weapon do {
-			case (primaryweapon _center): {_primaryWeaponMagazine = _magazine;};
-			case (secondaryweapon _center): {_secondaryWeaponMagazine = _magazine;};
-			case (handgunweapon _center): {_handgunMagazine = _magazine;};
+		if !(isnil "_magazine") then {
+			switch _weapon do {
+				case (primaryweapon _center): {_primaryWeaponMagazine = _magazine;};
+				case (secondaryweapon _center): {_secondaryWeaponMagazine = _magazine;};
+				case (handgunweapon _center): {_handgunMagazine = _magazine;};
+			};
 		};
 	};
 } foreach weaponsitems _center;
