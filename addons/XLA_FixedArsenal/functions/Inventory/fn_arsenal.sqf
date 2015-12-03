@@ -179,12 +179,12 @@ if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then {
 #define ERROR if !(_item in _disabledItems) then {_disabledItems set [count _disabledItems,_item];};
 
 // CONVERTING "MASS" TO REAL UNITS, OVERRIDES THE VARIABLE
-// Since Mass is really "mass*volume*fudge" it's going to be hard to turn this into real values, 
+// Since Mass is really "mass*volume*fudge" it's going to be hard to turn this into real values,
 // especially if we want the values to fit with what AGM says about total weight....
 // This is based on the way AGM calulcates overall inventory weight:
 // Compatible with AGM's Imperial/Metric switch:
 
-// Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc 
+// Derived from testing with ghillie suit, caryall, heaviest vanilla gun, etc
 // TODO: Actually calculate the maximum weight possible with the currently available relevant items
 // See https://github.com/ImperialAlex/XLA_FixedArsenal/issues/21 for more information
 // (guns, launchers. headwear, goggles, nvgs, radios, maps, radios, compasses, binos and uniforms/vests/backpacks)
@@ -237,7 +237,7 @@ switch _mode do {
 		_cargo = missionNamespace getvariable ["XLA_fnc_arsenal_cargo",objNull];
 		_center = missionNamespace getvariable ["XLA_fnc_arsenal_center",objNull];
 		_forceReplace = missionNamespace getVariable ["XLA_fnc_arsenal_forceReplace",[]];
-		
+
 		_toggleSpace = uinamespace getvariable ["XLA_fnc_arsenal_toggleSpace",false];
 		XLA_fnc_arsenal_type = 0; //--- 0 - Arsenal, 1 - Garage
 		XLA_fnc_arsenal_toggleSpace = nil;
@@ -286,10 +286,10 @@ switch _mode do {
 		INITTYPES
 		["InitGUI",[_display,"XLA_fnc_arsenal"]] call XLA_fnc_arsenal;
 		["Preload",[_fullVersion,_cargo,_center]] call XLA_fnc_arsenal;
-		/* 
-			We need to pass in "_fullVersion" since preload will ignore 
+		/*
+			We need to pass in "_fullVersion" since preload will ignore
 			the missionNamespace variable "XLA_fnc_fullArsenal" and
-			override the "_fullVersion" variable defined at the top 
+			override the "_fullVersion" variable defined at the top
 			of this file/function with its input (or the default, "true").
 
 			To see why this is necessary, think about this potential issue:
@@ -298,54 +298,54 @@ switch _mode do {
 		 set to true and then call "preload" for a restricted ammobox?
 		 => preload must always make sure to override the _fullVersion
 		 that has been defined at the top with its own input, otherwise
-		 it would no longer be possible to correctly call preload manually. 
+		 it would no longer be possible to correctly call preload manually.
 
 		 Due to this, any missions that call preload in the 'old'
 		 or 'vanilla' style, where preload has no parameters and defaults to
 		 _fullVersion = true, will create a fully allowed arsenal.
-		 => The next version breaks backwards compatibility for these 
-		 (advanced) use cases and will therefore be v3.0.0. 
+		 => The next version breaks backwards compatibility for these
+		 (advanced) use cases and will therefore be v3.0.0.
 		*/
 
 		/* before we go and grab the current equipment for allowEquip,
 			  we need to do force-replaces */
 		private ["_classname"];
-		{		
+		{
 			_classname = _x;
-		  {	
+		  {
 				if ((_x select 0)  == _classname) then { _center removeItem _classname; _center addItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach items _center;
 
-		{			
+		{
 			_classname = _x;
 		  {
 				if ((_x select 0)  == _classname) then { _center unlinkItem _classname; _center linkItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach assignedItems _center;
 
-		{			
+		{
 			_classname = _x;
 		  {
 				if ((_x select 0)  == _classname) then { _center removePrimaryWeaponItem _classname; _center addPrimaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach primaryWeaponItems _center;
 
-		{			
+		{
 			_classname = _x;
 		  {
 				if ((_x select 0)  == _classname) then { _center removeSecondaryWeaponItem _classname; _center addSecondaryWeaponItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach secondaryWeaponItems _center;
-		
-		{			
+
+		{
 			_classname = _x;
 		  {
 				if ((_x select 0)  == _classname) then { _center removeHandgunItem _classname; _center addHandgunItem (_x select 1);};
 			} forEach _forceReplace;
 		} forEach handgunItems _center;
 
-		{			
+		{
 			_classname = _x;
 		  {
 				if ((_x select 0)  == _classname) then { _center removeMagazine _classname; _center addMagazine (_x select 1);};
@@ -356,7 +356,7 @@ switch _mode do {
 	  {
 			if ((_x select 0)  == _classname ) then { removeUniform _center; _center addUniform (_x select 1);};
 		} forEach _forceReplace;
-		
+
 		_classname = vest _center;
 	  {
 			if ((_x select 0)  == _classname ) then { removeVest _center; _center addVest (_x select 1);};
@@ -373,7 +373,7 @@ switch _mode do {
 		} forEach _forceReplace;
 
 		_classname = backpack _center;
-	  {	
+	  {
 			if ((_x select 0)  == _classname ) then {
 				private ["_backpackitems"];
 				_backpackitems = backpackItems _center;
@@ -384,7 +384,7 @@ switch _mode do {
 		} forEach _forceReplace;
 
 		{
-			_classname = _x;			
+			_classname = _x;
 		  {
 		  	if ((_x select 0)  == _classname ) then { _center removeWeapon _classname; _center addWeapon (_x select 1); };
 			} forEach _forceReplace;
@@ -394,10 +394,10 @@ switch _mode do {
 		if (_allowEquipped) then {
 			/*
 				Because _data generated by "preload" only contains the items
-				whitelisted through virtualCargo/Blacklist, we need to add 
+				whitelisted through virtualCargo/Blacklist, we need to add
 				the currently equipped items/weapons/etc to _data.
 
-				We also need a way to remove them later, 
+				We also need a way to remove them later,
 				but only remove those that weren't in "preload" anyway.
 				We could simply always re-calculate preload _data for
 				allowEquipped arsenal's but that's a bit of a cheap way out.
@@ -405,27 +405,27 @@ switch _mode do {
 				To this end, we're keeping a list of things that we need to subtract.
 				We need to then subtract them upon "exit"
 
-				The whitelist/blacklist command already takes care of 
+				The whitelist/blacklist command already takes care of
 				_allowedEquipped internally and since that is recalculated on
 				every "init", we don't need to subtract/etc anything later.
 			*/
 
 			private ["_data","_dataspace"];
 			_dataspace = missionNamespace;
-			if (!isNull(_cargo)) then {		
+			if (!isNull(_cargo)) then {
 				_dataspace = _cargo;
 			};
 			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
 
 			/* get current equipment */
 			private["_currentEquipment"];
-			_currentEquipment = 
+			_currentEquipment =
 				items _center +
 				assigneditems _center +
-				primaryweaponitems _center + 
+				primaryweaponitems _center +
 				secondaryweaponitems _center +
 				handgunitems _center +
-				magazines _center + 
+				magazines _center +
 				[uniform _center,vest _center,headgear _center,goggles _center,backpack _center];
 			{
 				_currentEquipment set [count _currentEquipment,_x];
@@ -437,7 +437,7 @@ switch _mode do {
 			} foreach (weapons _center + [binocular _center]);
 
 			/* add equipment to _data */
-			private ["_addedEquipment"]; 
+			private ["_addedEquipment"];
 			// equipment we actually added that wasn't already allowed anway
 			_addedEquipment = [];
 			{
@@ -461,11 +461,11 @@ switch _mode do {
 						{
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
 						} foreach _types;
-					
+
 						if (_weaponTypeID >= 0) then {
 							private ["_items","_setArray"];
 							_items = _data select _weaponTypeID;
-							if ( !((configName _class) in _items) ) then {								
+							if ( !((configName _class) in _items) ) then {
 								_items set [count _items,configname _class];
 								_addedEquipment pushBack [_weaponTypeID,(count _items)-1,configname _class];
 							};
@@ -480,10 +480,10 @@ switch _mode do {
 			};
 
 			// WHAT ABOUT MAGAZINES??
-			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw) 
+			// => They are handled in TabSelectRight by getting _center's weapons (- put/throw)
 			// and grabbing all compatible (and whitelisted!) magazines from their "mags"
 
-		
+
 			// needed in "Exit" to remove any added equipment
 			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",_addedEquipment];
 
@@ -590,7 +590,7 @@ switch _mode do {
 		_ctrlStats = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_STATS_STATS;
 		_ctrlStats ctrlsetfade 1;
 		_ctrlStats ctrlenable false;
-		_ctrlStats ctrlcommit 0;	
+		_ctrlStats ctrlcommit 0;
 
 		//--- UI event handlers
 		_ctrlButtonInterface = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_CONTROLSBAR_BUTTONINTERFACE;
@@ -707,7 +707,7 @@ switch _mode do {
 			_ctrlButtonTry ctrlsettooltip "";
 		};
 
-		if (_fullVersion) then {				
+		if (_fullVersion) then {
 			if (missionname == "Arsenal") then {
 				// Do nothing. We'll never use this in the "Learn->VA" style
 			} else {
@@ -817,14 +817,14 @@ switch _mode do {
 						{
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
 						} foreach _types;
-						
+
 						// grab the indices of the white/blacklists (i.e. what core classes/Cfg...'s to check)
 						LISTINDICES
 						_lx = [];
 						if (_weaponTypeID >= 0) then {
 							_lx = _listindices select _weaponTypeID;
-						};						
-						
+						};
+
 						//get the condition
 						_XLA_condition = [(configName _class),_wlist,_blist,_lx,_fullVersion] call xla_fnc_arsenalCondition;
 						if (_weaponTypeID >= 0 && _XLA_condition) then {
@@ -920,7 +920,7 @@ switch _mode do {
 			/* grab _data */
 			private ["_data","_dataspace"];
 			_dataspace = missionNamespace;
-			if (!isNull(_cargo)) then {		
+			if (!isNull(_cargo)) then {
 				_dataspace = _cargo;
 			};
 			_data = _dataspace getvariable "XLA_fnc_arsenal_data";
@@ -928,14 +928,14 @@ switch _mode do {
 			/* grab _addedEquipment */
 			private ["_addedEquipment"];
 			_addedEquipment = missionNamespace getVariable ["XLA_fnc_arsenal_addedEquipment",[]];
-			
+
 			{
 				private ["_weaponType","_index","_classname","_items"];
 				_weaponTypeID = (_x select 0);
 				_index = (_x select 1);
 				//_className = (_x select 2); //not needed. Only here for debugging.
 				_items = _data select _weaponTypeID;
-				_items deleteAt _index;				
+				_items deleteAt _index;
 			} foreach _addedEquipment;
 
 			_dataspace setvariable ["XLA_fnc_arsenal_data",_data];
@@ -943,7 +943,7 @@ switch _mode do {
 			missionNamespace setVariable ["XLA_fnc_arsenal_addedEquipment",[]];
 		};
 
-		/* proceed with normal exit */		
+		/* proceed with normal exit */
 		removemissioneventhandler ["draw3D",XLA_fnc_arsenal_draw3D];
 
 		_target = (missionnamespace getvariable ["XLA_fnc_arsenal_target",player]);
@@ -1205,7 +1205,7 @@ switch _mode do {
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "ListAdd": {
 		_display = _this select 0;
-		
+
 		_center = (missionnamespace getvariable ["XLA_fnc_arsenal_center",player]);
 		_cargo = (missionnamespace getvariable ["XLA_fnc_arsenal_cargo",objnull]);
 		_dataspace = missionNamespace;
@@ -1219,7 +1219,7 @@ switch _mode do {
 				_ctrlList lbsetpictureright [_lbAdd,gettext ((configfile >> "cfgMods" >> gettext (_this >> "dlc")) >> "logo")];
 		};
 
-		{	
+		{
 			_ctrlList = _display displayctrl (IDC_RSCDISPLAYFIXEDARSENAL_LIST + _foreachindex);
 			switch _foreachindex do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_PRIMARYWEAPON;
@@ -1244,7 +1244,7 @@ switch _mode do {
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_RADIO;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_COMPASS;
 				case IDC_RSCDISPLAYFIXEDARSENAL_TAB_WATCH: {
-					{						
+					{
 						_xCfg = configfile >> "cfgweapons" >> _x;
 						_displayName = gettext (_xCfg >> "displayName");
 						_lbAdd = _ctrlList lbadd _displayName;;
@@ -1356,7 +1356,7 @@ switch _mode do {
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////
-	case "ListSelectCurrent": {		
+	case "ListSelectCurrent": {
 		_display = [_this,0,uinamespace getvariable ["XLA_fnc_arsenal_display",displaynull],[displaynull]] call bis_fnc_paramin;
 		_dataspace = missionNamespace;
 		if (!isNull(_cargo)) then {
@@ -1412,20 +1412,6 @@ switch _mode do {
 				if (lbcursel _ctrlList < 0) then {_ctrlList lbsetcursel 0;};
 			};
 
-			//--- Add default items (must be done here, because the weapon UI where it would make sense is hidden)
-			if (count _defaultItem > 0) then {
-				switch _foreachindex do {
-					case IDC_RSCDISPLAYARSENAL_TAB_PRIMARYWEAPON:{
-						{if (_foreachindex > 0) then {_center addprimaryweaponitem _x;};} foreach _defaultItem;
-					};
-					case IDC_RSCDISPLAYARSENAL_TAB_SECONDARYWEAPON:{
-						{if (_foreachindex > 0) then {_center addsecondaryweaponitem _x;};} foreach _defaultItem;
-					};
-					case IDC_RSCDISPLAYARSENAL_TAB_HANDGUN:{
-						{if (_foreachindex > 0) then {_center addhandgunitem _x;};} foreach _defaultItem;
-					};
-				};
-			};
 		} foreach _data;
 		if (_defaultShow >= 0) then {["ShowItem",[_display,_display displayctrl (IDC_RSCDISPLAYARSENAL_LIST + _defaultShow),_defaultShow]] spawn xla_fnc_arsenal;};
 		uinamespace setvariable ["xla_fnc_arsenal_defaultItems",nil];
@@ -1688,7 +1674,7 @@ switch _mode do {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	case "SelectItem": {
-		private ["_ctrlList","_index","_cursel"];		
+		private ["_ctrlList","_index","_cursel"];
 		_display = _this select 0;
 		_ctrlList = _this select 1;
 		_index = _this select 2;
@@ -1901,7 +1887,7 @@ switch _mode do {
 							if ((_type select 1) == "Watch") then {
 								_center unlinkItem _x;
 							}
-						} forEach  _assigned;	
+						} forEach  _assigned;
 				} else {
 					_center linkitem _item;
 				};
@@ -2708,7 +2694,7 @@ switch _mode do {
 
 		private ["_forceReplace","_dataspace"];
 		_dataspace = missionNamespace;
-		if (!isNull(_cargo)) then {		
+		if (!isNull(_cargo)) then {
 			_dataspace = _cargo;
 		};
 		_forceReplace = _dataspace getvariable ["XLA_fnc_arsenal_forceReplace",[]];
@@ -2734,7 +2720,7 @@ switch _mode do {
 
 				//--- Load custom data
 				_ctrlTemplateValue = _display displayctrl IDC_RSCDISPLAYFIXEDARSENAL_TEMPLATE_VALUENAME;
-				_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];	
+				_data = profilenamespace getvariable ["bis_fnc_saveInventory_data",[]];
 				_name = _ctrlTemplateValue lnbtext [lnbcurselrow _ctrlTemplateValue,0];
 				_nameID = _data find _name;
 				if (_nameID >= 0) then {
@@ -2877,10 +2863,10 @@ switch _mode do {
 		_list = [_cargo,_allowEquipped,_center] call xla_fnc_constructWhiteBlacklist;
 		_wlist = (_list select 0);
 		_blist = (_list select 1);
-		
+
 		private ["_forceReplace","_dataspace"];
 		_dataspace = missionNamespace;
-		if (!isNull(_cargo)) then {		
+		if (!isNull(_cargo)) then {
 			_dataspace = _cargo;
 		};
 		_forceReplace = _dataspace getvariable ["XLA_fnc_arsenal_forceReplace",[]];
@@ -2900,9 +2886,9 @@ switch _mode do {
 			_to = 1;
 			{
 				_item = _importArray select _foreachindex + 1;
-				// force-replace						
+				// force-replace
 				{
-					if ((_x select 0)  == _item) then { 
+					if ((_x select 0)  == _item) then {
 						_item = (_x select 1);
 					};
 				} forEach _forceReplace;
@@ -2919,7 +2905,7 @@ switch _mode do {
 					case "removeheadgear": {removeheadgear _center;};
 					case "removegoggles": {removegoggles _center;};
 					case "forceadduniform";
-					case "adduniform": {					
+					case "adduniform": {
 						// 0 for virtualItemCargo/Blacklist
 						_XLA_condition = [_item,_wlist,_blist,[0],_fullVersion] call xla_fnc_arsenalCondition;
 						if (_XLA_condition) then {_center forceadduniform _item;} else {ERROR};
