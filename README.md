@@ -39,6 +39,7 @@ This mod includes a simple showcase and debugging mission under Play -> Showcase
 
 Usage
 ===========
+You can find some more-or-less complete, potentially outdated and most defintively WIP documentation [here](https://www.mediawiki.org/wiki/User:ImperialAlex/Sandbox)
 
 
 Feedback
