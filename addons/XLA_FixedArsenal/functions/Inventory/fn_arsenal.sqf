@@ -129,11 +129,11 @@ if (_DEBUG && _mode != "draw3D" && _mode != "mouse") then {
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMOPTIC,[]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMACC,[]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMMUZZLE,[]];\
-		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMBIPOD,["AccessoryBipod"]];\
+		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_ITEMBIPOD,[]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMAG,[]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOTHROW,[/*"Grenade","SmokeShell"*/]];\
 		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOPUT,[/*"Mine","MineBounding","MineDirectional"*/]];\
-		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit"]];
+		_types set [IDC_RSCDISPLAYFIXEDARSENAL_TAB_CARGOMISC,["FirstAidKit","Medikit","MineDetector","Toolkit","AccessoryBipod"]];
 
 #define LISTINDICES\
 		_listindices = [];\
