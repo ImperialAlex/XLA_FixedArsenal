@@ -809,6 +809,12 @@ switch _mode do {
 					if (_weaponTypeCategory != "VehicleWeapon") then {
 						private ["_weaponTypeSpecific","_weaponTypeID"];
 						_weaponTypeSpecific = _weaponType select 1;
+
+						// Set the weapon type for CBA Misc Items to "MineDetector" so it appears in the Misc Tab
+						if((configName _class) isKindOf ['CBA_MiscItem', configFile >> 'CfgWeapons']) then {
+							_weaponTypeSpecific = "MineDetector";
+						};
+
 						_weaponTypeID = -1;
 						{
 							if (_weaponTypeSpecific in _x) exitwith {_weaponTypeID = _foreachindex;};
