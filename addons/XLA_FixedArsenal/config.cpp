@@ -18,14 +18,13 @@ class CfgMissions
 {
 	class Showcases
 	{
-    class Showcase_XLA
-		{
-			displayName = "XLA | Arsenal Showcase";
-			briefingName = "XLA | Arsenal Showcase";
-			directory = "XLA_FixedArsenal\missions\showcases\FixedArsenalExample.Stratis";
-			overviewText = "This mission shows how to use xla_fnc_arsenal with examples. It also includes a few handy tools for debugging the mod's definesides.hpp";
-			author = "Alexander (ImperialAlex)";
-		};
+        class Showcase_XLA {
+            //displayName = "XLA | Arsenal Showcase";
+            briefingName = "XLA | Arsenal Showcase";
+            directory = "XLA_FixedArsenal\missions\showcases\XLA_FixedArsenalExample.Stratis";
+            overviewText = "This mission shows how to use xla_fnc_arsenal with examples. It also includes a few handy tools for debugging the mod's definesides.hpp";
+            author = "Alexander (ImperialAlex)";
+        };
 	};
 };
 
