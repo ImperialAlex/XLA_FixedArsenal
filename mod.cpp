@@ -1,4 +1,4 @@
-name = "XLA Fixed Arsenal v3.1.1";
+name = "XLA Fixed Arsenal v3.1.2";
 picture = "XLA_FixedArsenal_Picture.paa";
 actionName = "Website";
 action = "https://github.com/ImperialAlex/XLA_FixedArsenal";
