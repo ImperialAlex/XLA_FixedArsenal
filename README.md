@@ -7,6 +7,9 @@ The 'white listing' feature of the (vanilla) arsenal allows scripters to determi
 However, the vanilla white-listing has a few issues. E.g. by default, saved outfits that contain non-whitelisted equipment cannot be loaded. 
 This mod introduces partial loading, i.e. loading all whitelisted parts of a saved outfit. It also includes fixes and improvements related to the white-listing feature.
 
+USE ACE3 ARSENAL INSTEAD
+=============
+As of version 3.12.0, the popular ACE3 mod now includes an arsenal that has partial loading/etc but also includes many additional improvements. https://github.com/acemod/ACE3 
 
 Partial Loading
 ================
